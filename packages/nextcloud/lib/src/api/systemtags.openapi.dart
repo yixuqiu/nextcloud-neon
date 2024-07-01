@@ -84,8 +84,17 @@ class _$Capabilities_Systemtags_EnabledSerializer implements PrimitiveSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $Capabilities_SystemtagsInterface {
+sealed class $Capabilities_SystemtagsInterface {
   Capabilities_Systemtags_Enabled get enabled;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$Capabilities_SystemtagsInterfaceBuilder].
+  $Capabilities_SystemtagsInterface rebuild(void Function($Capabilities_SystemtagsInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$Capabilities_SystemtagsInterfaceBuilder].
+  $Capabilities_SystemtagsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($Capabilities_SystemtagsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -131,8 +140,17 @@ abstract class Capabilities_Systemtags
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $CapabilitiesInterface {
+sealed class $CapabilitiesInterface {
   Capabilities_Systemtags get systemtags;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$CapabilitiesInterfaceBuilder].
+  $CapabilitiesInterface rebuild(void Function($CapabilitiesInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$CapabilitiesInterfaceBuilder].
+  $CapabilitiesInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($CapabilitiesInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)

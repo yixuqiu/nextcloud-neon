@@ -8,7 +8,6 @@ import 'package:meta/meta.dart';
 import 'package:neon_framework/models.dart';
 import 'package:neon_framework/src/bloc/bloc.dart';
 import 'package:neon_framework/src/bloc/result.dart';
-import 'package:neon_framework/src/blocs/apps.dart';
 import 'package:neon_framework/src/utils/request_manager.dart';
 import 'package:nextcloud/core.dart' as core;
 import 'package:rxdart/rxdart.dart';
@@ -17,7 +16,7 @@ import 'package:rxdart/rxdart.dart';
 sealed class UnifiedSearchBloc implements InteractiveBloc {
   @internal
   factory UnifiedSearchBloc({
-    required AppsBloc appsBloc,
+    required BehaviorSubject<AppImplementation> activeAppSubject,
     required Account account,
   }) = _UnifiedSearchBloc;
 
@@ -39,10 +38,10 @@ sealed class UnifiedSearchBloc implements InteractiveBloc {
 
 class _UnifiedSearchBloc extends InteractiveBloc implements UnifiedSearchBloc {
   _UnifiedSearchBloc({
-    required this.appsBloc,
+    required this.activeAppSubject,
     required this.account,
   }) {
-    appsBloc.activeApp.listen((_) {
+    activeAppSubscription = activeAppSubject.listen((_) {
       term = '';
       extendedSearchEnabled = false;
       results.add(BuiltMap());
@@ -52,7 +51,8 @@ class _UnifiedSearchBloc extends InteractiveBloc implements UnifiedSearchBloc {
   @override
   final log = Logger('UnifiedSearchBloc');
 
-  final AppsBloc appsBloc;
+  final BehaviorSubject<AppImplementation> activeAppSubject;
+  late final StreamSubscription<AppImplementation> activeAppSubscription;
   final Account account;
   String term = '';
   bool extendedSearchEnabled = false;
@@ -68,6 +68,7 @@ class _UnifiedSearchBloc extends InteractiveBloc implements UnifiedSearchBloc {
 
   @override
   void dispose() {
+    unawaited(activeAppSubscription.cancel());
     unawaited(isExtendedSearch.close());
     unawaited(providers.close());
     unawaited(results.close());
@@ -95,7 +96,7 @@ class _UnifiedSearchBloc extends InteractiveBloc implements UnifiedSearchBloc {
     }
 
     if (providers.value.hasData) {
-      final activeApp = appsBloc.activeApp.value;
+      final activeApp = activeAppSubject.value;
 
       var providerIDs = providers.value.requireData!.map((provider) => provider.id);
       if (!extendedSearchEnabled) {
@@ -175,12 +176,14 @@ class _UnifiedSearchBloc extends InteractiveBloc implements UnifiedSearchBloc {
   Iterable<MapEntry<String, Result<core.UnifiedSearchResult>>> sortResults(
     BuiltMap<String, Result<core.UnifiedSearchResult>> results,
   ) sync* {
-    final activeApp = appsBloc.activeApp.value;
+    final activeApp = activeAppSubject.value;
+    final extended = isExtendedSearch.value ?? false;
 
     // Unlike non-matching providers (below) we don't filter the empty results,
     // as the active app is more relevant and we want to know if there are no results for the active app.
     yield* results.entries
         .where((entry) => providerMatchesApp(entry.key, activeApp))
+        .where((entry) => !extended || hasEntries(entry.value))
         .sorted((a, b) => sortEntriesCount(a.value, b.value));
     yield* results.entries
         .whereNot((entry) => providerMatchesApp(entry.key, activeApp))
@@ -189,7 +192,7 @@ class _UnifiedSearchBloc extends InteractiveBloc implements UnifiedSearchBloc {
   }
 
   bool providerMatchesApp(String providerID, AppImplementation app) =>
-      providerID == app.id || providerID.startsWith('${app.id}_');
+      providerID == app.id || providerID.startsWith('${app.id}_') || providerID.startsWith('${app.id}-');
 
   bool hasEntries(Result<core.UnifiedSearchResult> result) => !result.hasData || result.requireData.entries.isNotEmpty;
 

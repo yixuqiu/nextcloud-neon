@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
+import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:neon_framework/src/theme/theme.dart';
+import 'package:neon_framework/testing.dart';
 import 'package:neon_framework/utils.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 
 /// An application used in testing that wraps it's children in a configured
 /// `MaterialApp`.
@@ -14,6 +20,8 @@ class TestApp extends StatelessWidget {
     this.appThemes,
     this.locale = const Locale('en'),
     this.wrapMaterial = true,
+    this.providers = const [],
+    this.router,
     super.key,
   });
 
@@ -51,6 +59,12 @@ class TestApp extends StatelessWidget {
   /// {@macro flutter.widgets.widgetsApp.locale}
   final Locale locale;
 
+  /// Additional [Provider]s.
+  final List<SingleChildWidget> providers;
+
+  /// Wraps the [child] using a GoRouter for mocking.
+  final MockGoRouter? router;
+
   @override
   Widget build(BuildContext context) {
     final theme = AppTheme.test(
@@ -63,7 +77,14 @@ class TestApp extends StatelessWidget {
       child = Material(child: child);
     }
 
-    return MaterialApp(
+    if (router != null && child != null) {
+      child = InheritedGoRouter(
+        goRouter: router!,
+        child: child,
+      );
+    }
+
+    final app = MaterialApp(
       theme: theme.lightTheme,
       localizationsDelegates: [
         ...NeonLocalizations.localizationsDelegates,
@@ -76,5 +97,32 @@ class TestApp extends StatelessWidget {
       locale: locale,
       home: child,
     );
+
+    if (providers.isNotEmpty) {
+      return MultiProvider(
+        providers: providers,
+        child: app,
+      );
+    }
+
+    return app;
+  }
+}
+
+/// Extension for pumping widgets with automatic accessibility guideline checks.
+extension TesterPumpWidgetWithAccessibility on WidgetTester {
+  /// Pumps the [widget] like [pumpWidget], but performs automatic accessibility guideline checks.
+  Future<void> pumpWidgetWithAccessibility(Widget widget) async {
+    final handle = ensureSemantics();
+
+    // ignore: prefer_pump_widget_with_accessibility
+    await pumpWidget(widget);
+
+    await expectLater(this, meetsGuideline(androidTapTargetGuideline));
+    await expectLater(this, meetsGuideline(iOSTapTargetGuideline));
+    await expectLater(this, meetsGuideline(labeledTapTargetGuideline));
+    await expectLater(this, meetsGuideline(textContrastGuideline));
+
+    handle.dispose();
   }
 }

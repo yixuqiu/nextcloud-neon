@@ -1,14 +1,20 @@
 // ignore_for_file: public_member_api_docs
 
+import 'package:built_collection/built_collection.dart';
 import 'package:nextcloud/src/api/core.openapi.dart' as core;
 import 'package:nextcloud/src/helpers/common.dart';
 import 'package:version/version.dart';
 
 /// Minimum version of core/Server supported
-final minVersion = Version(27, 0, 0);
+final minVersion = Version(28, 0, 0);
 
 /// Maximum major of core/Server supported
 const maxMajor = 29;
+
+/// Checks whether the server [version] is a dev, beta or RC version.
+bool _isDevelopmentServerVersion(String version) {
+  return version.contains('dev') || version.contains('beta') || version.contains('RC');
+}
 
 extension CoreVersionCheck on core.$Client {
   /// Check if the core/Server version is supported by this client
@@ -21,9 +27,10 @@ extension CoreVersionCheck on core.$Client {
       capabilities.version.micro,
     );
     return VersionCheck(
-      versions: [version],
+      versions: BuiltList([version]),
       minimumVersion: minVersion,
       maximumMajor: maxMajor,
+      isSupportedOverride: _isDevelopmentServerVersion(capabilities.version.string) ? true : null,
     );
   }
 }
@@ -31,9 +38,10 @@ extension CoreVersionCheck on core.$Client {
 extension CoreStatusVersionCheck on core.Status {
   /// Check if the core/Server version is supported
   VersionCheck get versionCheck => VersionCheck(
-        versions: [Version.parse(version)],
+        versions: BuiltList([Version.parse(version)]),
         minimumVersion: minVersion,
         maximumMajor: maxMajor,
+        isSupportedOverride: _isDevelopmentServerVersion(versionstring) ? true : null,
       );
 }
 

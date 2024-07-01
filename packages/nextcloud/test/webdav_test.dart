@@ -11,7 +11,6 @@ import 'package:nextcloud_test/nextcloud_test.dart';
 import 'package:test/test.dart';
 import 'package:test_api/src/backend/invoker.dart';
 import 'package:universal_io/io.dart';
-import 'package:version/version.dart';
 
 class MockCallbackFunction extends Mock {
   void progressCallback(double progress);
@@ -275,7 +274,6 @@ void main() {
             ncLockTime: true,
             ncLockTimeout: true,
             ncLockToken: true,
-            ncMetadataEtag: true,
             ncMountType: true,
             ncNote: true,
             ncReminderDueDate: true,
@@ -286,6 +284,7 @@ void main() {
             ncUploadTime: true,
             ncVersionAuthor: true,
             ncVersionLabel: true,
+            ncMetadataBlurhash: true,
             ocChecksums: true,
             ocCommentsCount: true,
             ocCommentsHref: true,
@@ -343,10 +342,10 @@ void main() {
         expect(response.props.ncDataFingerprint, isNull);
         expect(response.props.ncGroupFolderId, isNull);
         expect(response.props.ncHasPreview, isTrue);
-        expect(response.props.ncHidden, preset.version >= Version(28, 0, 0) ? isFalse : isNull);
+        expect(response.props.ncHidden, isFalse);
         expect(response.props.ncInheritedAclList, isNull);
         expect(response.props.ncIsEncrypted, isNull);
-        expect(response.props.ncIsMountRoot, preset.version >= Version(28, 0, 0) ? isFalse : isNull);
+        expect(response.props.ncIsMountRoot, isFalse);
         expect(response.props.ncLock, isNull);
         expect(response.props.ncLockOwner, isNull);
         expect(response.props.ncLockOwnerDisplayname, isNull);
@@ -354,7 +353,6 @@ void main() {
         expect(response.props.ncLockTime, isNull);
         expect(response.props.ncLockTimeout, isNull);
         expect(response.props.ncLockToken, isNull);
-        expect(response.props.ncMetadataEtag, isNull);
         expect(response.props.ncMountType, isNull);
         expect(response.props.ncNote, isNull);
         expect(response.props.ncReminderDueDate, isNull);
@@ -365,6 +363,7 @@ void main() {
         expect(response.props.ncUploadTime, DateTime.utc(1970));
         expect(response.props.ncVersionAuthor, isNull);
         expect(response.props.ncVersionLabel, isNull);
+        expect(response.props.ncMetadataBlurhash, isNull);
         expect(response.props.ocChecksums, isNull);
         expect(response.props.ocCommentsCount, 0);
         expect(response.props.ocCommentsHref, isNotEmpty);

@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:built_value/serializer.dart';
 import 'package:dynamite_runtime/http_client.dart';
-import 'package:dynamite_runtime/src/utils/byte_stream_extension.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 
@@ -112,33 +111,21 @@ final class ResponseConverter<B, H> with Converter<http.StreamedResponse, Future
 
   @override
   Future<DynamiteRawResponse<B, H>> convert(http.StreamedResponse input) async {
-    final rawHeaders = input.headers;
-    final encoding = encodingForHeaders(input.headers);
+    final response = await http.Response.fromStream(input);
 
-    final statusCode = input.statusCode;
+    final rawHeaders = response.headers;
+    final statusCode = response.statusCode;
     final validStatuses = serializer.validStatuses;
     if (validStatuses != null && !validStatuses.contains(statusCode)) {
-      Object body;
-      try {
-        body = await input.stream.bytesToString(encoding);
-      } on FormatException {
-        body = 'binary';
-      }
-
-      throw DynamiteStatusCodeException.fromResponse(
-        statusCode: statusCode,
-        headers: rawHeaders,
-        body: body,
-        url: input.request?.url,
-      );
+      throw DynamiteStatusCodeException(response);
     }
 
     final headers = _deserialize<H>(rawHeaders, serializer.serializers, serializer.headersType);
 
     final rawBody = switch (serializer.bodyType) {
-      const FullType(Uint8List) => await input.stream.bytes,
-      const FullType(String) => await input.stream.bytesToString(encoding),
-      _ => await input.stream.bytesToJson(encoding),
+      const FullType(Uint8List) => response.bodyBytes,
+      const FullType(String) => response.body,
+      _ => json.decode(response.body),
     };
     final body = _deserialize<B>(rawBody, serializer.serializers, serializer.bodyType);
 
@@ -153,7 +140,7 @@ final class ResponseConverter<B, H> with Converter<http.StreamedResponse, Future
 }
 
 /// Encoder to efficiently convert a raw response to json.
-final class RawResponseEncoder with Converter<DynamiteRawResponse<dynamic, dynamic>, Map<String, Object?>> {
+final class RawResponseEncoder with Converter<DynamiteRawResponse<dynamic, dynamic>, Object?> {
   /// Creates a new raw response encoder.
   const RawResponseEncoder();
 
@@ -166,7 +153,7 @@ final class RawResponseEncoder with Converter<DynamiteRawResponse<dynamic, dynam
 }
 
 /// Encoder to revive the json from a raw response.
-final class RawResponseDecoder<B, H> with Converter<Map<String, Object?>, DynamiteResponse<B, H>> {
+final class RawResponseDecoder<B, H> with Converter<Object?, DynamiteResponse<B, H>> {
   /// Creates a new raw response decoder.
   const RawResponseDecoder(this.serializer);
 
@@ -174,7 +161,11 @@ final class RawResponseDecoder<B, H> with Converter<Map<String, Object?>, Dynami
   final DynamiteSerializer<B, H> serializer;
 
   @override
-  DynamiteResponse<B, H> convert(Map<String, Object?> input) {
+  DynamiteResponse<B, H> convert(Object? input) {
+    if (input is! Map<String, Object?>) {
+      throw ArgumentError('Expected Map<String, Object?>, got ${input.runtimeType} instead');
+    }
+
     final rawHeaders = input['headers'];
     final headers = _deserialize<H>(rawHeaders, serializer.serializers, serializer.headersType);
 

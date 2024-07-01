@@ -345,10 +345,19 @@ class _$WrappedEnum_IntegerSerializer implements PrimitiveSerializer<WrappedEnum
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $WrappedEnumInterface {
+sealed class $WrappedEnumInterface {
   @BuiltValueField(wireName: 'String')
   WrappedEnum_String get string;
   WrappedEnum_Integer get integer;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$WrappedEnumInterfaceBuilder].
+  $WrappedEnumInterface rebuild(void Function($WrappedEnumInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$WrappedEnumInterfaceBuilder].
+  $WrappedEnumInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($WrappedEnumInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -386,8 +395,17 @@ abstract class WrappedEnum implements $WrappedEnumInterface, Built<WrappedEnum, 
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $EnumReferenceInterface {
+sealed class $EnumReferenceInterface {
   EnumString get string;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$EnumReferenceInterfaceBuilder].
+  $EnumReferenceInterface rebuild(void Function($EnumReferenceInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$EnumReferenceInterfaceBuilder].
+  $EnumReferenceInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($EnumReferenceInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)

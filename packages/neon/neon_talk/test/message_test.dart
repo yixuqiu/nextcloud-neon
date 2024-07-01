@@ -1,13 +1,16 @@
 import 'package:built_collection/built_collection.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:neon_framework/blocs.dart';
+import 'package:neon_framework/models.dart';
 import 'package:neon_framework/testing.dart';
 import 'package:neon_framework/theme.dart';
 import 'package:neon_framework/utils.dart';
 import 'package:neon_talk/l10n/localizations.dart';
 import 'package:neon_talk/l10n/localizations_en.dart';
+import 'package:neon_talk/src/blocs/room.dart';
 import 'package:neon_talk/src/widgets/actor_avatar.dart';
 import 'package:neon_talk/src/widgets/message.dart';
 import 'package:neon_talk/src/widgets/reactions.dart';
@@ -18,13 +21,23 @@ import 'package:neon_talk/src/widgets/rich_object/file.dart';
 import 'package:neon_talk/src/widgets/rich_object/mention.dart';
 import 'package:nextcloud/nextcloud.dart';
 import 'package:nextcloud/spreed.dart' as spreed;
+import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/data/latest.dart' as tzdata;
+import 'package:timezone/timezone.dart' as tz;
 
 import 'testing.dart';
 
-Widget wrapWidget(Widget child) => TestApp(
+Widget wrapWidget({
+  required Widget child,
+  List<SingleChildWidget> providers = const [],
+}) =>
+    TestApp(
       localizationsDelegates: TalkLocalizations.localizationsDelegates,
       supportedLocales: TalkLocalizations.supportedLocales,
+      providers: providers,
       child: child,
     );
 
@@ -33,6 +46,9 @@ void main() {
     FakeNeonStorage.setup();
 
     registerFallbackValue(Uri());
+
+    tzdata.initializeTimeZones();
+    tz.setLocalLocation(tz.getLocation('Europe/Berlin'));
   });
 
   group('getActorDisplayName', () {
@@ -62,9 +78,9 @@ void main() {
       when(() => chatMessage.messageType).thenReturn(spreed.MessageType.comment);
       when(() => chatMessage.messageParameters).thenReturn(BuiltMap());
 
-      await tester.pumpWidget(
+      await tester.pumpWidgetWithAccessibility(
         wrapWidget(
-          TalkMessagePreview(
+          child: TalkMessagePreview(
             actorId: 'test',
             roomType: spreed.RoomType.group,
             chatMessage: chatMessage,
@@ -82,9 +98,9 @@ void main() {
       when(() => chatMessage.messageType).thenReturn(spreed.MessageType.comment);
       when(() => chatMessage.messageParameters).thenReturn(BuiltMap());
 
-      await tester.pumpWidget(
+      await tester.pumpWidgetWithAccessibility(
         wrapWidget(
-          TalkMessagePreview(
+          child: TalkMessagePreview(
             actorId: 'abc',
             roomType: spreed.RoomType.group,
             chatMessage: chatMessage,
@@ -101,9 +117,9 @@ void main() {
       when(() => chatMessage.messageType).thenReturn(spreed.MessageType.comment);
       when(() => chatMessage.messageParameters).thenReturn(BuiltMap());
 
-      await tester.pumpWidget(
+      await tester.pumpWidgetWithAccessibility(
         wrapWidget(
-          TalkMessagePreview(
+          child: TalkMessagePreview(
             actorId: 'test',
             roomType: spreed.RoomType.oneToOne,
             chatMessage: chatMessage,
@@ -120,9 +136,9 @@ void main() {
       when(() => chatMessage.messageType).thenReturn(spreed.MessageType.comment);
       when(() => chatMessage.messageParameters).thenReturn(BuiltMap());
 
-      await tester.pumpWidget(
+      await tester.pumpWidgetWithAccessibility(
         wrapWidget(
-          TalkMessagePreview(
+          child: TalkMessagePreview(
             actorId: 'abc',
             roomType: spreed.RoomType.oneToOne,
             chatMessage: chatMessage,
@@ -139,9 +155,9 @@ void main() {
       when(() => chatMessage.messageType).thenReturn(spreed.MessageType.system);
       when(() => chatMessage.messageParameters).thenReturn(BuiltMap());
 
-      await tester.pumpWidget(
+      await tester.pumpWidgetWithAccessibility(
         wrapWidget(
-          TalkMessagePreview(
+          child: TalkMessagePreview(
             actorId: 'abc',
             roomType: spreed.RoomType.group,
             chatMessage: chatMessage,
@@ -158,9 +174,9 @@ void main() {
       when(() => chatMessage.messageType).thenReturn(spreed.MessageType.comment);
       when(() => chatMessage.messageParameters).thenReturn(BuiltMap());
 
-      await tester.pumpWidget(
+      await tester.pumpWidgetWithAccessibility(
         wrapWidget(
-          TalkMessagePreview(
+          child: TalkMessagePreview(
             actorId: 'abc',
             roomType: spreed.RoomType.oneToOne,
             chatMessage: chatMessage,
@@ -179,9 +195,9 @@ void main() {
       when(() => chatMessage.message).thenReturn('');
       when(() => chatMessage.messageParameters).thenReturn(BuiltMap());
 
-      await tester.pumpWidget(
+      await tester.pumpWidgetWithAccessibility(
         wrapWidget(
-          TalkMessage(
+          child: TalkMessage(
             chatMessage: chatMessage,
             lastCommonRead: null,
           ),
@@ -195,9 +211,6 @@ void main() {
       when(() => account.id).thenReturn('');
       when(() => account.client).thenReturn(NextcloudClient(Uri.parse('')));
 
-      final accountsBloc = MockAccountsBloc();
-      when(() => accountsBloc.activeAccount).thenAnswer((_) => BehaviorSubject.seeded(account));
-
       final chatMessage = MockChatMessage();
       when(() => chatMessage.messageType).thenReturn(spreed.MessageType.comment);
       when(() => chatMessage.timestamp).thenReturn(0);
@@ -208,14 +221,18 @@ void main() {
       when(() => chatMessage.reactions).thenReturn(BuiltMap());
       when(() => chatMessage.messageParameters).thenReturn(BuiltMap());
 
-      await tester.pumpWidget(
+      final roomBloc = MockRoomBloc();
+      when(() => roomBloc.reactions).thenAnswer((_) => BehaviorSubject.seeded(BuiltMap()));
+
+      await tester.pumpWidgetWithAccessibility(
         wrapWidget(
-          NeonProvider<AccountsBloc>.value(
-            value: accountsBloc,
-            child: TalkMessage(
-              chatMessage: chatMessage,
-              lastCommonRead: null,
-            ),
+          providers: [
+            Provider<Account>.value(value: account),
+            NeonProvider<TalkRoomBloc>.value(value: roomBloc),
+          ],
+          child: TalkMessage(
+            chatMessage: chatMessage,
+            lastCommonRead: null,
           ),
         ),
       );
@@ -224,32 +241,15 @@ void main() {
   });
 
   group('TalkSystemMessage', () {
-    testWidgets('Hide', (tester) async {
-      final chatMessage = MockChatMessage();
-      when(() => chatMessage.systemMessage).thenReturn('reaction');
-
-      await tester.pumpWidget(
-        wrapWidget(
-          TalkSystemMessage(
-            chatMessage: chatMessage,
-            previousChatMessage: null,
-          ),
-        ),
-      );
-      expect(find.byType(SizedBox), findsOne);
-      expect(find.byType(RichText), findsNothing);
-      await expectLater(find.byType(TalkSystemMessage), matchesGoldenFile('goldens/message_system_message_hide.png'));
-    });
-
-    testWidgets('Show', (tester) async {
+    testWidgets('Normal', (tester) async {
       final chatMessage = MockChatMessage();
       when(() => chatMessage.systemMessage).thenReturn('');
       when(() => chatMessage.message).thenReturn('test');
       when(() => chatMessage.messageParameters).thenReturn(BuiltMap());
 
-      await tester.pumpWidget(
+      await tester.pumpWidgetWithAccessibility(
         wrapWidget(
-          TalkSystemMessage(
+          child: TalkSystemMessage(
             chatMessage: chatMessage,
             previousChatMessage: null,
           ),
@@ -269,9 +269,9 @@ void main() {
       when(() => chatMessage.message).thenReturn('test');
       when(() => chatMessage.messageParameters).thenReturn(BuiltMap());
 
-      await tester.pumpWidget(
+      await tester.pumpWidgetWithAccessibility(
         wrapWidget(
-          TalkSystemMessage(
+          child: TalkSystemMessage(
             chatMessage: chatMessage,
             previousChatMessage: previousChatMessage,
           ),
@@ -291,9 +291,6 @@ void main() {
     when(() => account.id).thenReturn('');
     when(() => account.client).thenReturn(NextcloudClient(Uri.parse('')));
 
-    final accountsBloc = MockAccountsBloc();
-    when(() => accountsBloc.activeAccount).thenAnswer((_) => BehaviorSubject.seeded(account));
-
     final chatMessage = MockChatMessage();
     when(() => chatMessage.messageType).thenReturn(spreed.MessageType.comment);
     when(() => chatMessage.timestamp).thenReturn(0);
@@ -304,30 +301,28 @@ void main() {
     when(() => chatMessage.reactions).thenReturn(BuiltMap());
     when(() => chatMessage.messageParameters).thenReturn(BuiltMap());
 
-    await tester.pumpWidget(
+    await tester.pumpWidgetWithAccessibility(
       wrapWidget(
-        NeonProvider<AccountsBloc>.value(
-          value: accountsBloc,
-          child: TalkParentMessage(
-            parentChatMessage: chatMessage,
-            lastCommonRead: null,
-          ),
+        providers: [
+          Provider<Account>.value(value: account),
+        ],
+        child: TalkParentMessage(
+          parentChatMessage: chatMessage,
+          lastCommonRead: null,
         ),
       ),
     );
     expect(find.byType(TalkCommentMessage), findsOne);
+    expect(find.byType(SelectionArea), findsNothing);
     await expectLater(find.byType(TalkParentMessage), matchesGoldenFile('goldens/message_parent_message.png'));
   });
 
   group('TalkCommentMessage', () {
-    testWidgets('Default', (tester) async {
+    testWidgets('Self', (tester) async {
       final account = MockAccount();
       when(() => account.id).thenReturn('');
       when(() => account.username).thenReturn('test');
       when(() => account.client).thenReturn(NextcloudClient(Uri.parse('')));
-
-      final accountsBloc = MockAccountsBloc();
-      when(() => accountsBloc.activeAccount).thenAnswer((_) => BehaviorSubject.seeded(account));
 
       final previousChatMessage = MockChatMessage();
       when(() => previousChatMessage.messageType).thenReturn(spreed.MessageType.comment);
@@ -345,38 +340,41 @@ void main() {
       when(() => chatMessage.messageParameters).thenReturn(BuiltMap());
       when(() => chatMessage.id).thenReturn(0);
 
-      await tester.pumpWidget(
+      final roomBloc = MockRoomBloc();
+      when(() => roomBloc.reactions).thenAnswer((_) => BehaviorSubject.seeded(BuiltMap()));
+
+      await tester.pumpWidgetWithAccessibility(
         wrapWidget(
-          NeonProvider<AccountsBloc>.value(
-            value: accountsBloc,
-            child: TalkCommentMessage(
-              chatMessage: chatMessage,
-              lastCommonRead: 0,
-              previousChatMessage: previousChatMessage,
-            ),
+          providers: [
+            Provider<Account>.value(value: account),
+            NeonProvider<TalkRoomBloc>.value(value: roomBloc),
+          ],
+          child: TalkCommentMessage(
+            chatMessage: chatMessage,
+            lastCommonRead: 0,
+            previousChatMessage: previousChatMessage,
           ),
         ),
       );
       expect(find.byType(TalkActorAvatar), findsNothing);
-      expect(find.text('12:00 AM'), findsNothing);
+      expect(find.text('1:00 AM'), findsNothing);
+      expect(find.byTooltip('1/1/1970 1:00 AM'), findsNothing);
       expect(find.text('test'), findsNothing);
       expect(find.text('abc', findRichText: true), findsOne);
       expect(find.byType(TalkReactions), findsOne);
       expect(find.byType(TalkReadIndicator), findsOne);
+      expect(find.byType(SelectionArea), findsOne);
       await expectLater(
         find.byType(TalkCommentMessage),
         matchesGoldenFile('goldens/message_comment_message_self.png'),
       );
     });
 
-    testWidgets('Default', (tester) async {
+    testWidgets('Other', (tester) async {
       final account = MockAccount();
       when(() => account.id).thenReturn('');
       when(() => account.username).thenReturn('other');
       when(() => account.client).thenReturn(NextcloudClient(Uri.parse('')));
-
-      final accountsBloc = MockAccountsBloc();
-      when(() => accountsBloc.activeAccount).thenAnswer((_) => BehaviorSubject.seeded(account));
 
       final previousChatMessage = MockChatMessage();
       when(() => previousChatMessage.messageType).thenReturn(spreed.MessageType.comment);
@@ -394,24 +392,30 @@ void main() {
       when(() => chatMessage.messageParameters).thenReturn(BuiltMap());
       when(() => chatMessage.id).thenReturn(0);
 
-      await tester.pumpWidget(
+      final roomBloc = MockRoomBloc();
+      when(() => roomBloc.reactions).thenAnswer((_) => BehaviorSubject.seeded(BuiltMap()));
+
+      await tester.pumpWidgetWithAccessibility(
         wrapWidget(
-          NeonProvider<AccountsBloc>.value(
-            value: accountsBloc,
-            child: TalkCommentMessage(
-              chatMessage: chatMessage,
-              lastCommonRead: 0,
-              previousChatMessage: previousChatMessage,
-            ),
+          providers: [
+            Provider<Account>.value(value: account),
+            NeonProvider<TalkRoomBloc>.value(value: roomBloc),
+          ],
+          child: TalkCommentMessage(
+            chatMessage: chatMessage,
+            lastCommonRead: 0,
+            previousChatMessage: previousChatMessage,
           ),
         ),
       );
       expect(find.byType(TalkActorAvatar), findsNothing);
-      expect(find.text('12:00 AM'), findsNothing);
+      expect(find.text('1:00 AM'), findsNothing);
+      expect(find.byTooltip('1/1/1970 1:00 AM'), findsNothing);
       expect(find.text('test'), findsNothing);
       expect(find.text('abc', findRichText: true), findsOne);
       expect(find.byType(TalkReactions), findsOne);
       expect(find.byType(TalkReadIndicator), findsNothing);
+      expect(find.byType(SelectionArea), findsOne);
       await expectLater(
         find.byType(TalkCommentMessage),
         matchesGoldenFile('goldens/message_comment_message_other.png'),
@@ -422,9 +426,6 @@ void main() {
       final account = MockAccount();
       when(() => account.id).thenReturn('');
       when(() => account.client).thenReturn(NextcloudClient(Uri.parse('')));
-
-      final accountsBloc = MockAccountsBloc();
-      when(() => accountsBloc.activeAccount).thenAnswer((_) => BehaviorSubject.seeded(account));
 
       final previousChatMessage = MockChatMessage();
       when(() => previousChatMessage.messageType).thenReturn(spreed.MessageType.comment);
@@ -441,20 +442,22 @@ void main() {
       when(() => chatMessage.reactions).thenReturn(BuiltMap());
       when(() => chatMessage.messageParameters).thenReturn(BuiltMap());
 
-      await tester.pumpWidget(
+      await tester.pumpWidgetWithAccessibility(
         wrapWidget(
-          NeonProvider<AccountsBloc>.value(
-            value: accountsBloc,
-            child: TalkCommentMessage(
-              chatMessage: chatMessage,
-              lastCommonRead: null,
-              previousChatMessage: previousChatMessage,
-            ),
+          providers: [
+            Provider<Account>.value(value: account),
+          ],
+          child: TalkCommentMessage(
+            chatMessage: chatMessage,
+            lastCommonRead: null,
+            previousChatMessage: previousChatMessage,
           ),
         ),
       );
       expect(find.text('abc', findRichText: true), findsOne);
       expect(find.byIcon(AdaptiveIcons.cancel), findsOne);
+      expect(find.byType(TalkReactions), findsNothing);
+      expect(find.byType(SelectionArea), findsNothing);
       await expectLater(
         find.byType(TalkCommentMessage),
         matchesGoldenFile('goldens/message_comment_message_deleted.png'),
@@ -466,9 +469,6 @@ void main() {
       when(() => account.id).thenReturn('');
       when(() => account.client).thenReturn(NextcloudClient(Uri.parse('')));
 
-      final accountsBloc = MockAccountsBloc();
-      when(() => accountsBloc.activeAccount).thenAnswer((_) => BehaviorSubject.seeded(account));
-
       final chatMessage = MockChatMessage();
       when(() => chatMessage.timestamp).thenReturn(0);
       when(() => chatMessage.actorId).thenReturn('test');
@@ -477,23 +477,25 @@ void main() {
       when(() => chatMessage.message).thenReturn('abc');
       when(() => chatMessage.messageParameters).thenReturn(BuiltMap());
 
-      await tester.pumpWidget(
+      await tester.pumpWidgetWithAccessibility(
         wrapWidget(
-          NeonProvider<AccountsBloc>.value(
-            value: accountsBloc,
-            child: TalkCommentMessage(
-              chatMessage: chatMessage,
-              lastCommonRead: null,
-              isParent: true,
-            ),
+          providers: [
+            Provider<Account>.value(value: account),
+          ],
+          child: TalkCommentMessage(
+            chatMessage: chatMessage,
+            lastCommonRead: null,
+            isParent: true,
           ),
         ),
       );
       expect(find.byType(TalkActorAvatar), findsNothing);
-      expect(find.text('12:00 AM'), findsNothing);
+      expect(find.text('1:00 AM'), findsNothing);
+      expect(find.byTooltip('1/1/1970 1:00 AM'), findsNothing);
       expect(find.text('test'), findsOne);
       expect(find.text('abc', findRichText: true), findsOne);
       expect(find.byType(TalkReactions), findsNothing);
+      expect(find.byType(SelectionArea), findsNothing);
       await expectLater(
         find.byType(TalkCommentMessage),
         matchesGoldenFile('goldens/message_comment_message_as_parent.png'),
@@ -504,9 +506,6 @@ void main() {
       final account = MockAccount();
       when(() => account.id).thenReturn('');
       when(() => account.client).thenReturn(NextcloudClient(Uri.parse('')));
-
-      final accountsBloc = MockAccountsBloc();
-      when(() => accountsBloc.activeAccount).thenAnswer((_) => BehaviorSubject.seeded(account));
 
       final previousChatMessage = MockChatMessage();
       when(() => previousChatMessage.messageType).thenReturn(spreed.MessageType.comment);
@@ -532,19 +531,25 @@ void main() {
       when(() => chatMessage.parent).thenReturn(parentChatMessage);
       when(() => chatMessage.messageParameters).thenReturn(BuiltMap());
 
-      await tester.pumpWidget(
+      final roomBloc = MockRoomBloc();
+      when(() => roomBloc.reactions).thenAnswer((_) => BehaviorSubject.seeded(BuiltMap()));
+
+      await tester.pumpWidgetWithAccessibility(
         wrapWidget(
-          NeonProvider<AccountsBloc>.value(
-            value: accountsBloc,
-            child: TalkCommentMessage(
-              chatMessage: chatMessage,
-              lastCommonRead: null,
-              previousChatMessage: previousChatMessage,
-            ),
+          providers: [
+            Provider<Account>.value(value: account),
+            NeonProvider<TalkRoomBloc>.value(value: roomBloc),
+          ],
+          child: TalkCommentMessage(
+            chatMessage: chatMessage,
+            lastCommonRead: null,
+            previousChatMessage: previousChatMessage,
           ),
         ),
       );
       expect(find.byType(TalkParentMessage), findsOne);
+      expect(find.byType(TalkReactions), findsNothing);
+      expect(find.byType(SelectionArea), findsOne);
       await expectLater(
         find.byType(TalkCommentMessage).first,
         matchesGoldenFile('goldens/message_comment_message_with_parent.png'),
@@ -556,9 +561,6 @@ void main() {
         final account = MockAccount();
         when(() => account.id).thenReturn('');
         when(() => account.client).thenReturn(NextcloudClient(Uri.parse('')));
-
-        final accountsBloc = MockAccountsBloc();
-        when(() => accountsBloc.activeAccount).thenAnswer((_) => BehaviorSubject.seeded(account));
 
         final previousChatMessage = MockChatMessage();
         when(() => previousChatMessage.messageType).thenReturn(spreed.MessageType.comment);
@@ -575,23 +577,29 @@ void main() {
         when(() => chatMessage.reactions).thenReturn(BuiltMap({'😀': 1, '😊': 23}));
         when(() => chatMessage.messageParameters).thenReturn(BuiltMap());
 
-        await tester.pumpWidget(
+        final roomBloc = MockRoomBloc();
+        when(() => roomBloc.reactions).thenAnswer((_) => BehaviorSubject.seeded(BuiltMap()));
+
+        await tester.pumpWidgetWithAccessibility(
           wrapWidget(
-            NeonProvider<AccountsBloc>.value(
-              value: accountsBloc,
-              child: TalkCommentMessage(
-                chatMessage: chatMessage,
-                lastCommonRead: null,
-                previousChatMessage: previousChatMessage,
-              ),
+            providers: [
+              Provider<Account>.value(value: account),
+              NeonProvider<TalkRoomBloc>.value(value: roomBloc),
+            ],
+            child: TalkCommentMessage(
+              chatMessage: chatMessage,
+              lastCommonRead: null,
+              previousChatMessage: previousChatMessage,
             ),
           ),
         );
         expect(find.byType(TalkActorAvatar), findsOne);
-        expect(find.text('12:00 AM'), findsOne);
+        expect(find.text('1:00 AM'), findsOne);
+        expect(find.byTooltip('1/1/1970 1:00 AM'), findsOne);
         expect(find.text('test'), findsOne);
         expect(find.text('abc', findRichText: true), findsOne);
         expect(find.byType(TalkReactions), findsOne);
+        expect(find.byType(SelectionArea), findsOne);
         await expectLater(
           find.byType(TalkCommentMessage),
           matchesGoldenFile('goldens/message_comment_message_separate_actor.png'),
@@ -602,9 +610,6 @@ void main() {
         final account = MockAccount();
         when(() => account.id).thenReturn('');
         when(() => account.client).thenReturn(NextcloudClient(Uri.parse('')));
-
-        final accountsBloc = MockAccountsBloc();
-        when(() => accountsBloc.activeAccount).thenAnswer((_) => BehaviorSubject.seeded(account));
 
         final previousChatMessage = MockChatMessage();
         when(() => previousChatMessage.messageType).thenReturn(spreed.MessageType.comment);
@@ -621,23 +626,28 @@ void main() {
         when(() => chatMessage.reactions).thenReturn(BuiltMap({'😀': 1, '😊': 23}));
         when(() => chatMessage.messageParameters).thenReturn(BuiltMap());
 
-        await tester.pumpWidget(
+        final roomBloc = MockRoomBloc();
+        when(() => roomBloc.reactions).thenAnswer((_) => BehaviorSubject.seeded(BuiltMap()));
+
+        await tester.pumpWidgetWithAccessibility(
           wrapWidget(
-            NeonProvider<AccountsBloc>.value(
-              value: accountsBloc,
-              child: TalkCommentMessage(
-                chatMessage: chatMessage,
-                lastCommonRead: null,
-                previousChatMessage: previousChatMessage,
-              ),
+            providers: [
+              Provider<Account>.value(value: account),
+              NeonProvider<TalkRoomBloc>.value(value: roomBloc),
+            ],
+            child: TalkCommentMessage(
+              chatMessage: chatMessage,
+              lastCommonRead: null,
+              previousChatMessage: previousChatMessage,
             ),
           ),
         );
         expect(find.byType(TalkActorAvatar), findsOne);
-        expect(find.text('12:05 AM'), findsOne);
+        expect(find.text('1:05 AM'), findsOne);
         expect(find.text('test'), findsOne);
         expect(find.text('abc', findRichText: true), findsOne);
         expect(find.byType(TalkReactions), findsOne);
+        expect(find.byType(SelectionArea), findsOne);
         await expectLater(
           find.byType(TalkCommentMessage),
           matchesGoldenFile('goldens/message_comment_message_separate_time.png'),
@@ -648,9 +658,6 @@ void main() {
         final account = MockAccount();
         when(() => account.id).thenReturn('');
         when(() => account.client).thenReturn(NextcloudClient(Uri.parse('')));
-
-        final accountsBloc = MockAccountsBloc();
-        when(() => accountsBloc.activeAccount).thenAnswer((_) => BehaviorSubject.seeded(account));
 
         final previousChatMessage = MockChatMessage();
         when(() => previousChatMessage.messageType).thenReturn(spreed.MessageType.system);
@@ -667,27 +674,131 @@ void main() {
         when(() => chatMessage.reactions).thenReturn(BuiltMap({'😀': 1, '😊': 23}));
         when(() => chatMessage.messageParameters).thenReturn(BuiltMap());
 
-        await tester.pumpWidget(
+        final roomBloc = MockRoomBloc();
+        when(() => roomBloc.reactions).thenAnswer((_) => BehaviorSubject.seeded(BuiltMap()));
+
+        await tester.pumpWidgetWithAccessibility(
           wrapWidget(
-            NeonProvider<AccountsBloc>.value(
-              value: accountsBloc,
-              child: TalkCommentMessage(
-                chatMessage: chatMessage,
-                lastCommonRead: null,
-                previousChatMessage: previousChatMessage,
-              ),
+            providers: [
+              Provider<Account>.value(value: account),
+              NeonProvider<TalkRoomBloc>.value(value: roomBloc),
+            ],
+            child: TalkCommentMessage(
+              chatMessage: chatMessage,
+              lastCommonRead: null,
+              previousChatMessage: previousChatMessage,
             ),
           ),
         );
         expect(find.byType(TalkActorAvatar), findsOne);
-        expect(find.text('12:00 AM'), findsOne);
+        expect(find.text('1:00 AM'), findsOne);
+        expect(find.byTooltip('1/1/1970 1:00 AM'), findsOne);
         expect(find.text('test'), findsOne);
         expect(find.text('abc', findRichText: true), findsOne);
         expect(find.byType(TalkReactions), findsOne);
+        expect(find.byType(SelectionArea), findsOne);
         await expectLater(
           find.byType(TalkCommentMessage),
           matchesGoldenFile('goldens/message_comment_message_separate_system_message.png'),
         );
+      });
+    });
+
+    group('Menu', () {
+      late Account account;
+      late spreed.ChatMessage chatMessage;
+      late TalkRoomBloc roomBloc;
+
+      setUp(() {
+        account = MockAccount();
+        when(() => account.id).thenReturn('');
+        when(() => account.username).thenReturn('test');
+        when(() => account.client).thenReturn(NextcloudClient(Uri.parse('')));
+
+        chatMessage = MockChatMessage();
+        when(() => chatMessage.timestamp).thenReturn(0);
+        when(() => chatMessage.actorId).thenReturn('test');
+        when(() => chatMessage.actorType).thenReturn(spreed.ActorType.users);
+        when(() => chatMessage.actorDisplayName).thenReturn('test');
+        when(() => chatMessage.messageType).thenReturn(spreed.MessageType.comment);
+        when(() => chatMessage.message).thenReturn('abc');
+        when(() => chatMessage.reactions).thenReturn(BuiltMap());
+        when(() => chatMessage.messageParameters).thenReturn(BuiltMap());
+        when(() => chatMessage.id).thenReturn(0);
+        when(() => chatMessage.isReplyable).thenReturn(true);
+
+        roomBloc = MockRoomBloc();
+        when(() => roomBloc.reactions).thenAnswer((_) => BehaviorSubject.seeded(BuiltMap()));
+      });
+
+      testWidgets('Add reaction', (tester) async {
+        SharedPreferences.setMockInitialValues({});
+
+        await tester.pumpWidgetWithAccessibility(
+          wrapWidget(
+            providers: [
+              Provider<Account>.value(value: account),
+              NeonProvider<TalkRoomBloc>.value(value: roomBloc),
+            ],
+            child: TalkCommentMessage(
+              chatMessage: chatMessage,
+              lastCommonRead: 0,
+            ),
+          ),
+        );
+
+        final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        await gesture.addPointer(location: Offset.zero);
+        addTearDown(gesture.removePointer);
+        await tester.pump();
+        await gesture.moveTo(tester.getCenter(find.byType(TalkCommentMessage)));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byIcon(Icons.more_vert));
+        await tester.pumpAndSettle();
+
+        await tester.runAsync(() async {
+          await tester.tap(find.byIcon(Icons.add_reaction_outlined));
+          await tester.pumpAndSettle();
+          await tester.tap(find.byIcon(Icons.tag_faces));
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('😂'));
+          await tester.pumpAndSettle();
+
+          verify(() => roomBloc.addReaction(chatMessage, '😂')).called(1);
+        });
+      });
+
+      testWidgets('Reply', (tester) async {
+        await tester.pumpWidgetWithAccessibility(
+          wrapWidget(
+            providers: [
+              Provider<Account>.value(value: account),
+              NeonProvider<TalkRoomBloc>.value(value: roomBloc),
+            ],
+            child: TalkCommentMessage(
+              chatMessage: chatMessage,
+              lastCommonRead: 0,
+            ),
+          ),
+        );
+
+        final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        await gesture.addPointer(location: Offset.zero);
+        addTearDown(gesture.removePointer);
+        await tester.pump();
+        await gesture.moveTo(tester.getCenter(find.byType(TalkCommentMessage)));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byIcon(Icons.more_vert));
+        await tester.pumpAndSettle();
+
+        await tester.runAsync(() async {
+          await tester.tap(find.byIcon(Icons.reply));
+          await tester.pumpAndSettle();
+
+          verify(() => roomBloc.setReplyChatMessage(chatMessage)).called(1);
+        });
       });
     });
   });
@@ -708,42 +819,37 @@ void main() {
               final account = MockAccount();
               when(() => account.username).thenReturn('username');
               when(() => account.client).thenReturn(NextcloudClient(Uri()));
-              when(() => account.completeUri(any()))
-                  .thenAnswer((invocation) => invocation.positionalArguments[0]! as Uri);
 
-              final accountsBloc = MockAccountsBloc();
-              when(() => accountsBloc.activeAccount).thenAnswer((_) => BehaviorSubject.seeded(account));
-              when(() => accountsBloc.activeUserDetailsBloc).thenReturn(userDetailsBloc);
-
-              await tester.pumpWidget(
+              await tester.pumpWidgetWithAccessibility(
                 TestApp(
-                  child: NeonProvider<AccountsBloc>.value(
-                    value: accountsBloc,
-                    child: RichText(
-                      text: buildRichObjectParameter(
-                        parameter: spreed.RichObjectParameter(
-                          (b) => b
-                            ..type = type
-                            ..id = ''
-                            ..name = 'name'
-                            ..iconUrl = '',
-                        ),
-                        textStyle: null,
-                        isPreview: isPreview,
+                  providers: [
+                    Provider<Account>.value(value: account),
+                    NeonProvider<UserDetailsBloc>.value(value: userDetailsBloc),
+                  ],
+                  child: RichText(
+                    text: buildRichObjectParameter(
+                      parameter: spreed.RichObjectParameter(
+                        (b) => b
+                          ..type = type
+                          ..id = ''
+                          ..name = 'name'
+                          ..iconUrl = '',
                       ),
+                      textStyle: null,
+                      isPreview: isPreview,
                     ),
                   ),
                 ),
               );
 
-              expect(find.byType(TalkRichObjectMention), findsOne);
+              expect(find.byType(TalkRichObjectMention), isPreview ? findsNothing : findsOne);
               expect(find.text('name'), findsOne);
             });
           }
         });
 
         testWidgets('File', (tester) async {
-          await tester.pumpWidget(
+          await tester.pumpWidgetWithAccessibility(
             TestApp(
               child: RichText(
                 text: buildRichObjectParameter(
@@ -765,7 +871,7 @@ void main() {
         });
 
         testWidgets('Deck card', (tester) async {
-          await tester.pumpWidget(
+          await tester.pumpWidgetWithAccessibility(
             TestApp(
               child: RichText(
                 text: buildRichObjectParameter(
@@ -789,7 +895,7 @@ void main() {
         });
 
         testWidgets('Fallback', (tester) async {
-          await tester.pumpWidget(
+          await tester.pumpWidgetWithAccessibility(
             TestApp(
               child: RichText(
                 text: buildRichObjectParameter(

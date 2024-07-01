@@ -24,6 +24,7 @@ import 'package:meta/meta.dart' as _i2;
 part 'types.openapi.g.dart';
 
 typedef $Object = dynamic;
+typedef ObjectNullable = dynamic;
 typedef $String = dynamic;
 typedef $Uri = dynamic;
 typedef $Uint8List = dynamic;
@@ -32,7 +33,7 @@ typedef $Map = dynamic;
 typedef $RegExp = dynamic;
 
 @BuiltValue(instantiable: false)
-abstract interface class $BaseInterface {
+sealed class $BaseInterface {
   @BuiltValueField(wireName: 'bool')
   bool? get $bool;
   int? get integer;
@@ -50,6 +51,15 @@ abstract interface class $BaseInterface {
   BuiltList<Never>? get listNever;
   @BuiltValueField(wireName: 'list-string')
   BuiltList<String>? get listString;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BaseInterfaceBuilder].
+  $BaseInterface rebuild(void Function($BaseInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$BaseInterfaceBuilder].
+  $BaseInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BaseInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -93,7 +103,7 @@ abstract class Base implements $BaseInterface, Built<Base, BaseBuilder> {
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $DefaultsInterface {
+sealed class $DefaultsInterface {
   static final _$$bool = _$jsonSerializers.deserialize(
     true,
     specifiedType: const FullType(bool),
@@ -187,6 +197,15 @@ abstract interface class $DefaultsInterface {
   JsonObject get objectArray;
   @BuiltValueField(wireName: 'object-bool')
   JsonObject get objectBool;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$DefaultsInterfaceBuilder].
+  $DefaultsInterface rebuild(void Function($DefaultsInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$DefaultsInterfaceBuilder].
+  $DefaultsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($DefaultsInterfaceBuilder b) {
     b.$bool = _$$bool;
@@ -245,7 +264,7 @@ abstract class Defaults implements $DefaultsInterface, Built<Defaults, DefaultsB
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $AdditionalPropertiesInterface {
+sealed class $AdditionalPropertiesInterface {
   @BuiltValueField(wireName: 'empty_schema_bool')
   BuiltMap<String, JsonObject>? get emptySchemaBool;
   @BuiltValueField(wireName: 'empty_schema')
@@ -253,6 +272,8 @@ abstract interface class $AdditionalPropertiesInterface {
   BuiltMap<String, BuiltMap<String, JsonObject>>? get nested;
   @BuiltValueField(wireName: 'Object')
   BuiltMap<String, JsonObject>? get object;
+  @BuiltValueField(wireName: 'ObjectNullable')
+  BuiltMap<String, JsonObject?>? get objectNullable;
   @BuiltValueField(wireName: 'bool')
   BuiltMap<String, bool>? get $bool;
   BuiltMap<String, int>? get integer;
@@ -262,7 +283,7 @@ abstract interface class $AdditionalPropertiesInterface {
   BuiltMap<String, num>? get $num;
   BuiltMap<String, String>? get string;
   @BuiltValueField(wireName: 'content-string')
-  BuiltMap<String, ContentString<int>>? get contentString;
+  BuiltMap<String, ContentString<int>?>? get contentString;
   @BuiltValueField(wireName: 'string-binary')
   BuiltMap<String, Uint8List>? get stringBinary;
   BuiltMap<String, BuiltList<JsonObject>>? get list;
@@ -270,6 +291,15 @@ abstract interface class $AdditionalPropertiesInterface {
   BuiltMap<String, BuiltList<Never>>? get listNever;
   @BuiltValueField(wireName: 'list-string')
   BuiltMap<String, BuiltList<String>>? get listString;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$AdditionalPropertiesInterfaceBuilder].
+  $AdditionalPropertiesInterface rebuild(void Function($AdditionalPropertiesInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$AdditionalPropertiesInterfaceBuilder].
+  $AdditionalPropertiesInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($AdditionalPropertiesInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -338,6 +368,10 @@ final Serializers _$serializers = (Serializers().toBuilder()
         ]),
         MapBuilder<String, BuiltMap<String, JsonObject>>.new,
       )
+      ..addBuilderFactory(
+        const FullType(BuiltMap, [FullType(String), FullType.nullable(JsonObject)]),
+        MapBuilder<String, JsonObject?>.new,
+      )
       ..addBuilderFactory(const FullType(BuiltMap, [FullType(String), FullType(bool)]), MapBuilder<String, bool>.new)
       ..addBuilderFactory(const FullType(BuiltMap, [FullType(String), FullType(int)]), MapBuilder<String, int>.new)
       ..addBuilderFactory(
@@ -352,9 +386,9 @@ final Serializers _$serializers = (Serializers().toBuilder()
       ..addBuilderFactory(
         const FullType(BuiltMap, [
           FullType(String),
-          FullType(ContentString, [FullType(int)]),
+          FullType.nullable(ContentString, [FullType(int)]),
         ]),
-        MapBuilder<String, ContentString<int>>.new,
+        MapBuilder<String, ContentString<int>?>.new,
       )
       ..addBuilderFactory(
         const FullType(BuiltMap, [FullType(String), FullType(Uint8List)]),

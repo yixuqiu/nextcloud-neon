@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:neon_framework/l10n/localizations.dart';
+import 'package:neon_framework/models.dart';
 import 'package:neon_framework/src/bloc/result.dart';
-import 'package:neon_framework/src/blocs/accounts.dart';
-import 'package:neon_framework/src/models/account.dart';
+import 'package:neon_framework/src/blocs/unified_search.dart';
 import 'package:neon_framework/src/theme/icons.dart';
 import 'package:neon_framework/src/theme/sizes.dart';
 import 'package:neon_framework/src/utils/adaptive.dart';
@@ -28,128 +28,127 @@ class NeonUnifiedSearchResults extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accountsBloc = NeonProvider.of<AccountsBloc>(context);
-    final bloc = accountsBloc.activeUnifiedSearchBloc;
+    final bloc = NeonProvider.of<UnifiedSearchBloc>(context);
     return StreamBuilder(
       stream: bloc.isExtendedSearch,
       builder: (context, isExtendedSearchSnapshot) => ResultBuilder.behaviorSubject(
         subject: bloc.providers,
-        builder: (context, providers) => NeonListView(
-          scrollKey: 'unified-search',
-          isLoading: providers.isLoading,
-          error: providers.error,
-          onRefresh: bloc.refresh,
-          topFixedChildren: [
-            if (!(isExtendedSearchSnapshot.data ?? true))
-              Align(
-                child: ElevatedButton.icon(
-                  onPressed: bloc.enableExtendedSearch,
-                  label: Text(NeonLocalizations.of(context).searchGlobally),
-                  icon: Icon(AdaptiveIcons.search),
-                ),
-              ),
-          ],
-          itemCount: providers.data?.length ?? 0,
-          itemBuilder: (context, index) {
-            final provider = providers.data![index];
+        builder: (context, providers) => StreamBuilder(
+          stream: bloc.results,
+          builder: (context, resultsSnapshot) {
+            final results = resultsSnapshot.data;
 
-            return NeonUnifiedSearchProvider(
-              provider: provider,
-              onSelected: onSelected,
+            return NeonListView(
+              scrollKey: 'unified-search',
+              isLoading: providers.isLoading,
+              error: providers.error,
+              onRefresh: bloc.refresh,
+              topFixedChildren: [
+                if (!(isExtendedSearchSnapshot.data ?? true))
+                  Align(
+                    child: ElevatedButton.icon(
+                      onPressed: bloc.enableExtendedSearch,
+                      label: Text(NeonLocalizations.of(context).searchGlobally),
+                      icon: Icon(AdaptiveIcons.search),
+                    ),
+                  ),
+                if (results != null && results.isEmpty) _buildNoResultsTile(context),
+              ],
+              itemCount: providers.data?.length ?? 0,
+              itemBuilder: (context, index) {
+                final provider = providers.data![index];
+                final result = results?[provider.id];
+                if (result == null) {
+                  return const SizedBox.shrink();
+                }
+
+                return _buildResult(
+                  context: context,
+                  provider: provider,
+                  result: result,
+                );
+              },
             );
           },
         ),
       ),
     );
   }
-}
 
-@internal
-class NeonUnifiedSearchProvider extends StatelessWidget {
-  const NeonUnifiedSearchProvider({
-    required this.provider,
-    required this.onSelected,
-    super.key,
-  });
+  Widget _buildResult({
+    required BuildContext context,
+    required core.UnifiedSearchProvider provider,
+    required Result<core.UnifiedSearchResult> result,
+  }) {
+    final account = NeonProvider.of<Account>(context);
+    final bloc = NeonProvider.of<UnifiedSearchBloc>(context);
 
-  final core.UnifiedSearchProvider provider;
+    final showCupertino = isCupertino(context);
+    final title = Text(provider.name);
 
-  final void Function(core.UnifiedSearchResultEntry entry) onSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    final accountsBloc = NeonProvider.of<AccountsBloc>(context);
-    final bloc = accountsBloc.activeUnifiedSearchBloc;
-
-    return StreamBuilder(
-      stream: bloc.results.map((results) => results[provider.id]),
-      builder: (context, snapshot) {
-        final result = snapshot.data;
-        if (result == null) {
-          return const SizedBox.shrink();
-        }
-
-        final showCupertino = isCupertino(context);
-        final title = Text(provider.name);
-
-        final children = <Widget>[
-          if (!showCupertino)
-            DefaultTextStyle(
-              style: Theme.of(context).textTheme.headlineSmall!,
-              child: title,
+    final children = <Widget>[
+      if (!showCupertino)
+        DefaultTextStyle(
+          style: Theme.of(context).textTheme.headlineSmall!,
+          child: title,
+        ),
+      if (result.hasError)
+        NeonError(
+          result.error,
+          onRetry: bloc.refresh,
+        ),
+      if (result.isLoading) const NeonLinearProgressIndicator(),
+      if (result.hasData && result.requireData.entries.isEmpty) _buildNoResultsTile(context),
+      if (result.hasData)
+        for (final entry in result.requireData.entries)
+          AdaptiveListTile(
+            leading: NeonImageWrapper(
+              size: const Size.square(largeIconSize),
+              child: _buildThumbnail(context, account, entry),
             ),
-          if (result.hasError)
-            NeonError(
-              result.error,
-              onRetry: bloc.refresh,
-            ),
-          if (result.isLoading) const NeonLinearProgressIndicator(),
-          if (result.hasData && result.requireData.entries.isEmpty)
-            AdaptiveListTile(
-              leading: Icon(
-                AdaptiveIcons.close,
-                size: largeIconSize,
-              ),
-              title: Text(NeonLocalizations.of(context).searchNoResults),
-            ),
-          if (result.hasData)
-            for (final entry in result.requireData.entries)
-              AdaptiveListTile(
-                leading: NeonImageWrapper(
-                  size: const Size.square(largeIconSize),
-                  child: _buildThumbnail(context, accountsBloc.activeAccount.value!, entry),
-                ),
-                title: Text(entry.title),
-                subtitle: Text(entry.subline),
-                onTap: () {
-                  onSelected(entry);
-                },
-              ),
-        ];
+            title: Text(entry.title),
+            subtitle: Text(entry.subline),
+            onTap: () {
+              onSelected(entry);
+            },
+          ),
+    ];
 
-        if (isCupertino(context)) {
-          return CupertinoListSection.insetGrouped(
-            header: title,
+    if (isCupertino(context)) {
+      return CupertinoListSection.insetGrouped(
+        header: title,
+        children: children,
+      );
+    } else {
+      return Card(
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: children,
-          );
-        } else {
-          return Card(
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: children,
-              ),
-            ),
-          );
-        }
-      },
+          ),
+        ),
+      );
+    }
+  }
+
+  Widget _buildNoResultsTile(BuildContext context) {
+    return AdaptiveListTile(
+      leading: Icon(
+        AdaptiveIcons.close,
+        size: largeIconSize,
+      ),
+      title: Text(NeonLocalizations.of(context).searchNoResults),
     );
   }
 
-  Widget _buildThumbnail(BuildContext context, Account account, core.UnifiedSearchResultEntry entry) {
+  Widget _buildThumbnail(
+    BuildContext context,
+    Account account,
+    core.UnifiedSearchResultEntry entry,
+  ) {
     if (entry.thumbnailUrl.isNotEmpty) {
-      return NeonUriImage.withAccount(
+      return NeonUriImage(
         size: const Size.square(largeIconSize),
         uri: Uri.parse(entry.thumbnailUrl),
         account: account,
@@ -167,7 +166,7 @@ class NeonUnifiedSearchProvider extends StatelessWidget {
     core.UnifiedSearchResultEntry entry,
   ) {
     if (entry.icon.startsWith('/')) {
-      return NeonUriImage.withAccount(
+      return NeonUriImage(
         size: Size.square(IconTheme.of(context).size!),
         uri: Uri.parse(entry.icon),
         account: account,

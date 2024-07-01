@@ -1,8 +1,7 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables
-
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:neon_framework/blocs.dart';
@@ -180,8 +179,7 @@ void main() {
   });
 
   test('Load', () async {
-    // ignore: unawaited_futures
-    expectLater(
+    expect(
       bloc.status.transformResult((e) => e.status),
       emitsInOrder([
         Result<user_status.$Type>.loading(),
@@ -193,13 +191,7 @@ void main() {
         Result.success(user_status.$Type.online),
         Result.success(user_status.$Type.dnd),
         Result.success(user_status.$Type.dnd).asLoading(),
-        Result<String>.error(
-          DynamiteStatusCodeException.fromResponse(
-            statusCode: 201,
-            headers: {},
-            body: '',
-          ),
-        ),
+        Result<String>.error(DynamiteStatusCodeException(http.Response('', 201))),
       ]),
     );
 

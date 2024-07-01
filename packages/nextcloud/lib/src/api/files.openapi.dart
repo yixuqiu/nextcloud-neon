@@ -1422,12 +1422,21 @@ class $TransferOwnershipClient {
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $OCSMetaInterface {
+sealed class $OCSMetaInterface {
   String get status;
   int get statuscode;
   String? get message;
   String? get totalitems;
   String? get itemsperpage;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$OCSMetaInterfaceBuilder].
+  $OCSMetaInterface rebuild(void Function($OCSMetaInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$OCSMetaInterfaceBuilder].
+  $OCSMetaInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($OCSMetaInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -1471,12 +1480,23 @@ abstract class OCSMeta implements $OCSMetaInterface, Built<OCSMeta, OCSMetaBuild
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $DirectEditingInfoResponseApplicationJson_Ocs_Data_EditorsInterface {
+sealed class $DirectEditingInfoResponseApplicationJson_Ocs_Data_EditorsInterface {
   String get id;
   String get name;
   BuiltList<String> get mimetypes;
   BuiltList<String> get optionalMimetypes;
   bool get secure;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$DirectEditingInfoResponseApplicationJson_Ocs_Data_EditorsInterfaceBuilder].
+  $DirectEditingInfoResponseApplicationJson_Ocs_Data_EditorsInterface rebuild(
+    void Function($DirectEditingInfoResponseApplicationJson_Ocs_Data_EditorsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$DirectEditingInfoResponseApplicationJson_Ocs_Data_EditorsInterfaceBuilder].
+  $DirectEditingInfoResponseApplicationJson_Ocs_Data_EditorsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($DirectEditingInfoResponseApplicationJson_Ocs_Data_EditorsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -1528,7 +1548,7 @@ abstract class DirectEditingInfoResponseApplicationJson_Ocs_Data_Editors
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $DirectEditingInfoResponseApplicationJson_Ocs_Data_CreatorsInterface {
+sealed class $DirectEditingInfoResponseApplicationJson_Ocs_Data_CreatorsInterface {
   String get id;
   String get editor;
   String get name;
@@ -1536,6 +1556,17 @@ abstract interface class $DirectEditingInfoResponseApplicationJson_Ocs_Data_Crea
   String get $extension;
   bool get templates;
   BuiltList<String> get mimetypes;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$DirectEditingInfoResponseApplicationJson_Ocs_Data_CreatorsInterfaceBuilder].
+  $DirectEditingInfoResponseApplicationJson_Ocs_Data_CreatorsInterface rebuild(
+    void Function($DirectEditingInfoResponseApplicationJson_Ocs_Data_CreatorsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$DirectEditingInfoResponseApplicationJson_Ocs_Data_CreatorsInterfaceBuilder].
+  $DirectEditingInfoResponseApplicationJson_Ocs_Data_CreatorsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($DirectEditingInfoResponseApplicationJson_Ocs_Data_CreatorsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -1587,9 +1618,20 @@ abstract class DirectEditingInfoResponseApplicationJson_Ocs_Data_Creators
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $DirectEditingInfoResponseApplicationJson_Ocs_DataInterface {
+sealed class $DirectEditingInfoResponseApplicationJson_Ocs_DataInterface {
   BuiltMap<String, DirectEditingInfoResponseApplicationJson_Ocs_Data_Editors> get editors;
   BuiltMap<String, DirectEditingInfoResponseApplicationJson_Ocs_Data_Creators> get creators;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$DirectEditingInfoResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $DirectEditingInfoResponseApplicationJson_Ocs_DataInterface rebuild(
+    void Function($DirectEditingInfoResponseApplicationJson_Ocs_DataInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$DirectEditingInfoResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $DirectEditingInfoResponseApplicationJson_Ocs_DataInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($DirectEditingInfoResponseApplicationJson_Ocs_DataInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -1641,9 +1683,20 @@ abstract class DirectEditingInfoResponseApplicationJson_Ocs_Data
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $DirectEditingInfoResponseApplicationJson_OcsInterface {
+sealed class $DirectEditingInfoResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   DirectEditingInfoResponseApplicationJson_Ocs_Data get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$DirectEditingInfoResponseApplicationJson_OcsInterfaceBuilder].
+  $DirectEditingInfoResponseApplicationJson_OcsInterface rebuild(
+    void Function($DirectEditingInfoResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$DirectEditingInfoResponseApplicationJson_OcsInterfaceBuilder].
+  $DirectEditingInfoResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($DirectEditingInfoResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -1694,8 +1747,19 @@ abstract class DirectEditingInfoResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $DirectEditingInfoResponseApplicationJsonInterface {
+sealed class $DirectEditingInfoResponseApplicationJsonInterface {
   DirectEditingInfoResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$DirectEditingInfoResponseApplicationJsonInterfaceBuilder].
+  $DirectEditingInfoResponseApplicationJsonInterface rebuild(
+    void Function($DirectEditingInfoResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$DirectEditingInfoResponseApplicationJsonInterfaceBuilder].
+  $DirectEditingInfoResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($DirectEditingInfoResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -1746,13 +1810,24 @@ abstract class DirectEditingInfoResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $DirectEditingTemplatesResponseApplicationJson_Ocs_Data_TemplatesInterface {
+sealed class $DirectEditingTemplatesResponseApplicationJson_Ocs_Data_TemplatesInterface {
   String get id;
   String get title;
   String? get preview;
   @BuiltValueField(wireName: 'extension')
   String get $extension;
   String get mimetype;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$DirectEditingTemplatesResponseApplicationJson_Ocs_Data_TemplatesInterfaceBuilder].
+  $DirectEditingTemplatesResponseApplicationJson_Ocs_Data_TemplatesInterface rebuild(
+    void Function($DirectEditingTemplatesResponseApplicationJson_Ocs_Data_TemplatesInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$DirectEditingTemplatesResponseApplicationJson_Ocs_Data_TemplatesInterfaceBuilder].
+  $DirectEditingTemplatesResponseApplicationJson_Ocs_Data_TemplatesInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($DirectEditingTemplatesResponseApplicationJson_Ocs_Data_TemplatesInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -1804,8 +1879,19 @@ abstract class DirectEditingTemplatesResponseApplicationJson_Ocs_Data_Templates
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $DirectEditingTemplatesResponseApplicationJson_Ocs_DataInterface {
+sealed class $DirectEditingTemplatesResponseApplicationJson_Ocs_DataInterface {
   BuiltMap<String, DirectEditingTemplatesResponseApplicationJson_Ocs_Data_Templates> get templates;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$DirectEditingTemplatesResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $DirectEditingTemplatesResponseApplicationJson_Ocs_DataInterface rebuild(
+    void Function($DirectEditingTemplatesResponseApplicationJson_Ocs_DataInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$DirectEditingTemplatesResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $DirectEditingTemplatesResponseApplicationJson_Ocs_DataInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($DirectEditingTemplatesResponseApplicationJson_Ocs_DataInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -1857,9 +1943,20 @@ abstract class DirectEditingTemplatesResponseApplicationJson_Ocs_Data
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $DirectEditingTemplatesResponseApplicationJson_OcsInterface {
+sealed class $DirectEditingTemplatesResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   DirectEditingTemplatesResponseApplicationJson_Ocs_Data get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$DirectEditingTemplatesResponseApplicationJson_OcsInterfaceBuilder].
+  $DirectEditingTemplatesResponseApplicationJson_OcsInterface rebuild(
+    void Function($DirectEditingTemplatesResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$DirectEditingTemplatesResponseApplicationJson_OcsInterfaceBuilder].
+  $DirectEditingTemplatesResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($DirectEditingTemplatesResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -1911,8 +2008,19 @@ abstract class DirectEditingTemplatesResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $DirectEditingTemplatesResponseApplicationJsonInterface {
+sealed class $DirectEditingTemplatesResponseApplicationJsonInterface {
   DirectEditingTemplatesResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$DirectEditingTemplatesResponseApplicationJsonInterfaceBuilder].
+  $DirectEditingTemplatesResponseApplicationJsonInterface rebuild(
+    void Function($DirectEditingTemplatesResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$DirectEditingTemplatesResponseApplicationJsonInterfaceBuilder].
+  $DirectEditingTemplatesResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($DirectEditingTemplatesResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -1963,8 +2071,19 @@ abstract class DirectEditingTemplatesResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $DirectEditingOpenResponseApplicationJson_Ocs_DataInterface {
+sealed class $DirectEditingOpenResponseApplicationJson_Ocs_DataInterface {
   String get url;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$DirectEditingOpenResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $DirectEditingOpenResponseApplicationJson_Ocs_DataInterface rebuild(
+    void Function($DirectEditingOpenResponseApplicationJson_Ocs_DataInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$DirectEditingOpenResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $DirectEditingOpenResponseApplicationJson_Ocs_DataInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($DirectEditingOpenResponseApplicationJson_Ocs_DataInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -2016,9 +2135,20 @@ abstract class DirectEditingOpenResponseApplicationJson_Ocs_Data
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $DirectEditingOpenResponseApplicationJson_OcsInterface {
+sealed class $DirectEditingOpenResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   DirectEditingOpenResponseApplicationJson_Ocs_Data get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$DirectEditingOpenResponseApplicationJson_OcsInterfaceBuilder].
+  $DirectEditingOpenResponseApplicationJson_OcsInterface rebuild(
+    void Function($DirectEditingOpenResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$DirectEditingOpenResponseApplicationJson_OcsInterfaceBuilder].
+  $DirectEditingOpenResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($DirectEditingOpenResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -2069,8 +2199,19 @@ abstract class DirectEditingOpenResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $DirectEditingOpenResponseApplicationJsonInterface {
+sealed class $DirectEditingOpenResponseApplicationJsonInterface {
   DirectEditingOpenResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$DirectEditingOpenResponseApplicationJsonInterfaceBuilder].
+  $DirectEditingOpenResponseApplicationJsonInterface rebuild(
+    void Function($DirectEditingOpenResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$DirectEditingOpenResponseApplicationJsonInterfaceBuilder].
+  $DirectEditingOpenResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($DirectEditingOpenResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -2121,8 +2262,19 @@ abstract class DirectEditingOpenResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $DirectEditingCreateResponseApplicationJson_Ocs_DataInterface {
+sealed class $DirectEditingCreateResponseApplicationJson_Ocs_DataInterface {
   String get url;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$DirectEditingCreateResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $DirectEditingCreateResponseApplicationJson_Ocs_DataInterface rebuild(
+    void Function($DirectEditingCreateResponseApplicationJson_Ocs_DataInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$DirectEditingCreateResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $DirectEditingCreateResponseApplicationJson_Ocs_DataInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($DirectEditingCreateResponseApplicationJson_Ocs_DataInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -2174,9 +2326,20 @@ abstract class DirectEditingCreateResponseApplicationJson_Ocs_Data
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $DirectEditingCreateResponseApplicationJson_OcsInterface {
+sealed class $DirectEditingCreateResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   DirectEditingCreateResponseApplicationJson_Ocs_Data get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$DirectEditingCreateResponseApplicationJson_OcsInterfaceBuilder].
+  $DirectEditingCreateResponseApplicationJson_OcsInterface rebuild(
+    void Function($DirectEditingCreateResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$DirectEditingCreateResponseApplicationJson_OcsInterfaceBuilder].
+  $DirectEditingCreateResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($DirectEditingCreateResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -2227,8 +2390,19 @@ abstract class DirectEditingCreateResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $DirectEditingCreateResponseApplicationJsonInterface {
+sealed class $DirectEditingCreateResponseApplicationJsonInterface {
   DirectEditingCreateResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$DirectEditingCreateResponseApplicationJsonInterfaceBuilder].
+  $DirectEditingCreateResponseApplicationJsonInterface rebuild(
+    void Function($DirectEditingCreateResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$DirectEditingCreateResponseApplicationJsonInterfaceBuilder].
+  $DirectEditingCreateResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($DirectEditingCreateResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -2279,11 +2453,22 @@ abstract class DirectEditingCreateResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $OpenLocalEditorCreateResponseApplicationJson_Ocs_DataInterface {
+sealed class $OpenLocalEditorCreateResponseApplicationJson_Ocs_DataInterface {
   String? get userId;
   String get pathHash;
   int get expirationTime;
   String get token;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$OpenLocalEditorCreateResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $OpenLocalEditorCreateResponseApplicationJson_Ocs_DataInterface rebuild(
+    void Function($OpenLocalEditorCreateResponseApplicationJson_Ocs_DataInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$OpenLocalEditorCreateResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $OpenLocalEditorCreateResponseApplicationJson_Ocs_DataInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($OpenLocalEditorCreateResponseApplicationJson_Ocs_DataInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -2335,9 +2520,20 @@ abstract class OpenLocalEditorCreateResponseApplicationJson_Ocs_Data
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $OpenLocalEditorCreateResponseApplicationJson_OcsInterface {
+sealed class $OpenLocalEditorCreateResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   OpenLocalEditorCreateResponseApplicationJson_Ocs_Data get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$OpenLocalEditorCreateResponseApplicationJson_OcsInterfaceBuilder].
+  $OpenLocalEditorCreateResponseApplicationJson_OcsInterface rebuild(
+    void Function($OpenLocalEditorCreateResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$OpenLocalEditorCreateResponseApplicationJson_OcsInterfaceBuilder].
+  $OpenLocalEditorCreateResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($OpenLocalEditorCreateResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -2389,8 +2585,19 @@ abstract class OpenLocalEditorCreateResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $OpenLocalEditorCreateResponseApplicationJsonInterface {
+sealed class $OpenLocalEditorCreateResponseApplicationJsonInterface {
   OpenLocalEditorCreateResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$OpenLocalEditorCreateResponseApplicationJsonInterfaceBuilder].
+  $OpenLocalEditorCreateResponseApplicationJsonInterface rebuild(
+    void Function($OpenLocalEditorCreateResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$OpenLocalEditorCreateResponseApplicationJsonInterfaceBuilder].
+  $OpenLocalEditorCreateResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($OpenLocalEditorCreateResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -2441,11 +2648,22 @@ abstract class OpenLocalEditorCreateResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $OpenLocalEditorValidateResponseApplicationJson_Ocs_DataInterface {
+sealed class $OpenLocalEditorValidateResponseApplicationJson_Ocs_DataInterface {
   String get userId;
   String get pathHash;
   int get expirationTime;
   String get token;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$OpenLocalEditorValidateResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $OpenLocalEditorValidateResponseApplicationJson_Ocs_DataInterface rebuild(
+    void Function($OpenLocalEditorValidateResponseApplicationJson_Ocs_DataInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$OpenLocalEditorValidateResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $OpenLocalEditorValidateResponseApplicationJson_Ocs_DataInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($OpenLocalEditorValidateResponseApplicationJson_Ocs_DataInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -2497,9 +2715,20 @@ abstract class OpenLocalEditorValidateResponseApplicationJson_Ocs_Data
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $OpenLocalEditorValidateResponseApplicationJson_OcsInterface {
+sealed class $OpenLocalEditorValidateResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   OpenLocalEditorValidateResponseApplicationJson_Ocs_Data get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$OpenLocalEditorValidateResponseApplicationJson_OcsInterfaceBuilder].
+  $OpenLocalEditorValidateResponseApplicationJson_OcsInterface rebuild(
+    void Function($OpenLocalEditorValidateResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$OpenLocalEditorValidateResponseApplicationJson_OcsInterfaceBuilder].
+  $OpenLocalEditorValidateResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($OpenLocalEditorValidateResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -2551,8 +2780,19 @@ abstract class OpenLocalEditorValidateResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $OpenLocalEditorValidateResponseApplicationJsonInterface {
+sealed class $OpenLocalEditorValidateResponseApplicationJsonInterface {
   OpenLocalEditorValidateResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$OpenLocalEditorValidateResponseApplicationJsonInterfaceBuilder].
+  $OpenLocalEditorValidateResponseApplicationJsonInterface rebuild(
+    void Function($OpenLocalEditorValidateResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$OpenLocalEditorValidateResponseApplicationJsonInterfaceBuilder].
+  $OpenLocalEditorValidateResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($OpenLocalEditorValidateResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -2603,7 +2843,7 @@ abstract class OpenLocalEditorValidateResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $TemplateFileCreatorInterface {
+sealed class $TemplateFileCreatorInterface {
   String get app;
   String get label;
   @BuiltValueField(wireName: 'extension')
@@ -2613,6 +2853,15 @@ abstract interface class $TemplateFileCreatorInterface {
   BuiltList<String> get mimetypes;
   double? get ratio;
   String get actionLabel;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$TemplateFileCreatorInterfaceBuilder].
+  $TemplateFileCreatorInterface rebuild(void Function($TemplateFileCreatorInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$TemplateFileCreatorInterfaceBuilder].
+  $TemplateFileCreatorInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($TemplateFileCreatorInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -2658,9 +2907,20 @@ abstract class TemplateFileCreator
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $TemplateListResponseApplicationJson_OcsInterface {
+sealed class $TemplateListResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltList<TemplateFileCreator> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$TemplateListResponseApplicationJson_OcsInterfaceBuilder].
+  $TemplateListResponseApplicationJson_OcsInterface rebuild(
+    void Function($TemplateListResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$TemplateListResponseApplicationJson_OcsInterfaceBuilder].
+  $TemplateListResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($TemplateListResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -2710,8 +2970,19 @@ abstract class TemplateListResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $TemplateListResponseApplicationJsonInterface {
+sealed class $TemplateListResponseApplicationJsonInterface {
   TemplateListResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$TemplateListResponseApplicationJsonInterfaceBuilder].
+  $TemplateListResponseApplicationJsonInterface rebuild(
+    void Function($TemplateListResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$TemplateListResponseApplicationJsonInterfaceBuilder].
+  $TemplateListResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($TemplateListResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -2761,7 +3032,7 @@ abstract class TemplateListResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $TemplateFileInterface {
+sealed class $TemplateFileInterface {
   String get basename;
   String get etag;
   int get fileid;
@@ -2771,6 +3042,15 @@ abstract interface class $TemplateFileInterface {
   int get size;
   String get type;
   bool get hasPreview;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$TemplateFileInterfaceBuilder].
+  $TemplateFileInterface rebuild(void Function($TemplateFileInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$TemplateFileInterfaceBuilder].
+  $TemplateFileInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($TemplateFileInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -2814,9 +3094,20 @@ abstract class TemplateFile implements $TemplateFileInterface, Built<TemplateFil
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $TemplateCreateResponseApplicationJson_OcsInterface {
+sealed class $TemplateCreateResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   TemplateFile get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$TemplateCreateResponseApplicationJson_OcsInterfaceBuilder].
+  $TemplateCreateResponseApplicationJson_OcsInterface rebuild(
+    void Function($TemplateCreateResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$TemplateCreateResponseApplicationJson_OcsInterfaceBuilder].
+  $TemplateCreateResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($TemplateCreateResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -2867,8 +3158,19 @@ abstract class TemplateCreateResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $TemplateCreateResponseApplicationJsonInterface {
+sealed class $TemplateCreateResponseApplicationJsonInterface {
   TemplateCreateResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$TemplateCreateResponseApplicationJsonInterfaceBuilder].
+  $TemplateCreateResponseApplicationJsonInterface rebuild(
+    void Function($TemplateCreateResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$TemplateCreateResponseApplicationJsonInterfaceBuilder].
+  $TemplateCreateResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($TemplateCreateResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -2982,10 +3284,21 @@ class _$TemplatePathCopySystemTemplatesSerializer implements PrimitiveSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $TemplatePathResponseApplicationJson_Ocs_DataInterface {
+sealed class $TemplatePathResponseApplicationJson_Ocs_DataInterface {
   @BuiltValueField(wireName: 'template_path')
   String get templatePath;
   BuiltList<TemplateFileCreator> get templates;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$TemplatePathResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $TemplatePathResponseApplicationJson_Ocs_DataInterface rebuild(
+    void Function($TemplatePathResponseApplicationJson_Ocs_DataInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$TemplatePathResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $TemplatePathResponseApplicationJson_Ocs_DataInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($TemplatePathResponseApplicationJson_Ocs_DataInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -3036,9 +3349,20 @@ abstract class TemplatePathResponseApplicationJson_Ocs_Data
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $TemplatePathResponseApplicationJson_OcsInterface {
+sealed class $TemplatePathResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   TemplatePathResponseApplicationJson_Ocs_Data get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$TemplatePathResponseApplicationJson_OcsInterfaceBuilder].
+  $TemplatePathResponseApplicationJson_OcsInterface rebuild(
+    void Function($TemplatePathResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$TemplatePathResponseApplicationJson_OcsInterfaceBuilder].
+  $TemplatePathResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($TemplatePathResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -3088,8 +3412,19 @@ abstract class TemplatePathResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $TemplatePathResponseApplicationJsonInterface {
+sealed class $TemplatePathResponseApplicationJsonInterface {
   TemplatePathResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$TemplatePathResponseApplicationJsonInterfaceBuilder].
+  $TemplatePathResponseApplicationJsonInterface rebuild(
+    void Function($TemplatePathResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$TemplatePathResponseApplicationJsonInterfaceBuilder].
+  $TemplatePathResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($TemplatePathResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -3139,9 +3474,20 @@ abstract class TemplatePathResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $TransferOwnershipTransferResponseApplicationJson_OcsInterface {
+sealed class $TransferOwnershipTransferResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$TransferOwnershipTransferResponseApplicationJson_OcsInterfaceBuilder].
+  $TransferOwnershipTransferResponseApplicationJson_OcsInterface rebuild(
+    void Function($TransferOwnershipTransferResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$TransferOwnershipTransferResponseApplicationJson_OcsInterfaceBuilder].
+  $TransferOwnershipTransferResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($TransferOwnershipTransferResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -3193,8 +3539,19 @@ abstract class TransferOwnershipTransferResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $TransferOwnershipTransferResponseApplicationJsonInterface {
+sealed class $TransferOwnershipTransferResponseApplicationJsonInterface {
   TransferOwnershipTransferResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$TransferOwnershipTransferResponseApplicationJsonInterfaceBuilder].
+  $TransferOwnershipTransferResponseApplicationJsonInterface rebuild(
+    void Function($TransferOwnershipTransferResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$TransferOwnershipTransferResponseApplicationJsonInterfaceBuilder].
+  $TransferOwnershipTransferResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($TransferOwnershipTransferResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -3246,9 +3603,20 @@ abstract class TransferOwnershipTransferResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $TransferOwnershipAcceptResponseApplicationJson_OcsInterface {
+sealed class $TransferOwnershipAcceptResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$TransferOwnershipAcceptResponseApplicationJson_OcsInterfaceBuilder].
+  $TransferOwnershipAcceptResponseApplicationJson_OcsInterface rebuild(
+    void Function($TransferOwnershipAcceptResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$TransferOwnershipAcceptResponseApplicationJson_OcsInterfaceBuilder].
+  $TransferOwnershipAcceptResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($TransferOwnershipAcceptResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -3300,8 +3668,19 @@ abstract class TransferOwnershipAcceptResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $TransferOwnershipAcceptResponseApplicationJsonInterface {
+sealed class $TransferOwnershipAcceptResponseApplicationJsonInterface {
   TransferOwnershipAcceptResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$TransferOwnershipAcceptResponseApplicationJsonInterfaceBuilder].
+  $TransferOwnershipAcceptResponseApplicationJsonInterface rebuild(
+    void Function($TransferOwnershipAcceptResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$TransferOwnershipAcceptResponseApplicationJsonInterfaceBuilder].
+  $TransferOwnershipAcceptResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($TransferOwnershipAcceptResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -3352,9 +3731,20 @@ abstract class TransferOwnershipAcceptResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $TransferOwnershipRejectResponseApplicationJson_OcsInterface {
+sealed class $TransferOwnershipRejectResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$TransferOwnershipRejectResponseApplicationJson_OcsInterfaceBuilder].
+  $TransferOwnershipRejectResponseApplicationJson_OcsInterface rebuild(
+    void Function($TransferOwnershipRejectResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$TransferOwnershipRejectResponseApplicationJson_OcsInterfaceBuilder].
+  $TransferOwnershipRejectResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($TransferOwnershipRejectResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -3406,8 +3796,19 @@ abstract class TransferOwnershipRejectResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $TransferOwnershipRejectResponseApplicationJsonInterface {
+sealed class $TransferOwnershipRejectResponseApplicationJsonInterface {
   TransferOwnershipRejectResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$TransferOwnershipRejectResponseApplicationJsonInterfaceBuilder].
+  $TransferOwnershipRejectResponseApplicationJsonInterface rebuild(
+    void Function($TransferOwnershipRejectResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$TransferOwnershipRejectResponseApplicationJsonInterfaceBuilder].
+  $TransferOwnershipRejectResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($TransferOwnershipRejectResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -3458,10 +3859,21 @@ abstract class TransferOwnershipRejectResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $Capabilities_Files_DirectEditingInterface {
+sealed class $Capabilities_Files_DirectEditingInterface {
   String get url;
   String get etag;
   bool get supportsFileId;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$Capabilities_Files_DirectEditingInterfaceBuilder].
+  $Capabilities_Files_DirectEditingInterface rebuild(
+    void Function($Capabilities_Files_DirectEditingInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$Capabilities_Files_DirectEditingInterfaceBuilder].
+  $Capabilities_Files_DirectEditingInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($Capabilities_Files_DirectEditingInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -3510,13 +3922,22 @@ abstract class Capabilities_Files_DirectEditing
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $Capabilities_FilesInterface {
+sealed class $Capabilities_FilesInterface {
   bool get bigfilechunking;
   @BuiltValueField(wireName: 'blacklisted_files')
   BuiltList<JsonObject> get blacklistedFiles;
   @BuiltValueField(wireName: 'forbidden_filename_characters')
   BuiltList<String> get forbiddenFilenameCharacters;
   Capabilities_Files_DirectEditing get directEditing;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$Capabilities_FilesInterfaceBuilder].
+  $Capabilities_FilesInterface rebuild(void Function($Capabilities_FilesInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$Capabilities_FilesInterfaceBuilder].
+  $Capabilities_FilesInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($Capabilities_FilesInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -3562,8 +3983,17 @@ abstract class Capabilities_Files
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $CapabilitiesInterface {
+sealed class $CapabilitiesInterface {
   Capabilities_Files get files;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$CapabilitiesInterfaceBuilder].
+  $CapabilitiesInterface rebuild(void Function($CapabilitiesInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$CapabilitiesInterfaceBuilder].
+  $CapabilitiesInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($CapabilitiesInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)

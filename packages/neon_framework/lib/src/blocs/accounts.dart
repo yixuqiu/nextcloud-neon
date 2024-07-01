@@ -70,84 +70,28 @@ abstract interface class AccountsBloc implements Disposable {
   /// Whether accounts are logged in.
   bool get hasAccounts;
 
-  /// The options for the [activeAccount].
-  ///
-  /// Convenience method for [getOptionsFor] with the currently active account.
-  AccountOptions get activeOptions;
-
   /// The options for the specified [account].
-  ///
-  /// Use [activeOptions] to get them for the [activeAccount].
   AccountOptions getOptionsFor(Account account);
 
-  /// The appsBloc for the [activeAccount].
-  ///
-  /// Convenience method for [getAppsBlocFor] with the currently active account.
-  AppsBloc get activeAppsBloc;
-
   /// The appsBloc for the specified [account].
-  ///
-  /// Use [activeAppsBloc] to get them for the [activeAccount].
   AppsBloc getAppsBlocFor(Account account);
 
-  /// The capabilitiesBloc for the [activeAccount].
-  ///
-  /// Convenience method for [getCapabilitiesBlocFor] with the currently active account.
-  CapabilitiesBloc get activeCapabilitiesBloc;
-
   /// The capabilitiesBloc for the specified [account].
-  ///
-  /// Use [activeCapabilitiesBloc] to get them for the [activeAccount].
   CapabilitiesBloc getCapabilitiesBlocFor(Account account);
 
-  /// The userDetailsBloc for the [activeAccount].
-  ///
-  /// Convenience method for [getUserDetailsBlocFor] with the currently active account.
-  UserDetailsBloc get activeUserDetailsBloc;
-
   /// The userDetailsBloc for the specified [account].
-  ///
-  /// Use [activeUserDetailsBloc] to get them for the [activeAccount].
   UserDetailsBloc getUserDetailsBlocFor(Account account);
 
-  /// The userStatusBloc for the [activeAccount].
-  ///
-  /// Convenience method for [getUserStatusBlocFor] with the currently active account.
-  UserStatusBloc get activeUserStatusBloc;
-
   /// The userStatusBloc for the specified [account].
-  ///
-  /// Use [activeUserStatusBloc] to get them for the [activeAccount].
   UserStatusBloc getUserStatusBlocFor(Account account);
 
-  /// The UnifiedSearchBloc for the [activeAccount].
-  ///
-  /// Convenience method for [getUnifiedSearchBlocFor] with the currently active account.
-  UnifiedSearchBloc get activeUnifiedSearchBloc;
-
   /// The UnifiedSearchBloc for the specified [account].
-  ///
-  /// Use [activeUnifiedSearchBloc] to get them for the [activeAccount].
   UnifiedSearchBloc getUnifiedSearchBlocFor(Account account);
 
-  /// The WeatherStatusBloc for the [activeAccount].
-  ///
-  /// Convenience method for [getWeatherStatusBlocFor] with the currently active account.
-  WeatherStatusBloc get activeWeatherStatusBloc;
-
   /// The WeatherStatusBloc for the specified [account].
-  ///
-  /// Use [activeWeatherStatusBloc] to get them for the [activeAccount].
   WeatherStatusBloc getWeatherStatusBlocFor(Account account);
 
-  /// The MaintenanceModeBloc for the [activeAccount].
-  ///
-  /// Convenience method for [getMaintenanceModeBlocFor] with the currently active account.
-  MaintenanceModeBloc get activeMaintenanceModeBloc;
-
   /// The MaintenanceModeBloc for the specified [account].
-  ///
-  /// Use [activeMaintenanceModeBloc] to get them for the [activeAccount].
   MaintenanceModeBloc getMaintenanceModeBlocFor(Account account);
 }
 
@@ -205,6 +149,8 @@ class _AccountsBloc extends Bloc implements AccountsBloc {
       userDetailsBlocs.pruneAgainst(accounts);
       userStatusBlocs.pruneAgainst(accounts);
       unifiedSearchBlocs.pruneAgainst(accounts);
+      weatherStatusBlocs.pruneAgainst(accounts);
+      maintenanceModeBlocs.pruneAgainst(accounts);
       for (final app in allAppImplementations) {
         app.blocsCache.pruneAgainst(accounts);
       }
@@ -290,61 +236,37 @@ class _AccountsBloc extends Bloc implements AccountsBloc {
 
   @override
   void updateAccount(Account account) {
-    var as = accounts.value;
+    final as = accounts.value;
     final index = as.indexWhere((a) => a.id == account.id);
 
-    as = as.rebuild((b) {
-      if (index == -1) {
-        // TODO: Figure out how we can remove the old account without potentially race conditioning
-        b.add(account);
-      } else {
-        b[index] = account;
-      }
-    });
+    accounts.add(
+      as.rebuild((b) {
+        if (index == -1) {
+          b.add(account);
+        } else {
+          b[index] = account;
+        }
+      }),
+    );
 
-    accounts.add(as);
     setActiveAccount(account);
-  }
-
-  /// The currently active account.
-  ///
-  /// Equivalent to activeAccount.valueOrNull but throws a [StateError] when no user is logged in.
-  @visibleForTesting
-  Account get aa {
-    final aa = activeAccount.valueOrNull;
-
-    if (aa == null) {
-      throw StateError('No user is logged in.');
-    }
-
-    return aa;
   }
 
   @override
   bool get hasAccounts => activeAccount.valueOrNull != null;
 
   @override
-  AccountOptions get activeOptions => getOptionsFor(aa);
-
-  @override
   AccountOptions getOptionsFor(Account account) => accountsOptions[account] ??= AccountOptions(
         NeonStorage().settingsStore(StorageKeys.accountOptions, account.id),
-        getAppsBlocFor(account),
       );
-
-  @override
-  AppsBloc get activeAppsBloc => getAppsBlocFor(aa);
 
   @override
   AppsBloc getAppsBlocFor(Account account) => appsBlocs[account] ??= AppsBloc(
-        capabilitiesBloc: getCapabilitiesBlocFor(account),
-        accountsBloc: this,
+        capabilitiesSubject: getCapabilitiesBlocFor(account).capabilities,
         account: account,
+        accountOptions: getOptionsFor(account),
         allAppImplementations: allAppImplementations,
       );
-
-  @override
-  CapabilitiesBloc get activeCapabilitiesBloc => getCapabilitiesBlocFor(aa);
 
   @override
   CapabilitiesBloc getCapabilitiesBlocFor(Account account) => capabilitiesBlocs[account] ??= CapabilitiesBloc(
@@ -352,15 +274,9 @@ class _AccountsBloc extends Bloc implements AccountsBloc {
       );
 
   @override
-  UserDetailsBloc get activeUserDetailsBloc => getUserDetailsBlocFor(aa);
-
-  @override
   UserDetailsBloc getUserDetailsBlocFor(Account account) => userDetailsBlocs[account] ??= UserDetailsBloc(
         account: account,
       );
-
-  @override
-  UserStatusBloc get activeUserStatusBloc => getUserStatusBlocFor(aa);
 
   @override
   UserStatusBloc getUserStatusBlocFor(Account account) => userStatusBlocs[account] ??= UserStatusBloc(
@@ -368,25 +284,16 @@ class _AccountsBloc extends Bloc implements AccountsBloc {
       );
 
   @override
-  UnifiedSearchBloc get activeUnifiedSearchBloc => getUnifiedSearchBlocFor(aa);
-
-  @override
   UnifiedSearchBloc getUnifiedSearchBlocFor(Account account) => unifiedSearchBlocs[account] ??= UnifiedSearchBloc(
-        appsBloc: getAppsBlocFor(account),
+        activeAppSubject: getAppsBlocFor(account).activeApp,
         account: account,
       );
-
-  @override
-  WeatherStatusBloc get activeWeatherStatusBloc => getWeatherStatusBlocFor(aa);
 
   @override
   WeatherStatusBloc getWeatherStatusBlocFor(Account account) => weatherStatusBlocs[account] ??= WeatherStatusBloc(
         capabilities: getCapabilitiesBlocFor(account).capabilities,
         account: account,
       );
-
-  @override
-  MaintenanceModeBloc get activeMaintenanceModeBloc => getMaintenanceModeBlocFor(aa);
 
   @override
   MaintenanceModeBloc getMaintenanceModeBlocFor(Account account) =>

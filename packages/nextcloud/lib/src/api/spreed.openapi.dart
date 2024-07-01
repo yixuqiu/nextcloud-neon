@@ -15883,12 +15883,21 @@ class _$AvatarUploadAvatarApiVersionSerializer implements PrimitiveSerializer<Av
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $OCSMetaInterface {
+sealed class $OCSMetaInterface {
   String get status;
   int get statuscode;
   String? get message;
   String? get totalitems;
   String? get itemsperpage;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$OCSMetaInterfaceBuilder].
+  $OCSMetaInterface rebuild(void Function($OCSMetaInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$OCSMetaInterfaceBuilder].
+  $OCSMetaInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($OCSMetaInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -16294,7 +16303,7 @@ typedef RichObjectParameter_Width = ({int? $int, String? string});
 typedef RichObjectParameter_Height = ({int? $int, String? string});
 
 @BuiltValue(instantiable: false)
-abstract interface class $RichObjectParameterInterface {
+sealed class $RichObjectParameterInterface {
   String get type;
   String get id;
   String get name;
@@ -16325,6 +16334,15 @@ abstract interface class $RichObjectParameterInterface {
   String? get etag;
   RichObjectParameter_Width? get width;
   RichObjectParameter_Height? get height;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RichObjectParameterInterfaceBuilder].
+  $RichObjectParameterInterface rebuild(void Function($RichObjectParameterInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$RichObjectParameterInterfaceBuilder].
+  $RichObjectParameterInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RichObjectParameterInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -16481,7 +16499,7 @@ class _$MessageTypeSerializer implements PrimitiveSerializer<MessageType> {
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BaseMessageInterface {
+sealed class $BaseMessageInterface {
   String get actorDisplayName;
   String get actorId;
   ActorType get actorType;
@@ -16490,6 +16508,15 @@ abstract interface class $BaseMessageInterface {
   BuiltMap<String, RichObjectParameter> get messageParameters;
   MessageType get messageType;
   String get systemMessage;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BaseMessageInterfaceBuilder].
+  $BaseMessageInterface rebuild(void Function($BaseMessageInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$BaseMessageInterfaceBuilder].
+  $BaseMessageInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BaseMessageInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -16590,11 +16617,11 @@ class _$ChatMessage_DeletedSerializer implements PrimitiveSerializer<ChatMessage
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatMessageInterface implements $BaseMessageInterface {
+sealed class $ChatMessageInterface implements $BaseMessageInterface {
   ChatMessage_Deleted? get deleted;
   int get id;
   bool get isReplyable;
-  bool? get markdown;
+  bool get markdown;
   BuiltMap<String, int> get reactions;
   String get referenceId;
   int get timestamp;
@@ -16604,6 +16631,18 @@ abstract interface class $ChatMessageInterface implements $BaseMessageInterface 
   ActorType? get lastEditActorType;
   int? get lastEditTimestamp;
   bool? get silent;
+  BuiltList<String>? get reactionsSelf;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatMessageInterfaceBuilder].
+  @override
+  $ChatMessageInterface rebuild(void Function($ChatMessageInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$ChatMessageInterfaceBuilder].
+  @override
+  $ChatMessageInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatMessageInterfaceBuilder b) {
     $BaseMessageInterface._defaults(b);
@@ -16655,7 +16694,7 @@ typedef RoomLastMessage = ({BaseMessage? baseMessage, ChatMessage? chatMessage})
 typedef Room_LastMessage = ({BaseMessage? baseMessage, BuiltList<Never>? builtListNever, ChatMessage? chatMessage});
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomInterface {
+sealed class $RoomInterface {
   String get actorId;
   ActorType get actorType;
   int get attendeeId;
@@ -16698,7 +16737,7 @@ abstract interface class $RoomInterface {
   int get participantType;
   int get permissions;
   int get readOnly;
-  int? get recordingConsent;
+  int get recordingConsent;
   String get sessionId;
   int get sipEnabled;
   String? get status;
@@ -16710,6 +16749,15 @@ abstract interface class $RoomInterface {
   bool get unreadMention;
   bool get unreadMentionDirect;
   int get unreadMessages;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomInterfaceBuilder].
+  $RoomInterface rebuild(void Function($RoomInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$RoomInterfaceBuilder].
+  $RoomInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -16755,9 +16803,20 @@ abstract class Room implements $RoomInterface, Built<Room, RoomBuilder> {
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $AvatarUploadAvatarResponseApplicationJson_OcsInterface {
+sealed class $AvatarUploadAvatarResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$AvatarUploadAvatarResponseApplicationJson_OcsInterfaceBuilder].
+  $AvatarUploadAvatarResponseApplicationJson_OcsInterface rebuild(
+    void Function($AvatarUploadAvatarResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$AvatarUploadAvatarResponseApplicationJson_OcsInterfaceBuilder].
+  $AvatarUploadAvatarResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($AvatarUploadAvatarResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -16808,8 +16867,19 @@ abstract class AvatarUploadAvatarResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $AvatarUploadAvatarResponseApplicationJsonInterface {
+sealed class $AvatarUploadAvatarResponseApplicationJsonInterface {
   AvatarUploadAvatarResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$AvatarUploadAvatarResponseApplicationJsonInterfaceBuilder].
+  $AvatarUploadAvatarResponseApplicationJsonInterface rebuild(
+    void Function($AvatarUploadAvatarResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$AvatarUploadAvatarResponseApplicationJsonInterfaceBuilder].
+  $AvatarUploadAvatarResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($AvatarUploadAvatarResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -16916,9 +16986,20 @@ class _$AvatarDeleteAvatarApiVersionSerializer implements PrimitiveSerializer<Av
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $AvatarDeleteAvatarResponseApplicationJson_OcsInterface {
+sealed class $AvatarDeleteAvatarResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$AvatarDeleteAvatarResponseApplicationJson_OcsInterfaceBuilder].
+  $AvatarDeleteAvatarResponseApplicationJson_OcsInterface rebuild(
+    void Function($AvatarDeleteAvatarResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$AvatarDeleteAvatarResponseApplicationJson_OcsInterfaceBuilder].
+  $AvatarDeleteAvatarResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($AvatarDeleteAvatarResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -16969,8 +17050,19 @@ abstract class AvatarDeleteAvatarResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $AvatarDeleteAvatarResponseApplicationJsonInterface {
+sealed class $AvatarDeleteAvatarResponseApplicationJsonInterface {
   AvatarDeleteAvatarResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$AvatarDeleteAvatarResponseApplicationJsonInterfaceBuilder].
+  $AvatarDeleteAvatarResponseApplicationJsonInterface rebuild(
+    void Function($AvatarDeleteAvatarResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$AvatarDeleteAvatarResponseApplicationJsonInterfaceBuilder].
+  $AvatarDeleteAvatarResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($AvatarDeleteAvatarResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -17077,9 +17169,20 @@ class _$AvatarEmojiAvatarApiVersionSerializer implements PrimitiveSerializer<Ava
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $AvatarEmojiAvatarResponseApplicationJson_OcsInterface {
+sealed class $AvatarEmojiAvatarResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$AvatarEmojiAvatarResponseApplicationJson_OcsInterfaceBuilder].
+  $AvatarEmojiAvatarResponseApplicationJson_OcsInterface rebuild(
+    void Function($AvatarEmojiAvatarResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$AvatarEmojiAvatarResponseApplicationJson_OcsInterfaceBuilder].
+  $AvatarEmojiAvatarResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($AvatarEmojiAvatarResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -17130,8 +17233,19 @@ abstract class AvatarEmojiAvatarResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $AvatarEmojiAvatarResponseApplicationJsonInterface {
+sealed class $AvatarEmojiAvatarResponseApplicationJsonInterface {
   AvatarEmojiAvatarResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$AvatarEmojiAvatarResponseApplicationJsonInterfaceBuilder].
+  $AvatarEmojiAvatarResponseApplicationJsonInterface rebuild(
+    void Function($AvatarEmojiAvatarResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$AvatarEmojiAvatarResponseApplicationJsonInterfaceBuilder].
+  $AvatarEmojiAvatarResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($AvatarEmojiAvatarResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -17936,11 +18050,20 @@ class _$BotListBotsApiVersionSerializer implements PrimitiveSerializer<BotListBo
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BotInterface {
+sealed class $BotInterface {
   String? get description;
   int get id;
   String get name;
   int get state;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BotInterfaceBuilder].
+  $BotInterface rebuild(void Function($BotInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$BotInterfaceBuilder].
+  $BotInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BotInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -17984,9 +18107,20 @@ abstract class Bot implements $BotInterface, Built<Bot, BotBuilder> {
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BotListBotsResponseApplicationJson_OcsInterface {
+sealed class $BotListBotsResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltList<Bot> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BotListBotsResponseApplicationJson_OcsInterfaceBuilder].
+  $BotListBotsResponseApplicationJson_OcsInterface rebuild(
+    void Function($BotListBotsResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BotListBotsResponseApplicationJson_OcsInterfaceBuilder].
+  $BotListBotsResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BotListBotsResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -18036,8 +18170,19 @@ abstract class BotListBotsResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BotListBotsResponseApplicationJsonInterface {
+sealed class $BotListBotsResponseApplicationJsonInterface {
   BotListBotsResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BotListBotsResponseApplicationJsonInterfaceBuilder].
+  $BotListBotsResponseApplicationJsonInterface rebuild(
+    void Function($BotListBotsResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BotListBotsResponseApplicationJsonInterfaceBuilder].
+  $BotListBotsResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BotListBotsResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -18143,9 +18288,20 @@ class _$BotEnableBotApiVersionSerializer implements PrimitiveSerializer<BotEnabl
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BotEnableBotResponseApplicationJson_OcsInterface {
+sealed class $BotEnableBotResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Bot? get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BotEnableBotResponseApplicationJson_OcsInterfaceBuilder].
+  $BotEnableBotResponseApplicationJson_OcsInterface rebuild(
+    void Function($BotEnableBotResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BotEnableBotResponseApplicationJson_OcsInterfaceBuilder].
+  $BotEnableBotResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BotEnableBotResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -18195,8 +18351,19 @@ abstract class BotEnableBotResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BotEnableBotResponseApplicationJsonInterface {
+sealed class $BotEnableBotResponseApplicationJsonInterface {
   BotEnableBotResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BotEnableBotResponseApplicationJsonInterfaceBuilder].
+  $BotEnableBotResponseApplicationJsonInterface rebuild(
+    void Function($BotEnableBotResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BotEnableBotResponseApplicationJsonInterfaceBuilder].
+  $BotEnableBotResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BotEnableBotResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -18302,9 +18469,20 @@ class _$BotDisableBotApiVersionSerializer implements PrimitiveSerializer<BotDisa
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BotDisableBotResponseApplicationJson_OcsInterface {
+sealed class $BotDisableBotResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Bot? get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BotDisableBotResponseApplicationJson_OcsInterfaceBuilder].
+  $BotDisableBotResponseApplicationJson_OcsInterface rebuild(
+    void Function($BotDisableBotResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BotDisableBotResponseApplicationJson_OcsInterfaceBuilder].
+  $BotDisableBotResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BotDisableBotResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -18355,8 +18533,19 @@ abstract class BotDisableBotResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BotDisableBotResponseApplicationJsonInterface {
+sealed class $BotDisableBotResponseApplicationJsonInterface {
   BotDisableBotResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BotDisableBotResponseApplicationJsonInterfaceBuilder].
+  $BotDisableBotResponseApplicationJsonInterface rebuild(
+    void Function($BotDisableBotResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BotDisableBotResponseApplicationJsonInterfaceBuilder].
+  $BotDisableBotResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BotDisableBotResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -18525,9 +18714,20 @@ class _$BotSendMessageApiVersionSerializer implements PrimitiveSerializer<BotSen
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BotSendMessageResponseApplicationJson_OcsInterface {
+sealed class $BotSendMessageResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BotSendMessageResponseApplicationJson_OcsInterfaceBuilder].
+  $BotSendMessageResponseApplicationJson_OcsInterface rebuild(
+    void Function($BotSendMessageResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BotSendMessageResponseApplicationJson_OcsInterfaceBuilder].
+  $BotSendMessageResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BotSendMessageResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -18578,8 +18778,19 @@ abstract class BotSendMessageResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BotSendMessageResponseApplicationJsonInterface {
+sealed class $BotSendMessageResponseApplicationJsonInterface {
   BotSendMessageResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BotSendMessageResponseApplicationJsonInterfaceBuilder].
+  $BotSendMessageResponseApplicationJsonInterface rebuild(
+    void Function($BotSendMessageResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BotSendMessageResponseApplicationJsonInterfaceBuilder].
+  $BotSendMessageResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BotSendMessageResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -18685,9 +18896,20 @@ class _$BotReactApiVersionSerializer implements PrimitiveSerializer<BotReactApiV
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BotReactResponseApplicationJson_OcsInterface {
+sealed class $BotReactResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BotReactResponseApplicationJson_OcsInterfaceBuilder].
+  $BotReactResponseApplicationJson_OcsInterface rebuild(
+    void Function($BotReactResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BotReactResponseApplicationJson_OcsInterfaceBuilder].
+  $BotReactResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BotReactResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -18737,8 +18959,19 @@ abstract class BotReactResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BotReactResponseApplicationJsonInterface {
+sealed class $BotReactResponseApplicationJsonInterface {
   BotReactResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BotReactResponseApplicationJsonInterfaceBuilder].
+  $BotReactResponseApplicationJsonInterface rebuild(
+    void Function($BotReactResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BotReactResponseApplicationJsonInterfaceBuilder].
+  $BotReactResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BotReactResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -18843,9 +19076,20 @@ class _$BotDeleteReactionApiVersionSerializer implements PrimitiveSerializer<Bot
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BotDeleteReactionResponseApplicationJson_OcsInterface {
+sealed class $BotDeleteReactionResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BotDeleteReactionResponseApplicationJson_OcsInterfaceBuilder].
+  $BotDeleteReactionResponseApplicationJson_OcsInterface rebuild(
+    void Function($BotDeleteReactionResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BotDeleteReactionResponseApplicationJson_OcsInterfaceBuilder].
+  $BotDeleteReactionResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BotDeleteReactionResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -18896,8 +19140,19 @@ abstract class BotDeleteReactionResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BotDeleteReactionResponseApplicationJsonInterface {
+sealed class $BotDeleteReactionResponseApplicationJsonInterface {
   BotDeleteReactionResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BotDeleteReactionResponseApplicationJsonInterfaceBuilder].
+  $BotDeleteReactionResponseApplicationJsonInterface rebuild(
+    void Function($BotDeleteReactionResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BotDeleteReactionResponseApplicationJsonInterfaceBuilder].
+  $BotDeleteReactionResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BotDeleteReactionResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -19090,9 +19345,20 @@ class _$BreakoutRoomConfigureBreakoutRoomsApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BreakoutRoomConfigureBreakoutRoomsResponseApplicationJson_OcsInterface {
+sealed class $BreakoutRoomConfigureBreakoutRoomsResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltList<Room> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BreakoutRoomConfigureBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder].
+  $BreakoutRoomConfigureBreakoutRoomsResponseApplicationJson_OcsInterface rebuild(
+    void Function($BreakoutRoomConfigureBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BreakoutRoomConfigureBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder].
+  $BreakoutRoomConfigureBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BreakoutRoomConfigureBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -19144,8 +19410,19 @@ abstract class BreakoutRoomConfigureBreakoutRoomsResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BreakoutRoomConfigureBreakoutRoomsResponseApplicationJsonInterface {
+sealed class $BreakoutRoomConfigureBreakoutRoomsResponseApplicationJsonInterface {
   BreakoutRoomConfigureBreakoutRoomsResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BreakoutRoomConfigureBreakoutRoomsResponseApplicationJsonInterfaceBuilder].
+  $BreakoutRoomConfigureBreakoutRoomsResponseApplicationJsonInterface rebuild(
+    void Function($BreakoutRoomConfigureBreakoutRoomsResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BreakoutRoomConfigureBreakoutRoomsResponseApplicationJsonInterfaceBuilder].
+  $BreakoutRoomConfigureBreakoutRoomsResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BreakoutRoomConfigureBreakoutRoomsResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -19259,9 +19536,20 @@ class _$BreakoutRoomRemoveBreakoutRoomsApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BreakoutRoomRemoveBreakoutRoomsResponseApplicationJson_OcsInterface {
+sealed class $BreakoutRoomRemoveBreakoutRoomsResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BreakoutRoomRemoveBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder].
+  $BreakoutRoomRemoveBreakoutRoomsResponseApplicationJson_OcsInterface rebuild(
+    void Function($BreakoutRoomRemoveBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BreakoutRoomRemoveBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder].
+  $BreakoutRoomRemoveBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BreakoutRoomRemoveBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -19313,8 +19601,19 @@ abstract class BreakoutRoomRemoveBreakoutRoomsResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BreakoutRoomRemoveBreakoutRoomsResponseApplicationJsonInterface {
+sealed class $BreakoutRoomRemoveBreakoutRoomsResponseApplicationJsonInterface {
   BreakoutRoomRemoveBreakoutRoomsResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BreakoutRoomRemoveBreakoutRoomsResponseApplicationJsonInterfaceBuilder].
+  $BreakoutRoomRemoveBreakoutRoomsResponseApplicationJsonInterface rebuild(
+    void Function($BreakoutRoomRemoveBreakoutRoomsResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BreakoutRoomRemoveBreakoutRoomsResponseApplicationJsonInterfaceBuilder].
+  $BreakoutRoomRemoveBreakoutRoomsResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BreakoutRoomRemoveBreakoutRoomsResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -19428,9 +19727,20 @@ class _$BreakoutRoomBroadcastChatMessageApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BreakoutRoomBroadcastChatMessageResponseApplicationJson_OcsInterface {
+sealed class $BreakoutRoomBroadcastChatMessageResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltList<Room> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BreakoutRoomBroadcastChatMessageResponseApplicationJson_OcsInterfaceBuilder].
+  $BreakoutRoomBroadcastChatMessageResponseApplicationJson_OcsInterface rebuild(
+    void Function($BreakoutRoomBroadcastChatMessageResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BreakoutRoomBroadcastChatMessageResponseApplicationJson_OcsInterfaceBuilder].
+  $BreakoutRoomBroadcastChatMessageResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BreakoutRoomBroadcastChatMessageResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -19482,8 +19792,19 @@ abstract class BreakoutRoomBroadcastChatMessageResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BreakoutRoomBroadcastChatMessageResponseApplicationJsonInterface {
+sealed class $BreakoutRoomBroadcastChatMessageResponseApplicationJsonInterface {
   BreakoutRoomBroadcastChatMessageResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BreakoutRoomBroadcastChatMessageResponseApplicationJsonInterfaceBuilder].
+  $BreakoutRoomBroadcastChatMessageResponseApplicationJsonInterface rebuild(
+    void Function($BreakoutRoomBroadcastChatMessageResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BreakoutRoomBroadcastChatMessageResponseApplicationJsonInterfaceBuilder].
+  $BreakoutRoomBroadcastChatMessageResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BreakoutRoomBroadcastChatMessageResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -19596,9 +19917,20 @@ class _$BreakoutRoomApplyAttendeeMapApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BreakoutRoomApplyAttendeeMapResponseApplicationJson_OcsInterface {
+sealed class $BreakoutRoomApplyAttendeeMapResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltList<Room> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BreakoutRoomApplyAttendeeMapResponseApplicationJson_OcsInterfaceBuilder].
+  $BreakoutRoomApplyAttendeeMapResponseApplicationJson_OcsInterface rebuild(
+    void Function($BreakoutRoomApplyAttendeeMapResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BreakoutRoomApplyAttendeeMapResponseApplicationJson_OcsInterfaceBuilder].
+  $BreakoutRoomApplyAttendeeMapResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BreakoutRoomApplyAttendeeMapResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -19650,8 +19982,19 @@ abstract class BreakoutRoomApplyAttendeeMapResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BreakoutRoomApplyAttendeeMapResponseApplicationJsonInterface {
+sealed class $BreakoutRoomApplyAttendeeMapResponseApplicationJsonInterface {
   BreakoutRoomApplyAttendeeMapResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BreakoutRoomApplyAttendeeMapResponseApplicationJsonInterfaceBuilder].
+  $BreakoutRoomApplyAttendeeMapResponseApplicationJsonInterface rebuild(
+    void Function($BreakoutRoomApplyAttendeeMapResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BreakoutRoomApplyAttendeeMapResponseApplicationJsonInterfaceBuilder].
+  $BreakoutRoomApplyAttendeeMapResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BreakoutRoomApplyAttendeeMapResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -19765,9 +20108,20 @@ class _$BreakoutRoomRequestAssistanceApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BreakoutRoomRequestAssistanceResponseApplicationJson_OcsInterface {
+sealed class $BreakoutRoomRequestAssistanceResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BreakoutRoomRequestAssistanceResponseApplicationJson_OcsInterfaceBuilder].
+  $BreakoutRoomRequestAssistanceResponseApplicationJson_OcsInterface rebuild(
+    void Function($BreakoutRoomRequestAssistanceResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BreakoutRoomRequestAssistanceResponseApplicationJson_OcsInterfaceBuilder].
+  $BreakoutRoomRequestAssistanceResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BreakoutRoomRequestAssistanceResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -19819,8 +20173,19 @@ abstract class BreakoutRoomRequestAssistanceResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BreakoutRoomRequestAssistanceResponseApplicationJsonInterface {
+sealed class $BreakoutRoomRequestAssistanceResponseApplicationJsonInterface {
   BreakoutRoomRequestAssistanceResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BreakoutRoomRequestAssistanceResponseApplicationJsonInterfaceBuilder].
+  $BreakoutRoomRequestAssistanceResponseApplicationJsonInterface rebuild(
+    void Function($BreakoutRoomRequestAssistanceResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BreakoutRoomRequestAssistanceResponseApplicationJsonInterfaceBuilder].
+  $BreakoutRoomRequestAssistanceResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BreakoutRoomRequestAssistanceResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -19934,9 +20299,20 @@ class _$BreakoutRoomResetRequestForAssistanceApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BreakoutRoomResetRequestForAssistanceResponseApplicationJson_OcsInterface {
+sealed class $BreakoutRoomResetRequestForAssistanceResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BreakoutRoomResetRequestForAssistanceResponseApplicationJson_OcsInterfaceBuilder].
+  $BreakoutRoomResetRequestForAssistanceResponseApplicationJson_OcsInterface rebuild(
+    void Function($BreakoutRoomResetRequestForAssistanceResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BreakoutRoomResetRequestForAssistanceResponseApplicationJson_OcsInterfaceBuilder].
+  $BreakoutRoomResetRequestForAssistanceResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BreakoutRoomResetRequestForAssistanceResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -19988,8 +20364,19 @@ abstract class BreakoutRoomResetRequestForAssistanceResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BreakoutRoomResetRequestForAssistanceResponseApplicationJsonInterface {
+sealed class $BreakoutRoomResetRequestForAssistanceResponseApplicationJsonInterface {
   BreakoutRoomResetRequestForAssistanceResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BreakoutRoomResetRequestForAssistanceResponseApplicationJsonInterfaceBuilder].
+  $BreakoutRoomResetRequestForAssistanceResponseApplicationJsonInterface rebuild(
+    void Function($BreakoutRoomResetRequestForAssistanceResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BreakoutRoomResetRequestForAssistanceResponseApplicationJsonInterfaceBuilder].
+  $BreakoutRoomResetRequestForAssistanceResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BreakoutRoomResetRequestForAssistanceResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -20103,9 +20490,20 @@ class _$BreakoutRoomStartBreakoutRoomsApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BreakoutRoomStartBreakoutRoomsResponseApplicationJson_OcsInterface {
+sealed class $BreakoutRoomStartBreakoutRoomsResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltList<Room> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BreakoutRoomStartBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder].
+  $BreakoutRoomStartBreakoutRoomsResponseApplicationJson_OcsInterface rebuild(
+    void Function($BreakoutRoomStartBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BreakoutRoomStartBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder].
+  $BreakoutRoomStartBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BreakoutRoomStartBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -20157,8 +20555,19 @@ abstract class BreakoutRoomStartBreakoutRoomsResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BreakoutRoomStartBreakoutRoomsResponseApplicationJsonInterface {
+sealed class $BreakoutRoomStartBreakoutRoomsResponseApplicationJsonInterface {
   BreakoutRoomStartBreakoutRoomsResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BreakoutRoomStartBreakoutRoomsResponseApplicationJsonInterfaceBuilder].
+  $BreakoutRoomStartBreakoutRoomsResponseApplicationJsonInterface rebuild(
+    void Function($BreakoutRoomStartBreakoutRoomsResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BreakoutRoomStartBreakoutRoomsResponseApplicationJsonInterfaceBuilder].
+  $BreakoutRoomStartBreakoutRoomsResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BreakoutRoomStartBreakoutRoomsResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -20272,9 +20681,20 @@ class _$BreakoutRoomStopBreakoutRoomsApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BreakoutRoomStopBreakoutRoomsResponseApplicationJson_OcsInterface {
+sealed class $BreakoutRoomStopBreakoutRoomsResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltList<Room> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BreakoutRoomStopBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder].
+  $BreakoutRoomStopBreakoutRoomsResponseApplicationJson_OcsInterface rebuild(
+    void Function($BreakoutRoomStopBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BreakoutRoomStopBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder].
+  $BreakoutRoomStopBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BreakoutRoomStopBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -20326,8 +20746,19 @@ abstract class BreakoutRoomStopBreakoutRoomsResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BreakoutRoomStopBreakoutRoomsResponseApplicationJsonInterface {
+sealed class $BreakoutRoomStopBreakoutRoomsResponseApplicationJsonInterface {
   BreakoutRoomStopBreakoutRoomsResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BreakoutRoomStopBreakoutRoomsResponseApplicationJsonInterfaceBuilder].
+  $BreakoutRoomStopBreakoutRoomsResponseApplicationJsonInterface rebuild(
+    void Function($BreakoutRoomStopBreakoutRoomsResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BreakoutRoomStopBreakoutRoomsResponseApplicationJsonInterfaceBuilder].
+  $BreakoutRoomStopBreakoutRoomsResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BreakoutRoomStopBreakoutRoomsResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -20441,9 +20872,20 @@ class _$BreakoutRoomSwitchBreakoutRoomApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BreakoutRoomSwitchBreakoutRoomResponseApplicationJson_OcsInterface {
+sealed class $BreakoutRoomSwitchBreakoutRoomResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BreakoutRoomSwitchBreakoutRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $BreakoutRoomSwitchBreakoutRoomResponseApplicationJson_OcsInterface rebuild(
+    void Function($BreakoutRoomSwitchBreakoutRoomResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BreakoutRoomSwitchBreakoutRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $BreakoutRoomSwitchBreakoutRoomResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BreakoutRoomSwitchBreakoutRoomResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -20495,8 +20937,19 @@ abstract class BreakoutRoomSwitchBreakoutRoomResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BreakoutRoomSwitchBreakoutRoomResponseApplicationJsonInterface {
+sealed class $BreakoutRoomSwitchBreakoutRoomResponseApplicationJsonInterface {
   BreakoutRoomSwitchBreakoutRoomResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BreakoutRoomSwitchBreakoutRoomResponseApplicationJsonInterfaceBuilder].
+  $BreakoutRoomSwitchBreakoutRoomResponseApplicationJsonInterface rebuild(
+    void Function($BreakoutRoomSwitchBreakoutRoomResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BreakoutRoomSwitchBreakoutRoomResponseApplicationJsonInterfaceBuilder].
+  $BreakoutRoomSwitchBreakoutRoomResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BreakoutRoomSwitchBreakoutRoomResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -20604,13 +21057,22 @@ class _$CallGetPeersForCallApiVersionSerializer implements PrimitiveSerializer<C
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $CallPeerInterface {
+sealed class $CallPeerInterface {
   String get actorId;
   ActorType get actorType;
   String get displayName;
   int get lastPing;
   String get sessionId;
   String get token;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$CallPeerInterfaceBuilder].
+  $CallPeerInterface rebuild(void Function($CallPeerInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$CallPeerInterfaceBuilder].
+  $CallPeerInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($CallPeerInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -20654,9 +21116,20 @@ abstract class CallPeer implements $CallPeerInterface, Built<CallPeer, CallPeerB
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $CallGetPeersForCallResponseApplicationJson_OcsInterface {
+sealed class $CallGetPeersForCallResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltList<CallPeer> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$CallGetPeersForCallResponseApplicationJson_OcsInterfaceBuilder].
+  $CallGetPeersForCallResponseApplicationJson_OcsInterface rebuild(
+    void Function($CallGetPeersForCallResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$CallGetPeersForCallResponseApplicationJson_OcsInterfaceBuilder].
+  $CallGetPeersForCallResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($CallGetPeersForCallResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -20707,8 +21180,19 @@ abstract class CallGetPeersForCallResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $CallGetPeersForCallResponseApplicationJsonInterface {
+sealed class $CallGetPeersForCallResponseApplicationJsonInterface {
   CallGetPeersForCallResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$CallGetPeersForCallResponseApplicationJsonInterfaceBuilder].
+  $CallGetPeersForCallResponseApplicationJsonInterface rebuild(
+    void Function($CallGetPeersForCallResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$CallGetPeersForCallResponseApplicationJsonInterfaceBuilder].
+  $CallGetPeersForCallResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($CallGetPeersForCallResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -20815,9 +21299,20 @@ class _$CallUpdateCallFlagsApiVersionSerializer implements PrimitiveSerializer<C
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $CallUpdateCallFlagsResponseApplicationJson_OcsInterface {
+sealed class $CallUpdateCallFlagsResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$CallUpdateCallFlagsResponseApplicationJson_OcsInterfaceBuilder].
+  $CallUpdateCallFlagsResponseApplicationJson_OcsInterface rebuild(
+    void Function($CallUpdateCallFlagsResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$CallUpdateCallFlagsResponseApplicationJson_OcsInterfaceBuilder].
+  $CallUpdateCallFlagsResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($CallUpdateCallFlagsResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -20868,8 +21363,19 @@ abstract class CallUpdateCallFlagsResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $CallUpdateCallFlagsResponseApplicationJsonInterface {
+sealed class $CallUpdateCallFlagsResponseApplicationJsonInterface {
   CallUpdateCallFlagsResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$CallUpdateCallFlagsResponseApplicationJsonInterfaceBuilder].
+  $CallUpdateCallFlagsResponseApplicationJsonInterface rebuild(
+    void Function($CallUpdateCallFlagsResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$CallUpdateCallFlagsResponseApplicationJsonInterfaceBuilder].
+  $CallUpdateCallFlagsResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($CallUpdateCallFlagsResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -21102,9 +21608,20 @@ class _$CallJoinCallApiVersionSerializer implements PrimitiveSerializer<CallJoin
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $CallJoinCallResponseApplicationJson_OcsInterface {
+sealed class $CallJoinCallResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$CallJoinCallResponseApplicationJson_OcsInterfaceBuilder].
+  $CallJoinCallResponseApplicationJson_OcsInterface rebuild(
+    void Function($CallJoinCallResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$CallJoinCallResponseApplicationJson_OcsInterfaceBuilder].
+  $CallJoinCallResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($CallJoinCallResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -21154,8 +21671,19 @@ abstract class CallJoinCallResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $CallJoinCallResponseApplicationJsonInterface {
+sealed class $CallJoinCallResponseApplicationJsonInterface {
   CallJoinCallResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$CallJoinCallResponseApplicationJsonInterfaceBuilder].
+  $CallJoinCallResponseApplicationJsonInterface rebuild(
+    void Function($CallJoinCallResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$CallJoinCallResponseApplicationJsonInterfaceBuilder].
+  $CallJoinCallResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($CallJoinCallResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -21324,9 +21852,20 @@ class _$CallLeaveCallApiVersionSerializer implements PrimitiveSerializer<CallLea
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $CallLeaveCallResponseApplicationJson_OcsInterface {
+sealed class $CallLeaveCallResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$CallLeaveCallResponseApplicationJson_OcsInterfaceBuilder].
+  $CallLeaveCallResponseApplicationJson_OcsInterface rebuild(
+    void Function($CallLeaveCallResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$CallLeaveCallResponseApplicationJson_OcsInterfaceBuilder].
+  $CallLeaveCallResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($CallLeaveCallResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -21377,8 +21916,19 @@ abstract class CallLeaveCallResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $CallLeaveCallResponseApplicationJsonInterface {
+sealed class $CallLeaveCallResponseApplicationJsonInterface {
   CallLeaveCallResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$CallLeaveCallResponseApplicationJsonInterfaceBuilder].
+  $CallLeaveCallResponseApplicationJsonInterface rebuild(
+    void Function($CallLeaveCallResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$CallLeaveCallResponseApplicationJsonInterfaceBuilder].
+  $CallLeaveCallResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($CallLeaveCallResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -21484,9 +22034,20 @@ class _$CallRingAttendeeApiVersionSerializer implements PrimitiveSerializer<Call
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $CallRingAttendeeResponseApplicationJson_OcsInterface {
+sealed class $CallRingAttendeeResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$CallRingAttendeeResponseApplicationJson_OcsInterfaceBuilder].
+  $CallRingAttendeeResponseApplicationJson_OcsInterface rebuild(
+    void Function($CallRingAttendeeResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$CallRingAttendeeResponseApplicationJson_OcsInterfaceBuilder].
+  $CallRingAttendeeResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($CallRingAttendeeResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -21537,8 +22098,19 @@ abstract class CallRingAttendeeResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $CallRingAttendeeResponseApplicationJsonInterface {
+sealed class $CallRingAttendeeResponseApplicationJsonInterface {
   CallRingAttendeeResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$CallRingAttendeeResponseApplicationJsonInterfaceBuilder].
+  $CallRingAttendeeResponseApplicationJsonInterface rebuild(
+    void Function($CallRingAttendeeResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$CallRingAttendeeResponseApplicationJsonInterfaceBuilder].
+  $CallRingAttendeeResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($CallRingAttendeeResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -21644,9 +22216,20 @@ class _$CallSipDialOutApiVersionSerializer implements PrimitiveSerializer<CallSi
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $CallSipDialOutResponseApplicationJson_Ocs_DataInterface {
+sealed class $CallSipDialOutResponseApplicationJson_Ocs_DataInterface {
   String? get error;
   String? get message;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$CallSipDialOutResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $CallSipDialOutResponseApplicationJson_Ocs_DataInterface rebuild(
+    void Function($CallSipDialOutResponseApplicationJson_Ocs_DataInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$CallSipDialOutResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $CallSipDialOutResponseApplicationJson_Ocs_DataInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($CallSipDialOutResponseApplicationJson_Ocs_DataInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -21697,9 +22280,20 @@ abstract class CallSipDialOutResponseApplicationJson_Ocs_Data
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $CallSipDialOutResponseApplicationJson_OcsInterface {
+sealed class $CallSipDialOutResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   CallSipDialOutResponseApplicationJson_Ocs_Data get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$CallSipDialOutResponseApplicationJson_OcsInterfaceBuilder].
+  $CallSipDialOutResponseApplicationJson_OcsInterface rebuild(
+    void Function($CallSipDialOutResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$CallSipDialOutResponseApplicationJson_OcsInterfaceBuilder].
+  $CallSipDialOutResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($CallSipDialOutResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -21750,8 +22344,19 @@ abstract class CallSipDialOutResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $CallSipDialOutResponseApplicationJsonInterface {
+sealed class $CallSipDialOutResponseApplicationJsonInterface {
   CallSipDialOutResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$CallSipDialOutResponseApplicationJsonInterfaceBuilder].
+  $CallSipDialOutResponseApplicationJsonInterface rebuild(
+    void Function($CallSipDialOutResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$CallSipDialOutResponseApplicationJsonInterfaceBuilder].
+  $CallSipDialOutResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($CallSipDialOutResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -22184,8 +22789,19 @@ class _$ChatReceiveMessagesApiVersionSerializer implements PrimitiveSerializer<C
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatMessageWithParentInterface implements $ChatMessageInterface {
+sealed class $ChatMessageWithParentInterface implements $ChatMessageInterface {
   ChatMessage? get parent;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatMessageWithParentInterfaceBuilder].
+  @override
+  $ChatMessageWithParentInterface rebuild(void Function($ChatMessageWithParentInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$ChatMessageWithParentInterfaceBuilder].
+  @override
+  $ChatMessageWithParentInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatMessageWithParentInterfaceBuilder b) {
     $ChatMessageInterface._defaults(b);
@@ -22236,9 +22852,20 @@ abstract class ChatMessageWithParent
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatReceiveMessagesResponseApplicationJson_OcsInterface {
+sealed class $ChatReceiveMessagesResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltList<ChatMessageWithParent> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatReceiveMessagesResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatReceiveMessagesResponseApplicationJson_OcsInterface rebuild(
+    void Function($ChatReceiveMessagesResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatReceiveMessagesResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatReceiveMessagesResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatReceiveMessagesResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -22289,8 +22916,19 @@ abstract class ChatReceiveMessagesResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatReceiveMessagesResponseApplicationJsonInterface {
+sealed class $ChatReceiveMessagesResponseApplicationJsonInterface {
   ChatReceiveMessagesResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatReceiveMessagesResponseApplicationJsonInterfaceBuilder].
+  $ChatReceiveMessagesResponseApplicationJsonInterface rebuild(
+    void Function($ChatReceiveMessagesResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatReceiveMessagesResponseApplicationJsonInterfaceBuilder].
+  $ChatReceiveMessagesResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatReceiveMessagesResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -22341,11 +22979,22 @@ abstract class ChatReceiveMessagesResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatChatReceiveMessagesHeadersInterface {
+sealed class $ChatChatReceiveMessagesHeadersInterface {
   @BuiltValueField(wireName: 'x-chat-last-common-read')
   String? get xChatLastCommonRead;
   @BuiltValueField(wireName: 'x-chat-last-given')
   String? get xChatLastGiven;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatChatReceiveMessagesHeadersInterfaceBuilder].
+  $ChatChatReceiveMessagesHeadersInterface rebuild(
+    void Function($ChatChatReceiveMessagesHeadersInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatChatReceiveMessagesHeadersInterfaceBuilder].
+  $ChatChatReceiveMessagesHeadersInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatChatReceiveMessagesHeadersInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -22513,9 +23162,20 @@ class _$ChatSendMessageApiVersionSerializer implements PrimitiveSerializer<ChatS
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatSendMessageResponseApplicationJson_OcsInterface {
+sealed class $ChatSendMessageResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   ChatMessageWithParent? get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatSendMessageResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatSendMessageResponseApplicationJson_OcsInterface rebuild(
+    void Function($ChatSendMessageResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatSendMessageResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatSendMessageResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatSendMessageResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -22566,8 +23226,19 @@ abstract class ChatSendMessageResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatSendMessageResponseApplicationJsonInterface {
+sealed class $ChatSendMessageResponseApplicationJsonInterface {
   ChatSendMessageResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatSendMessageResponseApplicationJsonInterfaceBuilder].
+  $ChatSendMessageResponseApplicationJsonInterface rebuild(
+    void Function($ChatSendMessageResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatSendMessageResponseApplicationJsonInterfaceBuilder].
+  $ChatSendMessageResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatSendMessageResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -22617,9 +23288,18 @@ abstract class ChatSendMessageResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatChatSendMessageHeadersInterface {
+sealed class $ChatChatSendMessageHeadersInterface {
   @BuiltValueField(wireName: 'x-chat-last-common-read')
   String? get xChatLastCommonRead;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatChatSendMessageHeadersInterfaceBuilder].
+  $ChatChatSendMessageHeadersInterface rebuild(void Function($ChatChatSendMessageHeadersInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$ChatChatSendMessageHeadersInterfaceBuilder].
+  $ChatChatSendMessageHeadersInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatChatSendMessageHeadersInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -22724,9 +23404,20 @@ class _$ChatClearHistoryApiVersionSerializer implements PrimitiveSerializer<Chat
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatClearHistoryResponseApplicationJson_OcsInterface {
+sealed class $ChatClearHistoryResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   ChatMessage get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatClearHistoryResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatClearHistoryResponseApplicationJson_OcsInterface rebuild(
+    void Function($ChatClearHistoryResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatClearHistoryResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatClearHistoryResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatClearHistoryResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -22777,8 +23468,19 @@ abstract class ChatClearHistoryResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatClearHistoryResponseApplicationJsonInterface {
+sealed class $ChatClearHistoryResponseApplicationJsonInterface {
   ChatClearHistoryResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatClearHistoryResponseApplicationJsonInterfaceBuilder].
+  $ChatClearHistoryResponseApplicationJsonInterface rebuild(
+    void Function($ChatClearHistoryResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatClearHistoryResponseApplicationJsonInterfaceBuilder].
+  $ChatClearHistoryResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatClearHistoryResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -22828,9 +23530,18 @@ abstract class ChatClearHistoryResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatChatClearHistoryHeadersInterface {
+sealed class $ChatChatClearHistoryHeadersInterface {
   @BuiltValueField(wireName: 'x-chat-last-common-read')
   String? get xChatLastCommonRead;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatChatClearHistoryHeadersInterfaceBuilder].
+  $ChatChatClearHistoryHeadersInterface rebuild(void Function($ChatChatClearHistoryHeadersInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$ChatChatClearHistoryHeadersInterfaceBuilder].
+  $ChatChatClearHistoryHeadersInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatChatClearHistoryHeadersInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -22935,9 +23646,20 @@ class _$ChatEditMessageApiVersionSerializer implements PrimitiveSerializer<ChatE
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatEditMessageResponseApplicationJson_OcsInterface {
+sealed class $ChatEditMessageResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   ChatMessageWithParent get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatEditMessageResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatEditMessageResponseApplicationJson_OcsInterface rebuild(
+    void Function($ChatEditMessageResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatEditMessageResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatEditMessageResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatEditMessageResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -22988,8 +23710,19 @@ abstract class ChatEditMessageResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatEditMessageResponseApplicationJsonInterface {
+sealed class $ChatEditMessageResponseApplicationJsonInterface {
   ChatEditMessageResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatEditMessageResponseApplicationJsonInterfaceBuilder].
+  $ChatEditMessageResponseApplicationJsonInterface rebuild(
+    void Function($ChatEditMessageResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatEditMessageResponseApplicationJsonInterfaceBuilder].
+  $ChatEditMessageResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatEditMessageResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -23039,9 +23772,18 @@ abstract class ChatEditMessageResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatChatEditMessageHeadersInterface {
+sealed class $ChatChatEditMessageHeadersInterface {
   @BuiltValueField(wireName: 'x-chat-last-common-read')
   String? get xChatLastCommonRead;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatChatEditMessageHeadersInterfaceBuilder].
+  $ChatChatEditMessageHeadersInterface rebuild(void Function($ChatChatEditMessageHeadersInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$ChatChatEditMessageHeadersInterfaceBuilder].
+  $ChatChatEditMessageHeadersInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatChatEditMessageHeadersInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -23146,9 +23888,20 @@ class _$ChatDeleteMessageApiVersionSerializer implements PrimitiveSerializer<Cha
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatDeleteMessageResponseApplicationJson_OcsInterface {
+sealed class $ChatDeleteMessageResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   ChatMessageWithParent get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatDeleteMessageResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatDeleteMessageResponseApplicationJson_OcsInterface rebuild(
+    void Function($ChatDeleteMessageResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatDeleteMessageResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatDeleteMessageResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatDeleteMessageResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -23199,8 +23952,19 @@ abstract class ChatDeleteMessageResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatDeleteMessageResponseApplicationJsonInterface {
+sealed class $ChatDeleteMessageResponseApplicationJsonInterface {
   ChatDeleteMessageResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatDeleteMessageResponseApplicationJsonInterfaceBuilder].
+  $ChatDeleteMessageResponseApplicationJsonInterface rebuild(
+    void Function($ChatDeleteMessageResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatDeleteMessageResponseApplicationJsonInterfaceBuilder].
+  $ChatDeleteMessageResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatDeleteMessageResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -23251,9 +24015,18 @@ abstract class ChatDeleteMessageResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatChatDeleteMessageHeadersInterface {
+sealed class $ChatChatDeleteMessageHeadersInterface {
   @BuiltValueField(wireName: 'x-chat-last-common-read')
   String? get xChatLastCommonRead;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatChatDeleteMessageHeadersInterfaceBuilder].
+  $ChatChatDeleteMessageHeadersInterface rebuild(void Function($ChatChatDeleteMessageHeadersInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$ChatChatDeleteMessageHeadersInterfaceBuilder].
+  $ChatChatDeleteMessageHeadersInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatChatDeleteMessageHeadersInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -23359,9 +24132,20 @@ class _$ChatGetMessageContextApiVersionSerializer implements PrimitiveSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatGetMessageContextResponseApplicationJson_OcsInterface {
+sealed class $ChatGetMessageContextResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltList<ChatMessageWithParent> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatGetMessageContextResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatGetMessageContextResponseApplicationJson_OcsInterface rebuild(
+    void Function($ChatGetMessageContextResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatGetMessageContextResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatGetMessageContextResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatGetMessageContextResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -23413,8 +24197,19 @@ abstract class ChatGetMessageContextResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatGetMessageContextResponseApplicationJsonInterface {
+sealed class $ChatGetMessageContextResponseApplicationJsonInterface {
   ChatGetMessageContextResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatGetMessageContextResponseApplicationJsonInterfaceBuilder].
+  $ChatGetMessageContextResponseApplicationJsonInterface rebuild(
+    void Function($ChatGetMessageContextResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatGetMessageContextResponseApplicationJsonInterfaceBuilder].
+  $ChatGetMessageContextResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatGetMessageContextResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -23465,11 +24260,22 @@ abstract class ChatGetMessageContextResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatChatGetMessageContextHeadersInterface {
+sealed class $ChatChatGetMessageContextHeadersInterface {
   @BuiltValueField(wireName: 'x-chat-last-common-read')
   String? get xChatLastCommonRead;
   @BuiltValueField(wireName: 'x-chat-last-given')
   String? get xChatLastGiven;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatChatGetMessageContextHeadersInterfaceBuilder].
+  $ChatChatGetMessageContextHeadersInterface rebuild(
+    void Function($ChatChatGetMessageContextHeadersInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatChatGetMessageContextHeadersInterfaceBuilder].
+  $ChatChatGetMessageContextHeadersInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatChatGetMessageContextHeadersInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -23574,11 +24380,20 @@ class _$ChatGetReminderApiVersionSerializer implements PrimitiveSerializer<ChatG
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatReminderInterface {
+sealed class $ChatReminderInterface {
   int get messageId;
   int get timestamp;
   String get token;
   String get userId;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatReminderInterfaceBuilder].
+  $ChatReminderInterface rebuild(void Function($ChatReminderInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$ChatReminderInterfaceBuilder].
+  $ChatReminderInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatReminderInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -23622,9 +24437,20 @@ abstract class ChatReminder implements $ChatReminderInterface, Built<ChatReminde
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatGetReminderResponseApplicationJson_OcsInterface {
+sealed class $ChatGetReminderResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   ChatReminder get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatGetReminderResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatGetReminderResponseApplicationJson_OcsInterface rebuild(
+    void Function($ChatGetReminderResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatGetReminderResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatGetReminderResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatGetReminderResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -23675,8 +24501,19 @@ abstract class ChatGetReminderResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatGetReminderResponseApplicationJsonInterface {
+sealed class $ChatGetReminderResponseApplicationJsonInterface {
   ChatGetReminderResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatGetReminderResponseApplicationJsonInterfaceBuilder].
+  $ChatGetReminderResponseApplicationJsonInterface rebuild(
+    void Function($ChatGetReminderResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatGetReminderResponseApplicationJsonInterfaceBuilder].
+  $ChatGetReminderResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatGetReminderResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -23782,9 +24619,20 @@ class _$ChatSetReminderApiVersionSerializer implements PrimitiveSerializer<ChatS
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatSetReminderResponseApplicationJson_OcsInterface {
+sealed class $ChatSetReminderResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   ChatReminder get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatSetReminderResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatSetReminderResponseApplicationJson_OcsInterface rebuild(
+    void Function($ChatSetReminderResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatSetReminderResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatSetReminderResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatSetReminderResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -23835,8 +24683,19 @@ abstract class ChatSetReminderResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatSetReminderResponseApplicationJsonInterface {
+sealed class $ChatSetReminderResponseApplicationJsonInterface {
   ChatSetReminderResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatSetReminderResponseApplicationJsonInterfaceBuilder].
+  $ChatSetReminderResponseApplicationJsonInterface rebuild(
+    void Function($ChatSetReminderResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatSetReminderResponseApplicationJsonInterfaceBuilder].
+  $ChatSetReminderResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatSetReminderResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -23942,8 +24801,19 @@ class _$ChatDeleteReminderApiVersionSerializer implements PrimitiveSerializer<Ch
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatDeleteReminderResponseApplicationJson_Ocs_DataInterface {
+sealed class $ChatDeleteReminderResponseApplicationJson_Ocs_DataInterface {
   String? get error;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatDeleteReminderResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $ChatDeleteReminderResponseApplicationJson_Ocs_DataInterface rebuild(
+    void Function($ChatDeleteReminderResponseApplicationJson_Ocs_DataInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatDeleteReminderResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $ChatDeleteReminderResponseApplicationJson_Ocs_DataInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatDeleteReminderResponseApplicationJson_Ocs_DataInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -23995,9 +24865,20 @@ abstract class ChatDeleteReminderResponseApplicationJson_Ocs_Data
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatDeleteReminderResponseApplicationJson_OcsInterface {
+sealed class $ChatDeleteReminderResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   ChatDeleteReminderResponseApplicationJson_Ocs_Data get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatDeleteReminderResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatDeleteReminderResponseApplicationJson_OcsInterface rebuild(
+    void Function($ChatDeleteReminderResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatDeleteReminderResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatDeleteReminderResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatDeleteReminderResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -24048,8 +24929,19 @@ abstract class ChatDeleteReminderResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatDeleteReminderResponseApplicationJsonInterface {
+sealed class $ChatDeleteReminderResponseApplicationJsonInterface {
   ChatDeleteReminderResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatDeleteReminderResponseApplicationJsonInterfaceBuilder].
+  $ChatDeleteReminderResponseApplicationJsonInterface rebuild(
+    void Function($ChatDeleteReminderResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatDeleteReminderResponseApplicationJsonInterfaceBuilder].
+  $ChatDeleteReminderResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatDeleteReminderResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -24156,9 +25048,20 @@ class _$ChatSetReadMarkerApiVersionSerializer implements PrimitiveSerializer<Cha
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatSetReadMarkerResponseApplicationJson_OcsInterface {
+sealed class $ChatSetReadMarkerResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatSetReadMarkerResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatSetReadMarkerResponseApplicationJson_OcsInterface rebuild(
+    void Function($ChatSetReadMarkerResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatSetReadMarkerResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatSetReadMarkerResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatSetReadMarkerResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -24209,8 +25112,19 @@ abstract class ChatSetReadMarkerResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatSetReadMarkerResponseApplicationJsonInterface {
+sealed class $ChatSetReadMarkerResponseApplicationJsonInterface {
   ChatSetReadMarkerResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatSetReadMarkerResponseApplicationJsonInterfaceBuilder].
+  $ChatSetReadMarkerResponseApplicationJsonInterface rebuild(
+    void Function($ChatSetReadMarkerResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatSetReadMarkerResponseApplicationJsonInterfaceBuilder].
+  $ChatSetReadMarkerResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatSetReadMarkerResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -24261,9 +25175,18 @@ abstract class ChatSetReadMarkerResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatChatSetReadMarkerHeadersInterface {
+sealed class $ChatChatSetReadMarkerHeadersInterface {
   @BuiltValueField(wireName: 'x-chat-last-common-read')
   String? get xChatLastCommonRead;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatChatSetReadMarkerHeadersInterfaceBuilder].
+  $ChatChatSetReadMarkerHeadersInterface rebuild(void Function($ChatChatSetReadMarkerHeadersInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$ChatChatSetReadMarkerHeadersInterfaceBuilder].
+  $ChatChatSetReadMarkerHeadersInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatChatSetReadMarkerHeadersInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -24368,9 +25291,20 @@ class _$ChatMarkUnreadApiVersionSerializer implements PrimitiveSerializer<ChatMa
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatMarkUnreadResponseApplicationJson_OcsInterface {
+sealed class $ChatMarkUnreadResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatMarkUnreadResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatMarkUnreadResponseApplicationJson_OcsInterface rebuild(
+    void Function($ChatMarkUnreadResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatMarkUnreadResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatMarkUnreadResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatMarkUnreadResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -24421,8 +25355,19 @@ abstract class ChatMarkUnreadResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatMarkUnreadResponseApplicationJsonInterface {
+sealed class $ChatMarkUnreadResponseApplicationJsonInterface {
   ChatMarkUnreadResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatMarkUnreadResponseApplicationJsonInterfaceBuilder].
+  $ChatMarkUnreadResponseApplicationJsonInterface rebuild(
+    void Function($ChatMarkUnreadResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatMarkUnreadResponseApplicationJsonInterfaceBuilder].
+  $ChatMarkUnreadResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatMarkUnreadResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -24472,9 +25417,18 @@ abstract class ChatMarkUnreadResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatChatMarkUnreadHeadersInterface {
+sealed class $ChatChatMarkUnreadHeadersInterface {
   @BuiltValueField(wireName: 'x-chat-last-common-read')
   String? get xChatLastCommonRead;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatChatMarkUnreadHeadersInterfaceBuilder].
+  $ChatChatMarkUnreadHeadersInterface rebuild(void Function($ChatChatMarkUnreadHeadersInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$ChatChatMarkUnreadHeadersInterfaceBuilder].
+  $ChatChatMarkUnreadHeadersInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatChatMarkUnreadHeadersInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -24639,15 +25593,24 @@ class _$ChatMentionsApiVersionSerializer implements PrimitiveSerializer<ChatMent
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatMentionSuggestionInterface {
+sealed class $ChatMentionSuggestionInterface {
   String get id;
   String get label;
   String get source;
-  String get mentionId;
+  String? get mentionId;
   String? get status;
   int? get statusClearAt;
   String? get statusIcon;
   String? get statusMessage;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatMentionSuggestionInterfaceBuilder].
+  $ChatMentionSuggestionInterface rebuild(void Function($ChatMentionSuggestionInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$ChatMentionSuggestionInterfaceBuilder].
+  $ChatMentionSuggestionInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatMentionSuggestionInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -24693,9 +25656,20 @@ abstract class ChatMentionSuggestion
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatMentionsResponseApplicationJson_OcsInterface {
+sealed class $ChatMentionsResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltList<ChatMentionSuggestion> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatMentionsResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatMentionsResponseApplicationJson_OcsInterface rebuild(
+    void Function($ChatMentionsResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatMentionsResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatMentionsResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatMentionsResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -24745,8 +25719,19 @@ abstract class ChatMentionsResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatMentionsResponseApplicationJsonInterface {
+sealed class $ChatMentionsResponseApplicationJsonInterface {
   ChatMentionsResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatMentionsResponseApplicationJsonInterfaceBuilder].
+  $ChatMentionsResponseApplicationJsonInterface rebuild(
+    void Function($ChatMentionsResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatMentionsResponseApplicationJsonInterfaceBuilder].
+  $ChatMentionsResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatMentionsResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -24857,9 +25842,20 @@ class _$ChatGetObjectsSharedInRoomApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatGetObjectsSharedInRoomResponseApplicationJson_OcsInterface {
+sealed class $ChatGetObjectsSharedInRoomResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltList<ChatMessage> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatGetObjectsSharedInRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatGetObjectsSharedInRoomResponseApplicationJson_OcsInterface rebuild(
+    void Function($ChatGetObjectsSharedInRoomResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatGetObjectsSharedInRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatGetObjectsSharedInRoomResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatGetObjectsSharedInRoomResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -24911,8 +25907,19 @@ abstract class ChatGetObjectsSharedInRoomResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatGetObjectsSharedInRoomResponseApplicationJsonInterface {
+sealed class $ChatGetObjectsSharedInRoomResponseApplicationJsonInterface {
   ChatGetObjectsSharedInRoomResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatGetObjectsSharedInRoomResponseApplicationJsonInterfaceBuilder].
+  $ChatGetObjectsSharedInRoomResponseApplicationJsonInterface rebuild(
+    void Function($ChatGetObjectsSharedInRoomResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatGetObjectsSharedInRoomResponseApplicationJsonInterfaceBuilder].
+  $ChatGetObjectsSharedInRoomResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatGetObjectsSharedInRoomResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -24964,9 +25971,20 @@ abstract class ChatGetObjectsSharedInRoomResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatChatGetObjectsSharedInRoomHeadersInterface {
+sealed class $ChatChatGetObjectsSharedInRoomHeadersInterface {
   @BuiltValueField(wireName: 'x-chat-last-given')
   String? get xChatLastGiven;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatChatGetObjectsSharedInRoomHeadersInterfaceBuilder].
+  $ChatChatGetObjectsSharedInRoomHeadersInterface rebuild(
+    void Function($ChatChatGetObjectsSharedInRoomHeadersInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatChatGetObjectsSharedInRoomHeadersInterfaceBuilder].
+  $ChatChatGetObjectsSharedInRoomHeadersInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatChatGetObjectsSharedInRoomHeadersInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -25073,9 +26091,20 @@ class _$ChatShareObjectToChatApiVersionSerializer implements PrimitiveSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatShareObjectToChatResponseApplicationJson_OcsInterface {
+sealed class $ChatShareObjectToChatResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   ChatMessageWithParent? get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatShareObjectToChatResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatShareObjectToChatResponseApplicationJson_OcsInterface rebuild(
+    void Function($ChatShareObjectToChatResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatShareObjectToChatResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatShareObjectToChatResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatShareObjectToChatResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -25127,8 +26156,19 @@ abstract class ChatShareObjectToChatResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatShareObjectToChatResponseApplicationJsonInterface {
+sealed class $ChatShareObjectToChatResponseApplicationJsonInterface {
   ChatShareObjectToChatResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatShareObjectToChatResponseApplicationJsonInterfaceBuilder].
+  $ChatShareObjectToChatResponseApplicationJsonInterface rebuild(
+    void Function($ChatShareObjectToChatResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatShareObjectToChatResponseApplicationJsonInterfaceBuilder].
+  $ChatShareObjectToChatResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatShareObjectToChatResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -25179,9 +26219,20 @@ abstract class ChatShareObjectToChatResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatChatShareObjectToChatHeadersInterface {
+sealed class $ChatChatShareObjectToChatHeadersInterface {
   @BuiltValueField(wireName: 'x-chat-last-common-read')
   String? get xChatLastCommonRead;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatChatShareObjectToChatHeadersInterfaceBuilder].
+  $ChatChatShareObjectToChatHeadersInterface rebuild(
+    void Function($ChatChatShareObjectToChatHeadersInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatChatShareObjectToChatHeadersInterfaceBuilder].
+  $ChatChatShareObjectToChatHeadersInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatChatShareObjectToChatHeadersInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -25292,9 +26343,20 @@ class _$ChatGetObjectsSharedInRoomOverviewApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatGetObjectsSharedInRoomOverviewResponseApplicationJson_OcsInterface {
+sealed class $ChatGetObjectsSharedInRoomOverviewResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltMap<String, BuiltList<ChatMessage>> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatGetObjectsSharedInRoomOverviewResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatGetObjectsSharedInRoomOverviewResponseApplicationJson_OcsInterface rebuild(
+    void Function($ChatGetObjectsSharedInRoomOverviewResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatGetObjectsSharedInRoomOverviewResponseApplicationJson_OcsInterfaceBuilder].
+  $ChatGetObjectsSharedInRoomOverviewResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatGetObjectsSharedInRoomOverviewResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -25346,8 +26408,19 @@ abstract class ChatGetObjectsSharedInRoomOverviewResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ChatGetObjectsSharedInRoomOverviewResponseApplicationJsonInterface {
+sealed class $ChatGetObjectsSharedInRoomOverviewResponseApplicationJsonInterface {
   ChatGetObjectsSharedInRoomOverviewResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ChatGetObjectsSharedInRoomOverviewResponseApplicationJsonInterfaceBuilder].
+  $ChatGetObjectsSharedInRoomOverviewResponseApplicationJsonInterface rebuild(
+    void Function($ChatGetObjectsSharedInRoomOverviewResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ChatGetObjectsSharedInRoomOverviewResponseApplicationJsonInterfaceBuilder].
+  $ChatGetObjectsSharedInRoomOverviewResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ChatGetObjectsSharedInRoomOverviewResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -25456,9 +26529,20 @@ class _$SignalingGetSettingsApiVersionSerializer implements PrimitiveSerializer<
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SignalingSettings_HelloAuthParams_10Interface {
+sealed class $SignalingSettings_HelloAuthParams_10Interface {
   String? get userid;
   String get ticket;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SignalingSettings_HelloAuthParams_10InterfaceBuilder].
+  $SignalingSettings_HelloAuthParams_10Interface rebuild(
+    void Function($SignalingSettings_HelloAuthParams_10InterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SignalingSettings_HelloAuthParams_10InterfaceBuilder].
+  $SignalingSettings_HelloAuthParams_10InterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SignalingSettings_HelloAuthParams_10InterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -25508,8 +26592,19 @@ abstract class SignalingSettings_HelloAuthParams_10
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SignalingSettings_HelloAuthParams_20Interface {
+sealed class $SignalingSettings_HelloAuthParams_20Interface {
   String get token;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SignalingSettings_HelloAuthParams_20InterfaceBuilder].
+  $SignalingSettings_HelloAuthParams_20Interface rebuild(
+    void Function($SignalingSettings_HelloAuthParams_20InterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SignalingSettings_HelloAuthParams_20InterfaceBuilder].
+  $SignalingSettings_HelloAuthParams_20InterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SignalingSettings_HelloAuthParams_20InterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -25559,11 +26654,22 @@ abstract class SignalingSettings_HelloAuthParams_20
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SignalingSettings_HelloAuthParamsInterface {
+sealed class $SignalingSettings_HelloAuthParamsInterface {
   @BuiltValueField(wireName: '1.0')
   SignalingSettings_HelloAuthParams_10 get $10;
   @BuiltValueField(wireName: '2.0')
   SignalingSettings_HelloAuthParams_20 get $20;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SignalingSettings_HelloAuthParamsInterfaceBuilder].
+  $SignalingSettings_HelloAuthParamsInterface rebuild(
+    void Function($SignalingSettings_HelloAuthParamsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SignalingSettings_HelloAuthParamsInterfaceBuilder].
+  $SignalingSettings_HelloAuthParamsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SignalingSettings_HelloAuthParamsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -25612,8 +26718,19 @@ abstract class SignalingSettings_HelloAuthParams
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SignalingSettings_StunserversInterface {
+sealed class $SignalingSettings_StunserversInterface {
   BuiltList<String> get urls;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SignalingSettings_StunserversInterfaceBuilder].
+  $SignalingSettings_StunserversInterface rebuild(
+    void Function($SignalingSettings_StunserversInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SignalingSettings_StunserversInterfaceBuilder].
+  $SignalingSettings_StunserversInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SignalingSettings_StunserversInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -25662,10 +26779,21 @@ abstract class SignalingSettings_Stunservers
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SignalingSettings_TurnserversInterface {
+sealed class $SignalingSettings_TurnserversInterface {
   BuiltList<String> get urls;
   String get username;
   JsonObject get credential;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SignalingSettings_TurnserversInterfaceBuilder].
+  $SignalingSettings_TurnserversInterface rebuild(
+    void Function($SignalingSettings_TurnserversInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SignalingSettings_TurnserversInterfaceBuilder].
+  $SignalingSettings_TurnserversInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SignalingSettings_TurnserversInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -25714,7 +26842,7 @@ abstract class SignalingSettings_Turnservers
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SignalingSettingsInterface {
+sealed class $SignalingSettingsInterface {
   SignalingSettings_HelloAuthParams get helloAuthParams;
   bool get hideWarning;
   String get server;
@@ -25724,6 +26852,15 @@ abstract interface class $SignalingSettingsInterface {
   String get ticket;
   BuiltList<SignalingSettings_Turnservers> get turnservers;
   String? get userId;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SignalingSettingsInterfaceBuilder].
+  $SignalingSettingsInterface rebuild(void Function($SignalingSettingsInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$SignalingSettingsInterfaceBuilder].
+  $SignalingSettingsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SignalingSettingsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -25768,9 +26905,20 @@ abstract class SignalingSettings
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SignalingGetSettingsResponseApplicationJson_OcsInterface {
+sealed class $SignalingGetSettingsResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   SignalingSettings get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SignalingGetSettingsResponseApplicationJson_OcsInterfaceBuilder].
+  $SignalingGetSettingsResponseApplicationJson_OcsInterface rebuild(
+    void Function($SignalingGetSettingsResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SignalingGetSettingsResponseApplicationJson_OcsInterfaceBuilder].
+  $SignalingGetSettingsResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SignalingGetSettingsResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -25821,8 +26969,19 @@ abstract class SignalingGetSettingsResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SignalingGetSettingsResponseApplicationJsonInterface {
+sealed class $SignalingGetSettingsResponseApplicationJsonInterface {
   SignalingGetSettingsResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SignalingGetSettingsResponseApplicationJsonInterfaceBuilder].
+  $SignalingGetSettingsResponseApplicationJsonInterface rebuild(
+    void Function($SignalingGetSettingsResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SignalingGetSettingsResponseApplicationJsonInterfaceBuilder].
+  $SignalingGetSettingsResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SignalingGetSettingsResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -25930,9 +27089,20 @@ class _$FederationAcceptShareApiVersionSerializer implements PrimitiveSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $FederationAcceptShareResponseApplicationJson_OcsInterface {
+sealed class $FederationAcceptShareResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$FederationAcceptShareResponseApplicationJson_OcsInterfaceBuilder].
+  $FederationAcceptShareResponseApplicationJson_OcsInterface rebuild(
+    void Function($FederationAcceptShareResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$FederationAcceptShareResponseApplicationJson_OcsInterfaceBuilder].
+  $FederationAcceptShareResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($FederationAcceptShareResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -25984,8 +27154,19 @@ abstract class FederationAcceptShareResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $FederationAcceptShareResponseApplicationJsonInterface {
+sealed class $FederationAcceptShareResponseApplicationJsonInterface {
   FederationAcceptShareResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$FederationAcceptShareResponseApplicationJsonInterfaceBuilder].
+  $FederationAcceptShareResponseApplicationJsonInterface rebuild(
+    void Function($FederationAcceptShareResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$FederationAcceptShareResponseApplicationJsonInterfaceBuilder].
+  $FederationAcceptShareResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($FederationAcceptShareResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -26093,9 +27274,20 @@ class _$FederationRejectShareApiVersionSerializer implements PrimitiveSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $FederationRejectShareResponseApplicationJson_OcsInterface {
+sealed class $FederationRejectShareResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$FederationRejectShareResponseApplicationJson_OcsInterfaceBuilder].
+  $FederationRejectShareResponseApplicationJson_OcsInterface rebuild(
+    void Function($FederationRejectShareResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$FederationRejectShareResponseApplicationJson_OcsInterfaceBuilder].
+  $FederationRejectShareResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($FederationRejectShareResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -26147,8 +27339,19 @@ abstract class FederationRejectShareResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $FederationRejectShareResponseApplicationJsonInterface {
+sealed class $FederationRejectShareResponseApplicationJsonInterface {
   FederationRejectShareResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$FederationRejectShareResponseApplicationJsonInterfaceBuilder].
+  $FederationRejectShareResponseApplicationJsonInterface rebuild(
+    void Function($FederationRejectShareResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$FederationRejectShareResponseApplicationJsonInterfaceBuilder].
+  $FederationRejectShareResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($FederationRejectShareResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -26255,7 +27458,7 @@ class _$FederationGetSharesApiVersionSerializer implements PrimitiveSerializer<F
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $FederationInviteInterface {
+sealed class $FederationInviteInterface {
   int get id;
   int get state;
   String get localCloudId;
@@ -26267,6 +27470,15 @@ abstract interface class $FederationInviteInterface {
   String get userId;
   String get inviterCloudId;
   String get inviterDisplayName;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$FederationInviteInterfaceBuilder].
+  $FederationInviteInterface rebuild(void Function($FederationInviteInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$FederationInviteInterfaceBuilder].
+  $FederationInviteInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($FederationInviteInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -26311,9 +27523,20 @@ abstract class FederationInvite
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $FederationGetSharesResponseApplicationJson_OcsInterface {
+sealed class $FederationGetSharesResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltList<FederationInvite> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$FederationGetSharesResponseApplicationJson_OcsInterfaceBuilder].
+  $FederationGetSharesResponseApplicationJson_OcsInterface rebuild(
+    void Function($FederationGetSharesResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$FederationGetSharesResponseApplicationJson_OcsInterfaceBuilder].
+  $FederationGetSharesResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($FederationGetSharesResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -26364,8 +27587,19 @@ abstract class FederationGetSharesResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $FederationGetSharesResponseApplicationJsonInterface {
+sealed class $FederationGetSharesResponseApplicationJsonInterface {
   FederationGetSharesResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$FederationGetSharesResponseApplicationJsonInterfaceBuilder].
+  $FederationGetSharesResponseApplicationJsonInterface rebuild(
+    void Function($FederationGetSharesResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$FederationGetSharesResponseApplicationJsonInterfaceBuilder].
+  $FederationGetSharesResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($FederationGetSharesResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -26478,8 +27712,19 @@ class _$FilesIntegrationGetRoomByFileIdApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $FilesIntegrationGetRoomByFileIdResponseApplicationJson_Ocs_DataInterface {
+sealed class $FilesIntegrationGetRoomByFileIdResponseApplicationJson_Ocs_DataInterface {
   String get token;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$FilesIntegrationGetRoomByFileIdResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $FilesIntegrationGetRoomByFileIdResponseApplicationJson_Ocs_DataInterface rebuild(
+    void Function($FilesIntegrationGetRoomByFileIdResponseApplicationJson_Ocs_DataInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$FilesIntegrationGetRoomByFileIdResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $FilesIntegrationGetRoomByFileIdResponseApplicationJson_Ocs_DataInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($FilesIntegrationGetRoomByFileIdResponseApplicationJson_Ocs_DataInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -26531,9 +27776,20 @@ abstract class FilesIntegrationGetRoomByFileIdResponseApplicationJson_Ocs_Data
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $FilesIntegrationGetRoomByFileIdResponseApplicationJson_OcsInterface {
+sealed class $FilesIntegrationGetRoomByFileIdResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   FilesIntegrationGetRoomByFileIdResponseApplicationJson_Ocs_Data get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$FilesIntegrationGetRoomByFileIdResponseApplicationJson_OcsInterfaceBuilder].
+  $FilesIntegrationGetRoomByFileIdResponseApplicationJson_OcsInterface rebuild(
+    void Function($FilesIntegrationGetRoomByFileIdResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$FilesIntegrationGetRoomByFileIdResponseApplicationJson_OcsInterfaceBuilder].
+  $FilesIntegrationGetRoomByFileIdResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($FilesIntegrationGetRoomByFileIdResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -26585,8 +27841,19 @@ abstract class FilesIntegrationGetRoomByFileIdResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $FilesIntegrationGetRoomByFileIdResponseApplicationJsonInterface {
+sealed class $FilesIntegrationGetRoomByFileIdResponseApplicationJsonInterface {
   FilesIntegrationGetRoomByFileIdResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$FilesIntegrationGetRoomByFileIdResponseApplicationJsonInterfaceBuilder].
+  $FilesIntegrationGetRoomByFileIdResponseApplicationJsonInterface rebuild(
+    void Function($FilesIntegrationGetRoomByFileIdResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$FilesIntegrationGetRoomByFileIdResponseApplicationJsonInterfaceBuilder].
+  $FilesIntegrationGetRoomByFileIdResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($FilesIntegrationGetRoomByFileIdResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -26700,10 +27967,21 @@ class _$FilesIntegrationGetRoomByShareTokenApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $FilesIntegrationGetRoomByShareTokenResponseApplicationJson_Ocs_DataInterface {
+sealed class $FilesIntegrationGetRoomByShareTokenResponseApplicationJson_Ocs_DataInterface {
   String get token;
   String get userId;
   String get userDisplayName;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$FilesIntegrationGetRoomByShareTokenResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $FilesIntegrationGetRoomByShareTokenResponseApplicationJson_Ocs_DataInterface rebuild(
+    void Function($FilesIntegrationGetRoomByShareTokenResponseApplicationJson_Ocs_DataInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$FilesIntegrationGetRoomByShareTokenResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $FilesIntegrationGetRoomByShareTokenResponseApplicationJson_Ocs_DataInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($FilesIntegrationGetRoomByShareTokenResponseApplicationJson_Ocs_DataInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -26755,9 +28033,20 @@ abstract class FilesIntegrationGetRoomByShareTokenResponseApplicationJson_Ocs_Da
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $FilesIntegrationGetRoomByShareTokenResponseApplicationJson_OcsInterface {
+sealed class $FilesIntegrationGetRoomByShareTokenResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   FilesIntegrationGetRoomByShareTokenResponseApplicationJson_Ocs_Data get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$FilesIntegrationGetRoomByShareTokenResponseApplicationJson_OcsInterfaceBuilder].
+  $FilesIntegrationGetRoomByShareTokenResponseApplicationJson_OcsInterface rebuild(
+    void Function($FilesIntegrationGetRoomByShareTokenResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$FilesIntegrationGetRoomByShareTokenResponseApplicationJson_OcsInterfaceBuilder].
+  $FilesIntegrationGetRoomByShareTokenResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($FilesIntegrationGetRoomByShareTokenResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -26809,8 +28098,19 @@ abstract class FilesIntegrationGetRoomByShareTokenResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $FilesIntegrationGetRoomByShareTokenResponseApplicationJsonInterface {
+sealed class $FilesIntegrationGetRoomByShareTokenResponseApplicationJsonInterface {
   FilesIntegrationGetRoomByShareTokenResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$FilesIntegrationGetRoomByShareTokenResponseApplicationJsonInterfaceBuilder].
+  $FilesIntegrationGetRoomByShareTokenResponseApplicationJsonInterface rebuild(
+    void Function($FilesIntegrationGetRoomByShareTokenResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$FilesIntegrationGetRoomByShareTokenResponseApplicationJsonInterfaceBuilder].
+  $FilesIntegrationGetRoomByShareTokenResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($FilesIntegrationGetRoomByShareTokenResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -26921,10 +28221,21 @@ class _$PublicShareAuthCreateRoomApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $PublicShareAuthCreateRoomResponseApplicationJson_Ocs_DataInterface {
+sealed class $PublicShareAuthCreateRoomResponseApplicationJson_Ocs_DataInterface {
   String get token;
   String get name;
   String get displayName;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$PublicShareAuthCreateRoomResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $PublicShareAuthCreateRoomResponseApplicationJson_Ocs_DataInterface rebuild(
+    void Function($PublicShareAuthCreateRoomResponseApplicationJson_Ocs_DataInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$PublicShareAuthCreateRoomResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $PublicShareAuthCreateRoomResponseApplicationJson_Ocs_DataInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($PublicShareAuthCreateRoomResponseApplicationJson_Ocs_DataInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -26976,9 +28287,20 @@ abstract class PublicShareAuthCreateRoomResponseApplicationJson_Ocs_Data
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $PublicShareAuthCreateRoomResponseApplicationJson_OcsInterface {
+sealed class $PublicShareAuthCreateRoomResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   PublicShareAuthCreateRoomResponseApplicationJson_Ocs_Data get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$PublicShareAuthCreateRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $PublicShareAuthCreateRoomResponseApplicationJson_OcsInterface rebuild(
+    void Function($PublicShareAuthCreateRoomResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$PublicShareAuthCreateRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $PublicShareAuthCreateRoomResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($PublicShareAuthCreateRoomResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -27030,8 +28352,19 @@ abstract class PublicShareAuthCreateRoomResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $PublicShareAuthCreateRoomResponseApplicationJsonInterface {
+sealed class $PublicShareAuthCreateRoomResponseApplicationJsonInterface {
   PublicShareAuthCreateRoomResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$PublicShareAuthCreateRoomResponseApplicationJsonInterfaceBuilder].
+  $PublicShareAuthCreateRoomResponseApplicationJsonInterface rebuild(
+    void Function($PublicShareAuthCreateRoomResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$PublicShareAuthCreateRoomResponseApplicationJsonInterfaceBuilder].
+  $PublicShareAuthCreateRoomResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($PublicShareAuthCreateRoomResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -27139,9 +28472,20 @@ class _$GuestSetDisplayNameApiVersionSerializer implements PrimitiveSerializer<G
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $GuestSetDisplayNameResponseApplicationJson_OcsInterface {
+sealed class $GuestSetDisplayNameResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$GuestSetDisplayNameResponseApplicationJson_OcsInterfaceBuilder].
+  $GuestSetDisplayNameResponseApplicationJson_OcsInterface rebuild(
+    void Function($GuestSetDisplayNameResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$GuestSetDisplayNameResponseApplicationJson_OcsInterfaceBuilder].
+  $GuestSetDisplayNameResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($GuestSetDisplayNameResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -27192,8 +28536,19 @@ abstract class GuestSetDisplayNameResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $GuestSetDisplayNameResponseApplicationJsonInterface {
+sealed class $GuestSetDisplayNameResponseApplicationJsonInterface {
   GuestSetDisplayNameResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$GuestSetDisplayNameResponseApplicationJsonInterfaceBuilder].
+  $GuestSetDisplayNameResponseApplicationJsonInterface rebuild(
+    void Function($GuestSetDisplayNameResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$GuestSetDisplayNameResponseApplicationJsonInterfaceBuilder].
+  $GuestSetDisplayNameResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($GuestSetDisplayNameResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -27306,9 +28661,20 @@ class _$HostedSignalingServerRequestTrialApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $HostedSignalingServerRequestTrialResponseApplicationJson_OcsInterface {
+sealed class $HostedSignalingServerRequestTrialResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltMap<String, JsonObject> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$HostedSignalingServerRequestTrialResponseApplicationJson_OcsInterfaceBuilder].
+  $HostedSignalingServerRequestTrialResponseApplicationJson_OcsInterface rebuild(
+    void Function($HostedSignalingServerRequestTrialResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$HostedSignalingServerRequestTrialResponseApplicationJson_OcsInterfaceBuilder].
+  $HostedSignalingServerRequestTrialResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($HostedSignalingServerRequestTrialResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -27360,8 +28726,19 @@ abstract class HostedSignalingServerRequestTrialResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $HostedSignalingServerRequestTrialResponseApplicationJsonInterface {
+sealed class $HostedSignalingServerRequestTrialResponseApplicationJsonInterface {
   HostedSignalingServerRequestTrialResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$HostedSignalingServerRequestTrialResponseApplicationJsonInterfaceBuilder].
+  $HostedSignalingServerRequestTrialResponseApplicationJsonInterface rebuild(
+    void Function($HostedSignalingServerRequestTrialResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$HostedSignalingServerRequestTrialResponseApplicationJsonInterfaceBuilder].
+  $HostedSignalingServerRequestTrialResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($HostedSignalingServerRequestTrialResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -27532,13 +28909,22 @@ class _$SignalingPullMessagesApiVersionSerializer implements PrimitiveSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SignalingSessionInterface {
+sealed class $SignalingSessionInterface {
   int get inCall;
   int get lastPing;
   int get participantPermissions;
   int get roomId;
   String get sessionId;
   String get userId;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SignalingSessionInterfaceBuilder].
+  $SignalingSessionInterface rebuild(void Function($SignalingSessionInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$SignalingSessionInterfaceBuilder].
+  $SignalingSessionInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SignalingSessionInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -27588,9 +28974,20 @@ typedef SignalingPullMessagesResponseApplicationJson_Ocs_Data_Data = ({
 });
 
 @BuiltValue(instantiable: false)
-abstract interface class $SignalingPullMessagesResponseApplicationJson_Ocs_DataInterface {
+sealed class $SignalingPullMessagesResponseApplicationJson_Ocs_DataInterface {
   String get type;
   SignalingPullMessagesResponseApplicationJson_Ocs_Data_Data get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SignalingPullMessagesResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $SignalingPullMessagesResponseApplicationJson_Ocs_DataInterface rebuild(
+    void Function($SignalingPullMessagesResponseApplicationJson_Ocs_DataInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SignalingPullMessagesResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $SignalingPullMessagesResponseApplicationJson_Ocs_DataInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SignalingPullMessagesResponseApplicationJson_Ocs_DataInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -27644,9 +29041,20 @@ abstract class SignalingPullMessagesResponseApplicationJson_Ocs_Data
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SignalingPullMessagesResponseApplicationJson_OcsInterface {
+sealed class $SignalingPullMessagesResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltList<SignalingPullMessagesResponseApplicationJson_Ocs_Data> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SignalingPullMessagesResponseApplicationJson_OcsInterfaceBuilder].
+  $SignalingPullMessagesResponseApplicationJson_OcsInterface rebuild(
+    void Function($SignalingPullMessagesResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SignalingPullMessagesResponseApplicationJson_OcsInterfaceBuilder].
+  $SignalingPullMessagesResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SignalingPullMessagesResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -27698,8 +29106,19 @@ abstract class SignalingPullMessagesResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SignalingPullMessagesResponseApplicationJsonInterface {
+sealed class $SignalingPullMessagesResponseApplicationJsonInterface {
   SignalingPullMessagesResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SignalingPullMessagesResponseApplicationJsonInterfaceBuilder].
+  $SignalingPullMessagesResponseApplicationJsonInterface rebuild(
+    void Function($SignalingPullMessagesResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SignalingPullMessagesResponseApplicationJsonInterfaceBuilder].
+  $SignalingPullMessagesResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SignalingPullMessagesResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -27807,9 +29226,20 @@ class _$SignalingSendMessagesApiVersionSerializer implements PrimitiveSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SignalingSendMessagesResponseApplicationJson_OcsInterface {
+sealed class $SignalingSendMessagesResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SignalingSendMessagesResponseApplicationJson_OcsInterfaceBuilder].
+  $SignalingSendMessagesResponseApplicationJson_OcsInterface rebuild(
+    void Function($SignalingSendMessagesResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SignalingSendMessagesResponseApplicationJson_OcsInterfaceBuilder].
+  $SignalingSendMessagesResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SignalingSendMessagesResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -27861,8 +29291,19 @@ abstract class SignalingSendMessagesResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SignalingSendMessagesResponseApplicationJsonInterface {
+sealed class $SignalingSendMessagesResponseApplicationJsonInterface {
   SignalingSendMessagesResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SignalingSendMessagesResponseApplicationJsonInterfaceBuilder].
+  $SignalingSendMessagesResponseApplicationJsonInterface rebuild(
+    void Function($SignalingSendMessagesResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SignalingSendMessagesResponseApplicationJsonInterfaceBuilder].
+  $SignalingSendMessagesResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SignalingSendMessagesResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -27974,10 +29415,19 @@ class _$MatterbridgeGetBridgeOfRoomApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $MatterbridgeInterface {
+sealed class $MatterbridgeInterface {
   bool get enabled;
   BuiltList<BuiltMap<String, JsonObject>> get parts;
   int get pid;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$MatterbridgeInterfaceBuilder].
+  $MatterbridgeInterface rebuild(void Function($MatterbridgeInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$MatterbridgeInterfaceBuilder].
+  $MatterbridgeInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($MatterbridgeInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -28021,9 +29471,18 @@ abstract class Matterbridge implements $MatterbridgeInterface, Built<Matterbridg
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $MatterbridgeProcessStateInterface {
+sealed class $MatterbridgeProcessStateInterface {
   String get log;
   bool get running;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$MatterbridgeProcessStateInterfaceBuilder].
+  $MatterbridgeProcessStateInterface rebuild(void Function($MatterbridgeProcessStateInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$MatterbridgeProcessStateInterfaceBuilder].
+  $MatterbridgeProcessStateInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($MatterbridgeProcessStateInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -28069,8 +29528,16 @@ abstract class MatterbridgeProcessState
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $MatterbridgeWithProcessStateInterface
+sealed class $MatterbridgeWithProcessStateInterface
     implements $MatterbridgeInterface, $MatterbridgeProcessStateInterface {
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$MatterbridgeWithProcessStateInterfaceBuilder].
+  $MatterbridgeWithProcessStateInterface rebuild(void Function($MatterbridgeWithProcessStateInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$MatterbridgeWithProcessStateInterfaceBuilder].
+  $MatterbridgeWithProcessStateInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($MatterbridgeWithProcessStateInterfaceBuilder b) {
     $MatterbridgeInterface._defaults(b);
@@ -28126,9 +29593,20 @@ abstract class MatterbridgeWithProcessState
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $MatterbridgeGetBridgeOfRoomResponseApplicationJson_OcsInterface {
+sealed class $MatterbridgeGetBridgeOfRoomResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   MatterbridgeWithProcessState get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$MatterbridgeGetBridgeOfRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $MatterbridgeGetBridgeOfRoomResponseApplicationJson_OcsInterface rebuild(
+    void Function($MatterbridgeGetBridgeOfRoomResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$MatterbridgeGetBridgeOfRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $MatterbridgeGetBridgeOfRoomResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($MatterbridgeGetBridgeOfRoomResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -28180,8 +29658,19 @@ abstract class MatterbridgeGetBridgeOfRoomResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $MatterbridgeGetBridgeOfRoomResponseApplicationJsonInterface {
+sealed class $MatterbridgeGetBridgeOfRoomResponseApplicationJsonInterface {
   MatterbridgeGetBridgeOfRoomResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$MatterbridgeGetBridgeOfRoomResponseApplicationJsonInterfaceBuilder].
+  $MatterbridgeGetBridgeOfRoomResponseApplicationJsonInterface rebuild(
+    void Function($MatterbridgeGetBridgeOfRoomResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$MatterbridgeGetBridgeOfRoomResponseApplicationJsonInterfaceBuilder].
+  $MatterbridgeGetBridgeOfRoomResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($MatterbridgeGetBridgeOfRoomResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -28360,9 +29849,20 @@ class _$MatterbridgeEditBridgeOfRoomApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $MatterbridgeEditBridgeOfRoomResponseApplicationJson_OcsInterface {
+sealed class $MatterbridgeEditBridgeOfRoomResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   MatterbridgeProcessState get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$MatterbridgeEditBridgeOfRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $MatterbridgeEditBridgeOfRoomResponseApplicationJson_OcsInterface rebuild(
+    void Function($MatterbridgeEditBridgeOfRoomResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$MatterbridgeEditBridgeOfRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $MatterbridgeEditBridgeOfRoomResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($MatterbridgeEditBridgeOfRoomResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -28414,8 +29914,19 @@ abstract class MatterbridgeEditBridgeOfRoomResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $MatterbridgeEditBridgeOfRoomResponseApplicationJsonInterface {
+sealed class $MatterbridgeEditBridgeOfRoomResponseApplicationJsonInterface {
   MatterbridgeEditBridgeOfRoomResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$MatterbridgeEditBridgeOfRoomResponseApplicationJsonInterfaceBuilder].
+  $MatterbridgeEditBridgeOfRoomResponseApplicationJsonInterface rebuild(
+    void Function($MatterbridgeEditBridgeOfRoomResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$MatterbridgeEditBridgeOfRoomResponseApplicationJsonInterfaceBuilder].
+  $MatterbridgeEditBridgeOfRoomResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($MatterbridgeEditBridgeOfRoomResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -28529,9 +30040,20 @@ class _$MatterbridgeDeleteBridgeOfRoomApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $MatterbridgeDeleteBridgeOfRoomResponseApplicationJson_OcsInterface {
+sealed class $MatterbridgeDeleteBridgeOfRoomResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   bool get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$MatterbridgeDeleteBridgeOfRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $MatterbridgeDeleteBridgeOfRoomResponseApplicationJson_OcsInterface rebuild(
+    void Function($MatterbridgeDeleteBridgeOfRoomResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$MatterbridgeDeleteBridgeOfRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $MatterbridgeDeleteBridgeOfRoomResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($MatterbridgeDeleteBridgeOfRoomResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -28583,8 +30105,19 @@ abstract class MatterbridgeDeleteBridgeOfRoomResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $MatterbridgeDeleteBridgeOfRoomResponseApplicationJsonInterface {
+sealed class $MatterbridgeDeleteBridgeOfRoomResponseApplicationJsonInterface {
   MatterbridgeDeleteBridgeOfRoomResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$MatterbridgeDeleteBridgeOfRoomResponseApplicationJsonInterfaceBuilder].
+  $MatterbridgeDeleteBridgeOfRoomResponseApplicationJsonInterface rebuild(
+    void Function($MatterbridgeDeleteBridgeOfRoomResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$MatterbridgeDeleteBridgeOfRoomResponseApplicationJsonInterfaceBuilder].
+  $MatterbridgeDeleteBridgeOfRoomResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($MatterbridgeDeleteBridgeOfRoomResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -28698,9 +30231,20 @@ class _$MatterbridgeGetBridgeProcessStateApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $MatterbridgeGetBridgeProcessStateResponseApplicationJson_OcsInterface {
+sealed class $MatterbridgeGetBridgeProcessStateResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   MatterbridgeProcessState get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$MatterbridgeGetBridgeProcessStateResponseApplicationJson_OcsInterfaceBuilder].
+  $MatterbridgeGetBridgeProcessStateResponseApplicationJson_OcsInterface rebuild(
+    void Function($MatterbridgeGetBridgeProcessStateResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$MatterbridgeGetBridgeProcessStateResponseApplicationJson_OcsInterfaceBuilder].
+  $MatterbridgeGetBridgeProcessStateResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($MatterbridgeGetBridgeProcessStateResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -28752,8 +30296,19 @@ abstract class MatterbridgeGetBridgeProcessStateResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $MatterbridgeGetBridgeProcessStateResponseApplicationJsonInterface {
+sealed class $MatterbridgeGetBridgeProcessStateResponseApplicationJsonInterface {
   MatterbridgeGetBridgeProcessStateResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$MatterbridgeGetBridgeProcessStateResponseApplicationJsonInterfaceBuilder].
+  $MatterbridgeGetBridgeProcessStateResponseApplicationJsonInterface rebuild(
+    void Function($MatterbridgeGetBridgeProcessStateResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$MatterbridgeGetBridgeProcessStateResponseApplicationJsonInterfaceBuilder].
+  $MatterbridgeGetBridgeProcessStateResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($MatterbridgeGetBridgeProcessStateResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -28867,9 +30422,20 @@ class _$MatterbridgeSettingsStopAllBridgesApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $MatterbridgeSettingsStopAllBridgesResponseApplicationJson_OcsInterface {
+sealed class $MatterbridgeSettingsStopAllBridgesResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   bool get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$MatterbridgeSettingsStopAllBridgesResponseApplicationJson_OcsInterfaceBuilder].
+  $MatterbridgeSettingsStopAllBridgesResponseApplicationJson_OcsInterface rebuild(
+    void Function($MatterbridgeSettingsStopAllBridgesResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$MatterbridgeSettingsStopAllBridgesResponseApplicationJson_OcsInterfaceBuilder].
+  $MatterbridgeSettingsStopAllBridgesResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($MatterbridgeSettingsStopAllBridgesResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -28921,8 +30487,19 @@ abstract class MatterbridgeSettingsStopAllBridgesResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $MatterbridgeSettingsStopAllBridgesResponseApplicationJsonInterface {
+sealed class $MatterbridgeSettingsStopAllBridgesResponseApplicationJsonInterface {
   MatterbridgeSettingsStopAllBridgesResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$MatterbridgeSettingsStopAllBridgesResponseApplicationJsonInterfaceBuilder].
+  $MatterbridgeSettingsStopAllBridgesResponseApplicationJsonInterface rebuild(
+    void Function($MatterbridgeSettingsStopAllBridgesResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$MatterbridgeSettingsStopAllBridgesResponseApplicationJsonInterfaceBuilder].
+  $MatterbridgeSettingsStopAllBridgesResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($MatterbridgeSettingsStopAllBridgesResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -29037,8 +30614,19 @@ class _$MatterbridgeSettingsGetMatterbridgeVersionApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJson_Ocs_DataInterface {
+sealed class $MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJson_Ocs_DataInterface {
   String get version;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJson_Ocs_DataInterface rebuild(
+    void Function($MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJson_Ocs_DataInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJson_Ocs_DataInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(
     $MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJson_Ocs_DataInterfaceBuilder b,
@@ -29096,9 +30684,20 @@ abstract class MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJson_OcsInterface {
+sealed class $MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJson_Ocs_Data get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJson_OcsInterfaceBuilder].
+  $MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJson_OcsInterface rebuild(
+    void Function($MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJson_OcsInterfaceBuilder].
+  $MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -29150,8 +30749,19 @@ abstract class MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJsonInterface {
+sealed class $MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJsonInterface {
   MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJsonInterfaceBuilder].
+  $MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJsonInterface rebuild(
+    void Function($MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJsonInterfaceBuilder].
+  $MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($MatterbridgeSettingsGetMatterbridgeVersionResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -29322,11 +30932,20 @@ class _$PollCreatePollApiVersionSerializer implements PrimitiveSerializer<PollCr
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $PollVoteInterface {
+sealed class $PollVoteInterface {
   String get actorDisplayName;
   String get actorId;
   ActorType get actorType;
   int get optionId;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$PollVoteInterfaceBuilder].
+  $PollVoteInterface rebuild(void Function($PollVoteInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$PollVoteInterfaceBuilder].
+  $PollVoteInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($PollVoteInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -29370,7 +30989,7 @@ abstract class PollVote implements $PollVoteInterface, Built<PollVote, PollVoteB
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $PollInterface {
+sealed class $PollInterface {
   String get actorDisplayName;
   String get actorId;
   ActorType get actorType;
@@ -29384,6 +31003,15 @@ abstract interface class $PollInterface {
   int get status;
   BuiltList<int>? get votedSelf;
   BuiltMap<String, int>? get votes;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$PollInterfaceBuilder].
+  $PollInterface rebuild(void Function($PollInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$PollInterfaceBuilder].
+  $PollInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($PollInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -29427,9 +31055,20 @@ abstract class Poll implements $PollInterface, Built<Poll, PollBuilder> {
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $PollCreatePollResponseApplicationJson_OcsInterface {
+sealed class $PollCreatePollResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Poll get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$PollCreatePollResponseApplicationJson_OcsInterfaceBuilder].
+  $PollCreatePollResponseApplicationJson_OcsInterface rebuild(
+    void Function($PollCreatePollResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$PollCreatePollResponseApplicationJson_OcsInterfaceBuilder].
+  $PollCreatePollResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($PollCreatePollResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -29480,8 +31119,19 @@ abstract class PollCreatePollResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $PollCreatePollResponseApplicationJsonInterface {
+sealed class $PollCreatePollResponseApplicationJsonInterface {
   PollCreatePollResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$PollCreatePollResponseApplicationJsonInterfaceBuilder].
+  $PollCreatePollResponseApplicationJsonInterface rebuild(
+    void Function($PollCreatePollResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$PollCreatePollResponseApplicationJsonInterfaceBuilder].
+  $PollCreatePollResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($PollCreatePollResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -29587,9 +31237,20 @@ class _$PollShowPollApiVersionSerializer implements PrimitiveSerializer<PollShow
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $PollShowPollResponseApplicationJson_OcsInterface {
+sealed class $PollShowPollResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Poll get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$PollShowPollResponseApplicationJson_OcsInterfaceBuilder].
+  $PollShowPollResponseApplicationJson_OcsInterface rebuild(
+    void Function($PollShowPollResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$PollShowPollResponseApplicationJson_OcsInterfaceBuilder].
+  $PollShowPollResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($PollShowPollResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -29639,8 +31300,19 @@ abstract class PollShowPollResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $PollShowPollResponseApplicationJsonInterface {
+sealed class $PollShowPollResponseApplicationJsonInterface {
   PollShowPollResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$PollShowPollResponseApplicationJsonInterfaceBuilder].
+  $PollShowPollResponseApplicationJsonInterface rebuild(
+    void Function($PollShowPollResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$PollShowPollResponseApplicationJsonInterfaceBuilder].
+  $PollShowPollResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($PollShowPollResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -29746,9 +31418,20 @@ class _$PollVotePollApiVersionSerializer implements PrimitiveSerializer<PollVote
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $PollVotePollResponseApplicationJson_OcsInterface {
+sealed class $PollVotePollResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Poll get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$PollVotePollResponseApplicationJson_OcsInterfaceBuilder].
+  $PollVotePollResponseApplicationJson_OcsInterface rebuild(
+    void Function($PollVotePollResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$PollVotePollResponseApplicationJson_OcsInterfaceBuilder].
+  $PollVotePollResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($PollVotePollResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -29798,8 +31481,19 @@ abstract class PollVotePollResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $PollVotePollResponseApplicationJsonInterface {
+sealed class $PollVotePollResponseApplicationJsonInterface {
   PollVotePollResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$PollVotePollResponseApplicationJsonInterfaceBuilder].
+  $PollVotePollResponseApplicationJsonInterface rebuild(
+    void Function($PollVotePollResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$PollVotePollResponseApplicationJsonInterfaceBuilder].
+  $PollVotePollResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($PollVotePollResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -29905,9 +31599,20 @@ class _$PollClosePollApiVersionSerializer implements PrimitiveSerializer<PollClo
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $PollClosePollResponseApplicationJson_OcsInterface {
+sealed class $PollClosePollResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Poll get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$PollClosePollResponseApplicationJson_OcsInterfaceBuilder].
+  $PollClosePollResponseApplicationJson_OcsInterface rebuild(
+    void Function($PollClosePollResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$PollClosePollResponseApplicationJson_OcsInterfaceBuilder].
+  $PollClosePollResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($PollClosePollResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -29958,8 +31663,19 @@ abstract class PollClosePollResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $PollClosePollResponseApplicationJsonInterface {
+sealed class $PollClosePollResponseApplicationJsonInterface {
   PollClosePollResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$PollClosePollResponseApplicationJsonInterfaceBuilder].
+  $PollClosePollResponseApplicationJsonInterface rebuild(
+    void Function($PollClosePollResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$PollClosePollResponseApplicationJsonInterfaceBuilder].
+  $PollClosePollResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($PollClosePollResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -30066,11 +31782,20 @@ class _$ReactionGetReactionsApiVersionSerializer implements PrimitiveSerializer<
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ReactionInterface {
+sealed class $ReactionInterface {
   String get actorDisplayName;
   String get actorId;
   ActorType get actorType;
   int get timestamp;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ReactionInterfaceBuilder].
+  $ReactionInterface rebuild(void Function($ReactionInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$ReactionInterfaceBuilder].
+  $ReactionInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ReactionInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -30114,9 +31839,20 @@ abstract class Reaction implements $ReactionInterface, Built<Reaction, ReactionB
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ReactionGetReactionsResponseApplicationJson_OcsInterface {
+sealed class $ReactionGetReactionsResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltMap<String, BuiltList<Reaction>> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ReactionGetReactionsResponseApplicationJson_OcsInterfaceBuilder].
+  $ReactionGetReactionsResponseApplicationJson_OcsInterface rebuild(
+    void Function($ReactionGetReactionsResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ReactionGetReactionsResponseApplicationJson_OcsInterfaceBuilder].
+  $ReactionGetReactionsResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ReactionGetReactionsResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -30167,8 +31903,19 @@ abstract class ReactionGetReactionsResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ReactionGetReactionsResponseApplicationJsonInterface {
+sealed class $ReactionGetReactionsResponseApplicationJsonInterface {
   ReactionGetReactionsResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ReactionGetReactionsResponseApplicationJsonInterfaceBuilder].
+  $ReactionGetReactionsResponseApplicationJsonInterface rebuild(
+    void Function($ReactionGetReactionsResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ReactionGetReactionsResponseApplicationJsonInterfaceBuilder].
+  $ReactionGetReactionsResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ReactionGetReactionsResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -30275,9 +32022,20 @@ class _$ReactionReactApiVersionSerializer implements PrimitiveSerializer<Reactio
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ReactionReactResponseApplicationJson_OcsInterface {
+sealed class $ReactionReactResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltMap<String, BuiltList<Reaction>> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ReactionReactResponseApplicationJson_OcsInterfaceBuilder].
+  $ReactionReactResponseApplicationJson_OcsInterface rebuild(
+    void Function($ReactionReactResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ReactionReactResponseApplicationJson_OcsInterfaceBuilder].
+  $ReactionReactResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ReactionReactResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -30328,8 +32086,19 @@ abstract class ReactionReactResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ReactionReactResponseApplicationJsonInterface {
+sealed class $ReactionReactResponseApplicationJsonInterface {
   ReactionReactResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ReactionReactResponseApplicationJsonInterfaceBuilder].
+  $ReactionReactResponseApplicationJsonInterface rebuild(
+    void Function($ReactionReactResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ReactionReactResponseApplicationJsonInterfaceBuilder].
+  $ReactionReactResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ReactionReactResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -30435,9 +32204,20 @@ class _$ReactionDeleteApiVersionSerializer implements PrimitiveSerializer<Reacti
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ReactionDeleteResponseApplicationJson_OcsInterface {
+sealed class $ReactionDeleteResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltMap<String, BuiltList<Reaction>> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ReactionDeleteResponseApplicationJson_OcsInterfaceBuilder].
+  $ReactionDeleteResponseApplicationJson_OcsInterface rebuild(
+    void Function($ReactionDeleteResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ReactionDeleteResponseApplicationJson_OcsInterfaceBuilder].
+  $ReactionDeleteResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ReactionDeleteResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -30488,8 +32268,19 @@ abstract class ReactionDeleteResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ReactionDeleteResponseApplicationJsonInterface {
+sealed class $ReactionDeleteResponseApplicationJsonInterface {
   ReactionDeleteResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ReactionDeleteResponseApplicationJsonInterfaceBuilder].
+  $ReactionDeleteResponseApplicationJsonInterface rebuild(
+    void Function($ReactionDeleteResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ReactionDeleteResponseApplicationJsonInterfaceBuilder].
+  $ReactionDeleteResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ReactionDeleteResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -30595,9 +32386,20 @@ class _$RecordingStartApiVersionSerializer implements PrimitiveSerializer<Record
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RecordingStartResponseApplicationJson_OcsInterface {
+sealed class $RecordingStartResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RecordingStartResponseApplicationJson_OcsInterfaceBuilder].
+  $RecordingStartResponseApplicationJson_OcsInterface rebuild(
+    void Function($RecordingStartResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RecordingStartResponseApplicationJson_OcsInterfaceBuilder].
+  $RecordingStartResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RecordingStartResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -30648,8 +32450,19 @@ abstract class RecordingStartResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RecordingStartResponseApplicationJsonInterface {
+sealed class $RecordingStartResponseApplicationJsonInterface {
   RecordingStartResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RecordingStartResponseApplicationJsonInterfaceBuilder].
+  $RecordingStartResponseApplicationJsonInterface rebuild(
+    void Function($RecordingStartResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RecordingStartResponseApplicationJsonInterfaceBuilder].
+  $RecordingStartResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RecordingStartResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -30755,9 +32568,20 @@ class _$RecordingStopApiVersionSerializer implements PrimitiveSerializer<Recordi
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RecordingStopResponseApplicationJson_OcsInterface {
+sealed class $RecordingStopResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RecordingStopResponseApplicationJson_OcsInterfaceBuilder].
+  $RecordingStopResponseApplicationJson_OcsInterface rebuild(
+    void Function($RecordingStopResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RecordingStopResponseApplicationJson_OcsInterfaceBuilder].
+  $RecordingStopResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RecordingStopResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -30808,8 +32632,19 @@ abstract class RecordingStopResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RecordingStopResponseApplicationJsonInterface {
+sealed class $RecordingStopResponseApplicationJsonInterface {
   RecordingStopResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RecordingStopResponseApplicationJsonInterfaceBuilder].
+  $RecordingStopResponseApplicationJsonInterface rebuild(
+    void Function($RecordingStopResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RecordingStopResponseApplicationJsonInterfaceBuilder].
+  $RecordingStopResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RecordingStopResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -30920,9 +32755,20 @@ class _$RecordingNotificationDismissApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RecordingNotificationDismissResponseApplicationJson_OcsInterface {
+sealed class $RecordingNotificationDismissResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RecordingNotificationDismissResponseApplicationJson_OcsInterfaceBuilder].
+  $RecordingNotificationDismissResponseApplicationJson_OcsInterface rebuild(
+    void Function($RecordingNotificationDismissResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RecordingNotificationDismissResponseApplicationJson_OcsInterfaceBuilder].
+  $RecordingNotificationDismissResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RecordingNotificationDismissResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -30974,8 +32820,19 @@ abstract class RecordingNotificationDismissResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RecordingNotificationDismissResponseApplicationJsonInterface {
+sealed class $RecordingNotificationDismissResponseApplicationJsonInterface {
   RecordingNotificationDismissResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RecordingNotificationDismissResponseApplicationJsonInterfaceBuilder].
+  $RecordingNotificationDismissResponseApplicationJsonInterface rebuild(
+    void Function($RecordingNotificationDismissResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RecordingNotificationDismissResponseApplicationJsonInterfaceBuilder].
+  $RecordingNotificationDismissResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RecordingNotificationDismissResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -31084,9 +32941,20 @@ class _$RecordingShareToChatApiVersionSerializer implements PrimitiveSerializer<
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RecordingShareToChatResponseApplicationJson_OcsInterface {
+sealed class $RecordingShareToChatResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RecordingShareToChatResponseApplicationJson_OcsInterfaceBuilder].
+  $RecordingShareToChatResponseApplicationJson_OcsInterface rebuild(
+    void Function($RecordingShareToChatResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RecordingShareToChatResponseApplicationJson_OcsInterfaceBuilder].
+  $RecordingShareToChatResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RecordingShareToChatResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -31137,8 +33005,19 @@ abstract class RecordingShareToChatResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RecordingShareToChatResponseApplicationJsonInterface {
+sealed class $RecordingShareToChatResponseApplicationJsonInterface {
   RecordingShareToChatResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RecordingShareToChatResponseApplicationJsonInterfaceBuilder].
+  $RecordingShareToChatResponseApplicationJsonInterface rebuild(
+    void Function($RecordingShareToChatResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RecordingShareToChatResponseApplicationJsonInterfaceBuilder].
+  $RecordingShareToChatResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RecordingShareToChatResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -31245,9 +33124,20 @@ class _$RecordingBackendApiVersionSerializer implements PrimitiveSerializer<Reco
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RecordingBackendResponseApplicationJson_OcsInterface {
+sealed class $RecordingBackendResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RecordingBackendResponseApplicationJson_OcsInterfaceBuilder].
+  $RecordingBackendResponseApplicationJson_OcsInterface rebuild(
+    void Function($RecordingBackendResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RecordingBackendResponseApplicationJson_OcsInterfaceBuilder].
+  $RecordingBackendResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RecordingBackendResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -31298,8 +33188,19 @@ abstract class RecordingBackendResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RecordingBackendResponseApplicationJsonInterface {
+sealed class $RecordingBackendResponseApplicationJsonInterface {
   RecordingBackendResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RecordingBackendResponseApplicationJsonInterfaceBuilder].
+  $RecordingBackendResponseApplicationJsonInterface rebuild(
+    void Function($RecordingBackendResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RecordingBackendResponseApplicationJsonInterfaceBuilder].
+  $RecordingBackendResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RecordingBackendResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -31405,9 +33306,20 @@ class _$RecordingStoreApiVersionSerializer implements PrimitiveSerializer<Record
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RecordingStoreResponseApplicationJson_OcsInterface {
+sealed class $RecordingStoreResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RecordingStoreResponseApplicationJson_OcsInterfaceBuilder].
+  $RecordingStoreResponseApplicationJson_OcsInterface rebuild(
+    void Function($RecordingStoreResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RecordingStoreResponseApplicationJson_OcsInterfaceBuilder].
+  $RecordingStoreResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RecordingStoreResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -31458,8 +33370,19 @@ abstract class RecordingStoreResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RecordingStoreResponseApplicationJsonInterface {
+sealed class $RecordingStoreResponseApplicationJsonInterface {
   RecordingStoreResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RecordingStoreResponseApplicationJsonInterfaceBuilder].
+  $RecordingStoreResponseApplicationJsonInterface rebuild(
+    void Function($RecordingStoreResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RecordingStoreResponseApplicationJsonInterfaceBuilder].
+  $RecordingStoreResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RecordingStoreResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -31691,9 +33614,20 @@ class _$RoomGetRoomsApiVersionSerializer implements PrimitiveSerializer<RoomGetR
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomGetRoomsResponseApplicationJson_OcsInterface {
+sealed class $RoomGetRoomsResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltList<Room> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomGetRoomsResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomGetRoomsResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomGetRoomsResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomGetRoomsResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomGetRoomsResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomGetRoomsResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -31743,8 +33677,19 @@ abstract class RoomGetRoomsResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomGetRoomsResponseApplicationJsonInterface {
+sealed class $RoomGetRoomsResponseApplicationJsonInterface {
   RoomGetRoomsResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomGetRoomsResponseApplicationJsonInterfaceBuilder].
+  $RoomGetRoomsResponseApplicationJsonInterface rebuild(
+    void Function($RoomGetRoomsResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomGetRoomsResponseApplicationJsonInterfaceBuilder].
+  $RoomGetRoomsResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomGetRoomsResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -31794,13 +33739,22 @@ abstract class RoomGetRoomsResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomRoomGetRoomsHeadersInterface {
+sealed class $RoomRoomGetRoomsHeadersInterface {
   @BuiltValueField(wireName: 'x-nextcloud-talk-hash')
   String? get xNextcloudTalkHash;
   @BuiltValueField(wireName: 'x-nextcloud-talk-modified-before')
   String? get xNextcloudTalkModifiedBefore;
   @BuiltValueField(wireName: 'x-nextcloud-talk-federation-invites')
   String? get xNextcloudTalkFederationInvites;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomRoomGetRoomsHeadersInterfaceBuilder].
+  $RoomRoomGetRoomsHeadersInterface rebuild(void Function($RoomRoomGetRoomsHeadersInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$RoomRoomGetRoomsHeadersInterfaceBuilder].
+  $RoomRoomGetRoomsHeadersInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomRoomGetRoomsHeadersInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -31902,9 +33856,20 @@ class _$RoomCreateRoomApiVersionSerializer implements PrimitiveSerializer<RoomCr
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomCreateRoomResponseApplicationJson_OcsInterface {
+sealed class $RoomCreateRoomResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomCreateRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomCreateRoomResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomCreateRoomResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomCreateRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomCreateRoomResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomCreateRoomResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -31955,8 +33920,19 @@ abstract class RoomCreateRoomResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomCreateRoomResponseApplicationJsonInterface {
+sealed class $RoomCreateRoomResponseApplicationJsonInterface {
   RoomCreateRoomResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomCreateRoomResponseApplicationJsonInterfaceBuilder].
+  $RoomCreateRoomResponseApplicationJsonInterface rebuild(
+    void Function($RoomCreateRoomResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomCreateRoomResponseApplicationJsonInterfaceBuilder].
+  $RoomCreateRoomResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomCreateRoomResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -32062,9 +34038,20 @@ class _$RoomGetListedRoomsApiVersionSerializer implements PrimitiveSerializer<Ro
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomGetListedRoomsResponseApplicationJson_OcsInterface {
+sealed class $RoomGetListedRoomsResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltList<Room> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomGetListedRoomsResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomGetListedRoomsResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomGetListedRoomsResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomGetListedRoomsResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomGetListedRoomsResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomGetListedRoomsResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -32115,8 +34102,19 @@ abstract class RoomGetListedRoomsResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomGetListedRoomsResponseApplicationJsonInterface {
+sealed class $RoomGetListedRoomsResponseApplicationJsonInterface {
   RoomGetListedRoomsResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomGetListedRoomsResponseApplicationJsonInterfaceBuilder].
+  $RoomGetListedRoomsResponseApplicationJsonInterface rebuild(
+    void Function($RoomGetListedRoomsResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomGetListedRoomsResponseApplicationJsonInterfaceBuilder].
+  $RoomGetListedRoomsResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomGetListedRoomsResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -32229,9 +34227,20 @@ class _$RoomGetNoteToSelfConversationApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomGetNoteToSelfConversationResponseApplicationJson_OcsInterface {
+sealed class $RoomGetNoteToSelfConversationResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomGetNoteToSelfConversationResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomGetNoteToSelfConversationResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomGetNoteToSelfConversationResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomGetNoteToSelfConversationResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomGetNoteToSelfConversationResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomGetNoteToSelfConversationResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -32283,8 +34292,19 @@ abstract class RoomGetNoteToSelfConversationResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomGetNoteToSelfConversationResponseApplicationJsonInterface {
+sealed class $RoomGetNoteToSelfConversationResponseApplicationJsonInterface {
   RoomGetNoteToSelfConversationResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomGetNoteToSelfConversationResponseApplicationJsonInterfaceBuilder].
+  $RoomGetNoteToSelfConversationResponseApplicationJsonInterface rebuild(
+    void Function($RoomGetNoteToSelfConversationResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomGetNoteToSelfConversationResponseApplicationJsonInterfaceBuilder].
+  $RoomGetNoteToSelfConversationResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomGetNoteToSelfConversationResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -32336,9 +34356,20 @@ abstract class RoomGetNoteToSelfConversationResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomRoomGetNoteToSelfConversationHeadersInterface {
+sealed class $RoomRoomGetNoteToSelfConversationHeadersInterface {
   @BuiltValueField(wireName: 'x-nextcloud-talk-hash')
   String? get xNextcloudTalkHash;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomRoomGetNoteToSelfConversationHeadersInterfaceBuilder].
+  $RoomRoomGetNoteToSelfConversationHeadersInterface rebuild(
+    void Function($RoomRoomGetNoteToSelfConversationHeadersInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomRoomGetNoteToSelfConversationHeadersInterfaceBuilder].
+  $RoomRoomGetNoteToSelfConversationHeadersInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomRoomGetNoteToSelfConversationHeadersInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -32445,9 +34476,20 @@ class _$RoomGetSingleRoomApiVersionSerializer implements PrimitiveSerializer<Roo
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomGetSingleRoomResponseApplicationJson_OcsInterface {
+sealed class $RoomGetSingleRoomResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomGetSingleRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomGetSingleRoomResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomGetSingleRoomResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomGetSingleRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomGetSingleRoomResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomGetSingleRoomResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -32498,8 +34540,19 @@ abstract class RoomGetSingleRoomResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomGetSingleRoomResponseApplicationJsonInterface {
+sealed class $RoomGetSingleRoomResponseApplicationJsonInterface {
   RoomGetSingleRoomResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomGetSingleRoomResponseApplicationJsonInterfaceBuilder].
+  $RoomGetSingleRoomResponseApplicationJsonInterface rebuild(
+    void Function($RoomGetSingleRoomResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomGetSingleRoomResponseApplicationJsonInterfaceBuilder].
+  $RoomGetSingleRoomResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomGetSingleRoomResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -32550,9 +34603,18 @@ abstract class RoomGetSingleRoomResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomRoomGetSingleRoomHeadersInterface {
+sealed class $RoomRoomGetSingleRoomHeadersInterface {
   @BuiltValueField(wireName: 'x-nextcloud-talk-hash')
   String? get xNextcloudTalkHash;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomRoomGetSingleRoomHeadersInterfaceBuilder].
+  $RoomRoomGetSingleRoomHeadersInterface rebuild(void Function($RoomRoomGetSingleRoomHeadersInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$RoomRoomGetSingleRoomHeadersInterfaceBuilder].
+  $RoomRoomGetSingleRoomHeadersInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomRoomGetSingleRoomHeadersInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -32658,9 +34720,20 @@ class _$RoomGetBreakoutRoomsApiVersionSerializer implements PrimitiveSerializer<
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomGetBreakoutRoomsResponseApplicationJson_OcsInterface {
+sealed class $RoomGetBreakoutRoomsResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltList<Room> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomGetBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomGetBreakoutRoomsResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomGetBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomGetBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomGetBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomGetBreakoutRoomsResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -32711,8 +34784,19 @@ abstract class RoomGetBreakoutRoomsResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomGetBreakoutRoomsResponseApplicationJsonInterface {
+sealed class $RoomGetBreakoutRoomsResponseApplicationJsonInterface {
   RoomGetBreakoutRoomsResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomGetBreakoutRoomsResponseApplicationJsonInterfaceBuilder].
+  $RoomGetBreakoutRoomsResponseApplicationJsonInterface rebuild(
+    void Function($RoomGetBreakoutRoomsResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomGetBreakoutRoomsResponseApplicationJsonInterfaceBuilder].
+  $RoomGetBreakoutRoomsResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomGetBreakoutRoomsResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -32819,9 +34903,20 @@ class _$RoomMakePublicApiVersionSerializer implements PrimitiveSerializer<RoomMa
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomMakePublicResponseApplicationJson_OcsInterface {
+sealed class $RoomMakePublicResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomMakePublicResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomMakePublicResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomMakePublicResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomMakePublicResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomMakePublicResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomMakePublicResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -32872,8 +34967,19 @@ abstract class RoomMakePublicResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomMakePublicResponseApplicationJsonInterface {
+sealed class $RoomMakePublicResponseApplicationJsonInterface {
   RoomMakePublicResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomMakePublicResponseApplicationJsonInterfaceBuilder].
+  $RoomMakePublicResponseApplicationJsonInterface rebuild(
+    void Function($RoomMakePublicResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomMakePublicResponseApplicationJsonInterfaceBuilder].
+  $RoomMakePublicResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomMakePublicResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -32979,9 +35085,20 @@ class _$RoomMakePrivateApiVersionSerializer implements PrimitiveSerializer<RoomM
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomMakePrivateResponseApplicationJson_OcsInterface {
+sealed class $RoomMakePrivateResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomMakePrivateResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomMakePrivateResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomMakePrivateResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomMakePrivateResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomMakePrivateResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomMakePrivateResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -33032,8 +35149,19 @@ abstract class RoomMakePrivateResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomMakePrivateResponseApplicationJsonInterface {
+sealed class $RoomMakePrivateResponseApplicationJsonInterface {
   RoomMakePrivateResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomMakePrivateResponseApplicationJsonInterfaceBuilder].
+  $RoomMakePrivateResponseApplicationJsonInterface rebuild(
+    void Function($RoomMakePrivateResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomMakePrivateResponseApplicationJsonInterfaceBuilder].
+  $RoomMakePrivateResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomMakePrivateResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -33139,9 +35267,20 @@ class _$RoomSetDescriptionApiVersionSerializer implements PrimitiveSerializer<Ro
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetDescriptionResponseApplicationJson_OcsInterface {
+sealed class $RoomSetDescriptionResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetDescriptionResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetDescriptionResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomSetDescriptionResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetDescriptionResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetDescriptionResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetDescriptionResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -33192,8 +35331,19 @@ abstract class RoomSetDescriptionResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetDescriptionResponseApplicationJsonInterface {
+sealed class $RoomSetDescriptionResponseApplicationJsonInterface {
   RoomSetDescriptionResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetDescriptionResponseApplicationJsonInterfaceBuilder].
+  $RoomSetDescriptionResponseApplicationJsonInterface rebuild(
+    void Function($RoomSetDescriptionResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetDescriptionResponseApplicationJsonInterfaceBuilder].
+  $RoomSetDescriptionResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetDescriptionResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -33363,9 +35513,20 @@ class _$RoomSetReadOnlyApiVersionSerializer implements PrimitiveSerializer<RoomS
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetReadOnlyResponseApplicationJson_OcsInterface {
+sealed class $RoomSetReadOnlyResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetReadOnlyResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetReadOnlyResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomSetReadOnlyResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetReadOnlyResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetReadOnlyResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetReadOnlyResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -33416,8 +35577,19 @@ abstract class RoomSetReadOnlyResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetReadOnlyResponseApplicationJsonInterface {
+sealed class $RoomSetReadOnlyResponseApplicationJsonInterface {
   RoomSetReadOnlyResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetReadOnlyResponseApplicationJsonInterfaceBuilder].
+  $RoomSetReadOnlyResponseApplicationJsonInterface rebuild(
+    void Function($RoomSetReadOnlyResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetReadOnlyResponseApplicationJsonInterfaceBuilder].
+  $RoomSetReadOnlyResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetReadOnlyResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -33592,9 +35764,20 @@ class _$RoomSetListableApiVersionSerializer implements PrimitiveSerializer<RoomS
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetListableResponseApplicationJson_OcsInterface {
+sealed class $RoomSetListableResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetListableResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetListableResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomSetListableResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetListableResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetListableResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetListableResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -33645,8 +35828,19 @@ abstract class RoomSetListableResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetListableResponseApplicationJsonInterface {
+sealed class $RoomSetListableResponseApplicationJsonInterface {
   RoomSetListableResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetListableResponseApplicationJsonInterfaceBuilder].
+  $RoomSetListableResponseApplicationJsonInterface rebuild(
+    void Function($RoomSetListableResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetListableResponseApplicationJsonInterfaceBuilder].
+  $RoomSetListableResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetListableResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -33752,9 +35946,20 @@ class _$RoomSetPasswordApiVersionSerializer implements PrimitiveSerializer<RoomS
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetPasswordResponseApplicationJson_OcsInterface {
+sealed class $RoomSetPasswordResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetPasswordResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetPasswordResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomSetPasswordResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetPasswordResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetPasswordResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetPasswordResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -33805,8 +36010,19 @@ abstract class RoomSetPasswordResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetPasswordResponseApplicationJsonInterface {
+sealed class $RoomSetPasswordResponseApplicationJsonInterface {
   RoomSetPasswordResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetPasswordResponseApplicationJsonInterfaceBuilder].
+  $RoomSetPasswordResponseApplicationJsonInterface rebuild(
+    void Function($RoomSetPasswordResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetPasswordResponseApplicationJsonInterfaceBuilder].
+  $RoomSetPasswordResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetPasswordResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -33974,9 +36190,20 @@ class _$RoomSetPermissionsApiVersionSerializer implements PrimitiveSerializer<Ro
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetPermissionsResponseApplicationJson_OcsInterface {
+sealed class $RoomSetPermissionsResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetPermissionsResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetPermissionsResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomSetPermissionsResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetPermissionsResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetPermissionsResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetPermissionsResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -34027,8 +36254,19 @@ abstract class RoomSetPermissionsResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetPermissionsResponseApplicationJsonInterface {
+sealed class $RoomSetPermissionsResponseApplicationJsonInterface {
   RoomSetPermissionsResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetPermissionsResponseApplicationJsonInterfaceBuilder].
+  $RoomSetPermissionsResponseApplicationJsonInterface rebuild(
+    void Function($RoomSetPermissionsResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetPermissionsResponseApplicationJsonInterfaceBuilder].
+  $RoomSetPermissionsResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetPermissionsResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -34199,7 +36437,7 @@ class _$RoomGetParticipantsApiVersionSerializer implements PrimitiveSerializer<R
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ParticipantInterface {
+sealed class $ParticipantInterface {
   String get actorId;
   ActorType get actorType;
   int get attendeeId;
@@ -34218,6 +36456,15 @@ abstract interface class $ParticipantInterface {
   String? get statusMessage;
   String? get phoneNumber;
   String? get callId;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ParticipantInterfaceBuilder].
+  $ParticipantInterface rebuild(void Function($ParticipantInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$ParticipantInterfaceBuilder].
+  $ParticipantInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ParticipantInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -34261,9 +36508,20 @@ abstract class Participant implements $ParticipantInterface, Built<Participant, 
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomGetParticipantsResponseApplicationJson_OcsInterface {
+sealed class $RoomGetParticipantsResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltList<Participant> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomGetParticipantsResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomGetParticipantsResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomGetParticipantsResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomGetParticipantsResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomGetParticipantsResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomGetParticipantsResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -34314,8 +36572,19 @@ abstract class RoomGetParticipantsResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomGetParticipantsResponseApplicationJsonInterface {
+sealed class $RoomGetParticipantsResponseApplicationJsonInterface {
   RoomGetParticipantsResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomGetParticipantsResponseApplicationJsonInterfaceBuilder].
+  $RoomGetParticipantsResponseApplicationJsonInterface rebuild(
+    void Function($RoomGetParticipantsResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomGetParticipantsResponseApplicationJsonInterfaceBuilder].
+  $RoomGetParticipantsResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomGetParticipantsResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -34366,9 +36635,20 @@ abstract class RoomGetParticipantsResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomRoomGetParticipantsHeadersInterface {
+sealed class $RoomRoomGetParticipantsHeadersInterface {
   @BuiltValueField(wireName: 'x-nextcloud-has-user-statuses')
-  Header<bool>? get xNextcloudHasUserStatuses;
+  Header<bool?>? get xNextcloudHasUserStatuses;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomRoomGetParticipantsHeadersInterfaceBuilder].
+  $RoomRoomGetParticipantsHeadersInterface rebuild(
+    void Function($RoomRoomGetParticipantsHeadersInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomRoomGetParticipantsHeadersInterfaceBuilder].
+  $RoomRoomGetParticipantsHeadersInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomRoomGetParticipantsHeadersInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -34558,8 +36838,19 @@ class _$RoomAddParticipantToRoomApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomAddParticipantToRoomResponseApplicationJson_Ocs_Data0Interface {
+sealed class $RoomAddParticipantToRoomResponseApplicationJson_Ocs_Data0Interface {
   int get type;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomAddParticipantToRoomResponseApplicationJson_Ocs_Data0InterfaceBuilder].
+  $RoomAddParticipantToRoomResponseApplicationJson_Ocs_Data0Interface rebuild(
+    void Function($RoomAddParticipantToRoomResponseApplicationJson_Ocs_Data0InterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomAddParticipantToRoomResponseApplicationJson_Ocs_Data0InterfaceBuilder].
+  $RoomAddParticipantToRoomResponseApplicationJson_Ocs_Data0InterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomAddParticipantToRoomResponseApplicationJson_Ocs_Data0InterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -34616,9 +36907,20 @@ typedef RoomAddParticipantToRoomResponseApplicationJson_Ocs_Data = ({
 });
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomAddParticipantToRoomResponseApplicationJson_OcsInterface {
+sealed class $RoomAddParticipantToRoomResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   RoomAddParticipantToRoomResponseApplicationJson_Ocs_Data get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomAddParticipantToRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomAddParticipantToRoomResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomAddParticipantToRoomResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomAddParticipantToRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomAddParticipantToRoomResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomAddParticipantToRoomResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -34672,8 +36974,19 @@ abstract class RoomAddParticipantToRoomResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomAddParticipantToRoomResponseApplicationJsonInterface {
+sealed class $RoomAddParticipantToRoomResponseApplicationJsonInterface {
   RoomAddParticipantToRoomResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomAddParticipantToRoomResponseApplicationJsonInterfaceBuilder].
+  $RoomAddParticipantToRoomResponseApplicationJsonInterface rebuild(
+    void Function($RoomAddParticipantToRoomResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomAddParticipantToRoomResponseApplicationJsonInterfaceBuilder].
+  $RoomAddParticipantToRoomResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomAddParticipantToRoomResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -34855,9 +37168,20 @@ class _$RoomGetBreakoutRoomParticipantsApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomGetBreakoutRoomParticipantsResponseApplicationJson_OcsInterface {
+sealed class $RoomGetBreakoutRoomParticipantsResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltList<Participant> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomGetBreakoutRoomParticipantsResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomGetBreakoutRoomParticipantsResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomGetBreakoutRoomParticipantsResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomGetBreakoutRoomParticipantsResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomGetBreakoutRoomParticipantsResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomGetBreakoutRoomParticipantsResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -34909,8 +37233,19 @@ abstract class RoomGetBreakoutRoomParticipantsResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomGetBreakoutRoomParticipantsResponseApplicationJsonInterface {
+sealed class $RoomGetBreakoutRoomParticipantsResponseApplicationJsonInterface {
   RoomGetBreakoutRoomParticipantsResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomGetBreakoutRoomParticipantsResponseApplicationJsonInterfaceBuilder].
+  $RoomGetBreakoutRoomParticipantsResponseApplicationJsonInterface rebuild(
+    void Function($RoomGetBreakoutRoomParticipantsResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomGetBreakoutRoomParticipantsResponseApplicationJsonInterfaceBuilder].
+  $RoomGetBreakoutRoomParticipantsResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomGetBreakoutRoomParticipantsResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -34962,9 +37297,20 @@ abstract class RoomGetBreakoutRoomParticipantsResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomRoomGetBreakoutRoomParticipantsHeadersInterface {
+sealed class $RoomRoomGetBreakoutRoomParticipantsHeadersInterface {
   @BuiltValueField(wireName: 'x-nextcloud-has-user-statuses')
-  Header<bool>? get xNextcloudHasUserStatuses;
+  Header<bool?>? get xNextcloudHasUserStatuses;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomRoomGetBreakoutRoomParticipantsHeadersInterfaceBuilder].
+  $RoomRoomGetBreakoutRoomParticipantsHeadersInterface rebuild(
+    void Function($RoomRoomGetBreakoutRoomParticipantsHeadersInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomRoomGetBreakoutRoomParticipantsHeadersInterfaceBuilder].
+  $RoomRoomGetBreakoutRoomParticipantsHeadersInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomRoomGetBreakoutRoomParticipantsHeadersInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -35072,9 +37418,20 @@ class _$RoomRemoveSelfFromRoomApiVersionSerializer implements PrimitiveSerialize
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomRemoveSelfFromRoomResponseApplicationJson_OcsInterface {
+sealed class $RoomRemoveSelfFromRoomResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomRemoveSelfFromRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomRemoveSelfFromRoomResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomRemoveSelfFromRoomResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomRemoveSelfFromRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomRemoveSelfFromRoomResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomRemoveSelfFromRoomResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -35126,8 +37483,19 @@ abstract class RoomRemoveSelfFromRoomResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomRemoveSelfFromRoomResponseApplicationJsonInterface {
+sealed class $RoomRemoveSelfFromRoomResponseApplicationJsonInterface {
   RoomRemoveSelfFromRoomResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomRemoveSelfFromRoomResponseApplicationJsonInterfaceBuilder].
+  $RoomRemoveSelfFromRoomResponseApplicationJsonInterface rebuild(
+    void Function($RoomRemoveSelfFromRoomResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomRemoveSelfFromRoomResponseApplicationJsonInterfaceBuilder].
+  $RoomRemoveSelfFromRoomResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomRemoveSelfFromRoomResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -35239,9 +37607,20 @@ class _$RoomRemoveAttendeeFromRoomApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomRemoveAttendeeFromRoomResponseApplicationJson_OcsInterface {
+sealed class $RoomRemoveAttendeeFromRoomResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomRemoveAttendeeFromRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomRemoveAttendeeFromRoomResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomRemoveAttendeeFromRoomResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomRemoveAttendeeFromRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomRemoveAttendeeFromRoomResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomRemoveAttendeeFromRoomResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -35293,8 +37672,19 @@ abstract class RoomRemoveAttendeeFromRoomResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomRemoveAttendeeFromRoomResponseApplicationJsonInterface {
+sealed class $RoomRemoveAttendeeFromRoomResponseApplicationJsonInterface {
   RoomRemoveAttendeeFromRoomResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomRemoveAttendeeFromRoomResponseApplicationJsonInterfaceBuilder].
+  $RoomRemoveAttendeeFromRoomResponseApplicationJsonInterface rebuild(
+    void Function($RoomRemoveAttendeeFromRoomResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomRemoveAttendeeFromRoomResponseApplicationJsonInterfaceBuilder].
+  $RoomRemoveAttendeeFromRoomResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomRemoveAttendeeFromRoomResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -35475,9 +37865,20 @@ class _$RoomSetAttendeePermissionsApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetAttendeePermissionsResponseApplicationJson_OcsInterface {
+sealed class $RoomSetAttendeePermissionsResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetAttendeePermissionsResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetAttendeePermissionsResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomSetAttendeePermissionsResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetAttendeePermissionsResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetAttendeePermissionsResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetAttendeePermissionsResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -35529,8 +37930,19 @@ abstract class RoomSetAttendeePermissionsResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetAttendeePermissionsResponseApplicationJsonInterface {
+sealed class $RoomSetAttendeePermissionsResponseApplicationJsonInterface {
   RoomSetAttendeePermissionsResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetAttendeePermissionsResponseApplicationJsonInterfaceBuilder].
+  $RoomSetAttendeePermissionsResponseApplicationJsonInterface rebuild(
+    void Function($RoomSetAttendeePermissionsResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetAttendeePermissionsResponseApplicationJsonInterfaceBuilder].
+  $RoomSetAttendeePermissionsResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetAttendeePermissionsResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -35716,9 +38128,20 @@ class _$RoomSetAllAttendeesPermissionsApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetAllAttendeesPermissionsResponseApplicationJson_OcsInterface {
+sealed class $RoomSetAllAttendeesPermissionsResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetAllAttendeesPermissionsResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetAllAttendeesPermissionsResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomSetAllAttendeesPermissionsResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetAllAttendeesPermissionsResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetAllAttendeesPermissionsResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetAllAttendeesPermissionsResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -35770,8 +38193,19 @@ abstract class RoomSetAllAttendeesPermissionsResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetAllAttendeesPermissionsResponseApplicationJsonInterface {
+sealed class $RoomSetAllAttendeesPermissionsResponseApplicationJsonInterface {
   RoomSetAllAttendeesPermissionsResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetAllAttendeesPermissionsResponseApplicationJsonInterfaceBuilder].
+  $RoomSetAllAttendeesPermissionsResponseApplicationJsonInterface rebuild(
+    void Function($RoomSetAllAttendeesPermissionsResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetAllAttendeesPermissionsResponseApplicationJsonInterfaceBuilder].
+  $RoomSetAllAttendeesPermissionsResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetAllAttendeesPermissionsResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -35942,9 +38376,20 @@ class _$RoomJoinRoomApiVersionSerializer implements PrimitiveSerializer<RoomJoin
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomJoinRoomResponseApplicationJson_OcsInterface {
+sealed class $RoomJoinRoomResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomJoinRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomJoinRoomResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomJoinRoomResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomJoinRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomJoinRoomResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomJoinRoomResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -35994,8 +38439,19 @@ abstract class RoomJoinRoomResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomJoinRoomResponseApplicationJsonInterface {
+sealed class $RoomJoinRoomResponseApplicationJsonInterface {
   RoomJoinRoomResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomJoinRoomResponseApplicationJsonInterfaceBuilder].
+  $RoomJoinRoomResponseApplicationJsonInterface rebuild(
+    void Function($RoomJoinRoomResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomJoinRoomResponseApplicationJsonInterfaceBuilder].
+  $RoomJoinRoomResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomJoinRoomResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -36045,9 +38501,18 @@ abstract class RoomJoinRoomResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomRoomJoinRoomHeadersInterface {
+sealed class $RoomRoomJoinRoomHeadersInterface {
   @BuiltValueField(wireName: 'x-nextcloud-talk-proxy-hash')
   String? get xNextcloudTalkProxyHash;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomRoomJoinRoomHeadersInterfaceBuilder].
+  $RoomRoomJoinRoomHeadersInterface rebuild(void Function($RoomRoomJoinRoomHeadersInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$RoomRoomJoinRoomHeadersInterfaceBuilder].
+  $RoomRoomJoinRoomHeadersInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomRoomJoinRoomHeadersInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -36149,9 +38614,20 @@ class _$RoomLeaveRoomApiVersionSerializer implements PrimitiveSerializer<RoomLea
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomLeaveRoomResponseApplicationJson_OcsInterface {
+sealed class $RoomLeaveRoomResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomLeaveRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomLeaveRoomResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomLeaveRoomResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomLeaveRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomLeaveRoomResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomLeaveRoomResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -36202,8 +38678,19 @@ abstract class RoomLeaveRoomResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomLeaveRoomResponseApplicationJsonInterface {
+sealed class $RoomLeaveRoomResponseApplicationJsonInterface {
   RoomLeaveRoomResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomLeaveRoomResponseApplicationJsonInterfaceBuilder].
+  $RoomLeaveRoomResponseApplicationJsonInterface rebuild(
+    void Function($RoomLeaveRoomResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomLeaveRoomResponseApplicationJsonInterfaceBuilder].
+  $RoomLeaveRoomResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomLeaveRoomResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -36310,9 +38797,20 @@ class _$RoomResendInvitationsApiVersionSerializer implements PrimitiveSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomResendInvitationsResponseApplicationJson_OcsInterface {
+sealed class $RoomResendInvitationsResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomResendInvitationsResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomResendInvitationsResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomResendInvitationsResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomResendInvitationsResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomResendInvitationsResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomResendInvitationsResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -36364,8 +38862,19 @@ abstract class RoomResendInvitationsResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomResendInvitationsResponseApplicationJsonInterface {
+sealed class $RoomResendInvitationsResponseApplicationJsonInterface {
   RoomResendInvitationsResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomResendInvitationsResponseApplicationJsonInterfaceBuilder].
+  $RoomResendInvitationsResponseApplicationJsonInterface rebuild(
+    void Function($RoomResendInvitationsResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomResendInvitationsResponseApplicationJsonInterfaceBuilder].
+  $RoomResendInvitationsResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomResendInvitationsResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -36535,9 +39044,20 @@ class _$RoomSetSessionStateApiVersionSerializer implements PrimitiveSerializer<R
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetSessionStateResponseApplicationJson_OcsInterface {
+sealed class $RoomSetSessionStateResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetSessionStateResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetSessionStateResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomSetSessionStateResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetSessionStateResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetSessionStateResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetSessionStateResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -36588,8 +39108,19 @@ abstract class RoomSetSessionStateResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetSessionStateResponseApplicationJsonInterface {
+sealed class $RoomSetSessionStateResponseApplicationJsonInterface {
   RoomSetSessionStateResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetSessionStateResponseApplicationJsonInterfaceBuilder].
+  $RoomSetSessionStateResponseApplicationJsonInterface rebuild(
+    void Function($RoomSetSessionStateResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetSessionStateResponseApplicationJsonInterfaceBuilder].
+  $RoomSetSessionStateResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetSessionStateResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -36697,9 +39228,20 @@ class _$RoomPromoteModeratorApiVersionSerializer implements PrimitiveSerializer<
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomPromoteModeratorResponseApplicationJson_OcsInterface {
+sealed class $RoomPromoteModeratorResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomPromoteModeratorResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomPromoteModeratorResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomPromoteModeratorResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomPromoteModeratorResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomPromoteModeratorResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomPromoteModeratorResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -36750,8 +39292,19 @@ abstract class RoomPromoteModeratorResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomPromoteModeratorResponseApplicationJsonInterface {
+sealed class $RoomPromoteModeratorResponseApplicationJsonInterface {
   RoomPromoteModeratorResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomPromoteModeratorResponseApplicationJsonInterfaceBuilder].
+  $RoomPromoteModeratorResponseApplicationJsonInterface rebuild(
+    void Function($RoomPromoteModeratorResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomPromoteModeratorResponseApplicationJsonInterfaceBuilder].
+  $RoomPromoteModeratorResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomPromoteModeratorResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -36858,9 +39411,20 @@ class _$RoomDemoteModeratorApiVersionSerializer implements PrimitiveSerializer<R
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomDemoteModeratorResponseApplicationJson_OcsInterface {
+sealed class $RoomDemoteModeratorResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomDemoteModeratorResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomDemoteModeratorResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomDemoteModeratorResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomDemoteModeratorResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomDemoteModeratorResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomDemoteModeratorResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -36911,8 +39475,19 @@ abstract class RoomDemoteModeratorResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomDemoteModeratorResponseApplicationJsonInterface {
+sealed class $RoomDemoteModeratorResponseApplicationJsonInterface {
   RoomDemoteModeratorResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomDemoteModeratorResponseApplicationJsonInterfaceBuilder].
+  $RoomDemoteModeratorResponseApplicationJsonInterface rebuild(
+    void Function($RoomDemoteModeratorResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomDemoteModeratorResponseApplicationJsonInterfaceBuilder].
+  $RoomDemoteModeratorResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomDemoteModeratorResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -37019,9 +39594,20 @@ class _$RoomAddToFavoritesApiVersionSerializer implements PrimitiveSerializer<Ro
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomAddToFavoritesResponseApplicationJson_OcsInterface {
+sealed class $RoomAddToFavoritesResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomAddToFavoritesResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomAddToFavoritesResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomAddToFavoritesResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomAddToFavoritesResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomAddToFavoritesResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomAddToFavoritesResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -37072,8 +39658,19 @@ abstract class RoomAddToFavoritesResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomAddToFavoritesResponseApplicationJsonInterface {
+sealed class $RoomAddToFavoritesResponseApplicationJsonInterface {
   RoomAddToFavoritesResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomAddToFavoritesResponseApplicationJsonInterfaceBuilder].
+  $RoomAddToFavoritesResponseApplicationJsonInterface rebuild(
+    void Function($RoomAddToFavoritesResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomAddToFavoritesResponseApplicationJsonInterfaceBuilder].
+  $RoomAddToFavoritesResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomAddToFavoritesResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -37181,9 +39778,20 @@ class _$RoomRemoveFromFavoritesApiVersionSerializer implements PrimitiveSerializ
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomRemoveFromFavoritesResponseApplicationJson_OcsInterface {
+sealed class $RoomRemoveFromFavoritesResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomRemoveFromFavoritesResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomRemoveFromFavoritesResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomRemoveFromFavoritesResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomRemoveFromFavoritesResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomRemoveFromFavoritesResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomRemoveFromFavoritesResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -37235,8 +39843,19 @@ abstract class RoomRemoveFromFavoritesResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomRemoveFromFavoritesResponseApplicationJsonInterface {
+sealed class $RoomRemoveFromFavoritesResponseApplicationJsonInterface {
   RoomRemoveFromFavoritesResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomRemoveFromFavoritesResponseApplicationJsonInterfaceBuilder].
+  $RoomRemoveFromFavoritesResponseApplicationJsonInterface rebuild(
+    void Function($RoomRemoveFromFavoritesResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomRemoveFromFavoritesResponseApplicationJsonInterfaceBuilder].
+  $RoomRemoveFromFavoritesResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomRemoveFromFavoritesResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -37345,9 +39964,20 @@ class _$RoomSetNotificationLevelApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetNotificationLevelResponseApplicationJson_OcsInterface {
+sealed class $RoomSetNotificationLevelResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetNotificationLevelResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetNotificationLevelResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomSetNotificationLevelResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetNotificationLevelResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetNotificationLevelResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetNotificationLevelResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -37399,8 +40029,19 @@ abstract class RoomSetNotificationLevelResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetNotificationLevelResponseApplicationJsonInterface {
+sealed class $RoomSetNotificationLevelResponseApplicationJsonInterface {
   RoomSetNotificationLevelResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetNotificationLevelResponseApplicationJsonInterfaceBuilder].
+  $RoomSetNotificationLevelResponseApplicationJsonInterface rebuild(
+    void Function($RoomSetNotificationLevelResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetNotificationLevelResponseApplicationJsonInterfaceBuilder].
+  $RoomSetNotificationLevelResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetNotificationLevelResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -37509,9 +40150,20 @@ class _$RoomSetNotificationCallsApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetNotificationCallsResponseApplicationJson_OcsInterface {
+sealed class $RoomSetNotificationCallsResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetNotificationCallsResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetNotificationCallsResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomSetNotificationCallsResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetNotificationCallsResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetNotificationCallsResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetNotificationCallsResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -37563,8 +40215,19 @@ abstract class RoomSetNotificationCallsResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetNotificationCallsResponseApplicationJsonInterface {
+sealed class $RoomSetNotificationCallsResponseApplicationJsonInterface {
   RoomSetNotificationCallsResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetNotificationCallsResponseApplicationJsonInterfaceBuilder].
+  $RoomSetNotificationCallsResponseApplicationJsonInterface rebuild(
+    void Function($RoomSetNotificationCallsResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetNotificationCallsResponseApplicationJsonInterfaceBuilder].
+  $RoomSetNotificationCallsResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetNotificationCallsResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -37671,9 +40334,20 @@ class _$RoomSetLobbyApiVersionSerializer implements PrimitiveSerializer<RoomSetL
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetLobbyResponseApplicationJson_OcsInterface {
+sealed class $RoomSetLobbyResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetLobbyResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetLobbyResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomSetLobbyResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetLobbyResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetLobbyResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetLobbyResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -37723,8 +40397,19 @@ abstract class RoomSetLobbyResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetLobbyResponseApplicationJsonInterface {
+sealed class $RoomSetLobbyResponseApplicationJsonInterface {
   RoomSetLobbyResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetLobbyResponseApplicationJsonInterfaceBuilder].
+  $RoomSetLobbyResponseApplicationJsonInterface rebuild(
+    void Function($RoomSetLobbyResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetLobbyResponseApplicationJsonInterfaceBuilder].
+  $RoomSetLobbyResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetLobbyResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -37899,9 +40584,20 @@ class _$RoomSetsipEnabledApiVersionSerializer implements PrimitiveSerializer<Roo
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetsipEnabledResponseApplicationJson_OcsInterface {
+sealed class $RoomSetsipEnabledResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetsipEnabledResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetsipEnabledResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomSetsipEnabledResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetsipEnabledResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetsipEnabledResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetsipEnabledResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -37952,8 +40648,19 @@ abstract class RoomSetsipEnabledResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetsipEnabledResponseApplicationJsonInterface {
+sealed class $RoomSetsipEnabledResponseApplicationJsonInterface {
   RoomSetsipEnabledResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetsipEnabledResponseApplicationJsonInterfaceBuilder].
+  $RoomSetsipEnabledResponseApplicationJsonInterface rebuild(
+    void Function($RoomSetsipEnabledResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetsipEnabledResponseApplicationJsonInterfaceBuilder].
+  $RoomSetsipEnabledResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetsipEnabledResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -38061,9 +40768,20 @@ class _$RoomSetRecordingConsentApiVersionSerializer implements PrimitiveSerializ
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetRecordingConsentResponseApplicationJson_OcsInterface {
+sealed class $RoomSetRecordingConsentResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetRecordingConsentResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetRecordingConsentResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomSetRecordingConsentResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetRecordingConsentResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetRecordingConsentResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetRecordingConsentResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -38115,8 +40833,19 @@ abstract class RoomSetRecordingConsentResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetRecordingConsentResponseApplicationJsonInterface {
+sealed class $RoomSetRecordingConsentResponseApplicationJsonInterface {
   RoomSetRecordingConsentResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetRecordingConsentResponseApplicationJsonInterfaceBuilder].
+  $RoomSetRecordingConsentResponseApplicationJsonInterface rebuild(
+    void Function($RoomSetRecordingConsentResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetRecordingConsentResponseApplicationJsonInterfaceBuilder].
+  $RoomSetRecordingConsentResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetRecordingConsentResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -38225,9 +40954,20 @@ class _$RoomSetMessageExpirationApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetMessageExpirationResponseApplicationJson_OcsInterface {
+sealed class $RoomSetMessageExpirationResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetMessageExpirationResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetMessageExpirationResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomSetMessageExpirationResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetMessageExpirationResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomSetMessageExpirationResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetMessageExpirationResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -38279,8 +41019,19 @@ abstract class RoomSetMessageExpirationResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomSetMessageExpirationResponseApplicationJsonInterface {
+sealed class $RoomSetMessageExpirationResponseApplicationJsonInterface {
   RoomSetMessageExpirationResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomSetMessageExpirationResponseApplicationJsonInterfaceBuilder].
+  $RoomSetMessageExpirationResponseApplicationJsonInterface rebuild(
+    void Function($RoomSetMessageExpirationResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomSetMessageExpirationResponseApplicationJsonInterfaceBuilder].
+  $RoomSetMessageExpirationResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomSetMessageExpirationResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -38387,9 +41138,20 @@ class _$RoomGetCapabilitiesApiVersionSerializer implements PrimitiveSerializer<R
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $Capabilities_Config_AttachmentsInterface {
+sealed class $Capabilities_Config_AttachmentsInterface {
   bool get allowed;
   String? get folder;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$Capabilities_Config_AttachmentsInterfaceBuilder].
+  $Capabilities_Config_AttachmentsInterface rebuild(
+    void Function($Capabilities_Config_AttachmentsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$Capabilities_Config_AttachmentsInterfaceBuilder].
+  $Capabilities_Config_AttachmentsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($Capabilities_Config_AttachmentsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -38438,13 +41200,13 @@ abstract class Capabilities_Config_Attachments
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $Capabilities_Config_CallInterface {
+sealed class $Capabilities_Config_CallInterface {
   bool get enabled;
   @BuiltValueField(wireName: 'breakout-rooms')
   bool get breakoutRooms;
   bool get recording;
   @BuiltValueField(wireName: 'recording-consent')
-  int? get recordingConsent;
+  int get recordingConsent;
   @BuiltValueField(wireName: 'supported-reactions')
   BuiltList<String> get supportedReactions;
   @BuiltValueField(wireName: 'predefined-backgrounds')
@@ -38452,11 +41214,20 @@ abstract interface class $Capabilities_Config_CallInterface {
   @BuiltValueField(wireName: 'can-upload-background')
   bool get canUploadBackground;
   @BuiltValueField(wireName: 'sip-enabled')
-  bool? get sipEnabled;
+  bool get sipEnabled;
   @BuiltValueField(wireName: 'sip-dialout-enabled')
-  bool? get sipDialoutEnabled;
+  bool get sipDialoutEnabled;
   @BuiltValueField(wireName: 'can-enable-sip')
-  bool? get canEnableSip;
+  bool get canEnableSip;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$Capabilities_Config_CallInterfaceBuilder].
+  $Capabilities_Config_CallInterface rebuild(void Function($Capabilities_Config_CallInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$Capabilities_Config_CallInterfaceBuilder].
+  $Capabilities_Config_CallInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($Capabilities_Config_CallInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -38502,16 +41273,24 @@ abstract class Capabilities_Config_Call
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $Capabilities_Config_ChatInterface {
+sealed class $Capabilities_Config_ChatInterface {
   @BuiltValueField(wireName: 'max-length')
   int get maxLength;
   @BuiltValueField(wireName: 'read-privacy')
   int get readPrivacy;
   @BuiltValueField(wireName: 'has-translation-providers')
-  bool? get hasTranslationProviders;
+  bool get hasTranslationProviders;
   @BuiltValueField(wireName: 'typing-privacy')
   int get typingPrivacy;
-  BuiltList<String>? get translations;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$Capabilities_Config_ChatInterfaceBuilder].
+  $Capabilities_Config_ChatInterface rebuild(void Function($Capabilities_Config_ChatInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$Capabilities_Config_ChatInterfaceBuilder].
+  $Capabilities_Config_ChatInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($Capabilities_Config_ChatInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -38557,9 +41336,20 @@ abstract class Capabilities_Config_Chat
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $Capabilities_Config_ConversationsInterface {
+sealed class $Capabilities_Config_ConversationsInterface {
   @BuiltValueField(wireName: 'can-create')
   bool get canCreate;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$Capabilities_Config_ConversationsInterfaceBuilder].
+  $Capabilities_Config_ConversationsInterface rebuild(
+    void Function($Capabilities_Config_ConversationsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$Capabilities_Config_ConversationsInterfaceBuilder].
+  $Capabilities_Config_ConversationsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($Capabilities_Config_ConversationsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -38608,7 +41398,7 @@ abstract class Capabilities_Config_Conversations
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $Capabilities_Config_FederationInterface {
+sealed class $Capabilities_Config_FederationInterface {
   bool get enabled;
   @BuiltValueField(wireName: 'incoming-enabled')
   bool get incomingEnabled;
@@ -38616,6 +41406,17 @@ abstract interface class $Capabilities_Config_FederationInterface {
   bool get outgoingEnabled;
   @BuiltValueField(wireName: 'only-trusted-servers')
   bool get onlyTrustedServers;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$Capabilities_Config_FederationInterfaceBuilder].
+  $Capabilities_Config_FederationInterface rebuild(
+    void Function($Capabilities_Config_FederationInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$Capabilities_Config_FederationInterfaceBuilder].
+  $Capabilities_Config_FederationInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($Capabilities_Config_FederationInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -38664,9 +41465,18 @@ abstract class Capabilities_Config_Federation
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $Capabilities_Config_PreviewsInterface {
+sealed class $Capabilities_Config_PreviewsInterface {
   @BuiltValueField(wireName: 'max-gif-size')
   int get maxGifSize;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$Capabilities_Config_PreviewsInterfaceBuilder].
+  $Capabilities_Config_PreviewsInterface rebuild(void Function($Capabilities_Config_PreviewsInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$Capabilities_Config_PreviewsInterfaceBuilder].
+  $Capabilities_Config_PreviewsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($Capabilities_Config_PreviewsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -38715,11 +41525,22 @@ abstract class Capabilities_Config_Previews
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $Capabilities_Config_SignalingInterface {
+sealed class $Capabilities_Config_SignalingInterface {
   @BuiltValueField(wireName: 'session-ping-limit')
   int get sessionPingLimit;
   @BuiltValueField(wireName: 'hello-v2-token-key')
   String? get helloV2TokenKey;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$Capabilities_Config_SignalingInterfaceBuilder].
+  $Capabilities_Config_SignalingInterface rebuild(
+    void Function($Capabilities_Config_SignalingInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$Capabilities_Config_SignalingInterfaceBuilder].
+  $Capabilities_Config_SignalingInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($Capabilities_Config_SignalingInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -38768,7 +41589,7 @@ abstract class Capabilities_Config_Signaling
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $Capabilities_ConfigInterface {
+sealed class $Capabilities_ConfigInterface {
   Capabilities_Config_Attachments get attachments;
   Capabilities_Config_Call get call;
   Capabilities_Config_Chat get chat;
@@ -38776,6 +41597,15 @@ abstract interface class $Capabilities_ConfigInterface {
   Capabilities_Config_Federation? get federation;
   Capabilities_Config_Previews get previews;
   Capabilities_Config_Signaling get signaling;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$Capabilities_ConfigInterfaceBuilder].
+  $Capabilities_ConfigInterface rebuild(void Function($Capabilities_ConfigInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$Capabilities_ConfigInterfaceBuilder].
+  $Capabilities_ConfigInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($Capabilities_ConfigInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -38821,10 +41651,19 @@ abstract class Capabilities_Config
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $CapabilitiesInterface {
+sealed class $CapabilitiesInterface {
   BuiltList<String> get features;
   Capabilities_Config get config;
   String get version;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$CapabilitiesInterfaceBuilder].
+  $CapabilitiesInterface rebuild(void Function($CapabilitiesInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$CapabilitiesInterfaceBuilder].
+  $CapabilitiesInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($CapabilitiesInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -38873,9 +41712,20 @@ typedef RoomGetCapabilitiesResponseApplicationJson_Ocs_Data = ({
 });
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomGetCapabilitiesResponseApplicationJson_OcsInterface {
+sealed class $RoomGetCapabilitiesResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   RoomGetCapabilitiesResponseApplicationJson_Ocs_Data get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomGetCapabilitiesResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomGetCapabilitiesResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomGetCapabilitiesResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomGetCapabilitiesResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomGetCapabilitiesResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomGetCapabilitiesResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -38928,8 +41778,19 @@ abstract class RoomGetCapabilitiesResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomGetCapabilitiesResponseApplicationJsonInterface {
+sealed class $RoomGetCapabilitiesResponseApplicationJsonInterface {
   RoomGetCapabilitiesResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomGetCapabilitiesResponseApplicationJsonInterfaceBuilder].
+  $RoomGetCapabilitiesResponseApplicationJsonInterface rebuild(
+    void Function($RoomGetCapabilitiesResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomGetCapabilitiesResponseApplicationJsonInterfaceBuilder].
+  $RoomGetCapabilitiesResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomGetCapabilitiesResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -38980,11 +41841,22 @@ abstract class RoomGetCapabilitiesResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomRoomGetCapabilitiesHeadersInterface {
+sealed class $RoomRoomGetCapabilitiesHeadersInterface {
   @BuiltValueField(wireName: 'x-nextcloud-talk-hash')
   String? get xNextcloudTalkHash;
   @BuiltValueField(wireName: 'x-nextcloud-talk-proxy-hash')
   String? get xNextcloudTalkProxyHash;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomRoomGetCapabilitiesHeadersInterfaceBuilder].
+  $RoomRoomGetCapabilitiesHeadersInterface rebuild(
+    void Function($RoomRoomGetCapabilitiesHeadersInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomRoomGetCapabilitiesHeadersInterfaceBuilder].
+  $RoomRoomGetCapabilitiesHeadersInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomRoomGetCapabilitiesHeadersInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -39090,9 +41962,20 @@ class _$RoomJoinFederatedRoomApiVersionSerializer implements PrimitiveSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomJoinFederatedRoomResponseApplicationJson_OcsInterface {
+sealed class $RoomJoinFederatedRoomResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomJoinFederatedRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomJoinFederatedRoomResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomJoinFederatedRoomResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomJoinFederatedRoomResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomJoinFederatedRoomResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomJoinFederatedRoomResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -39144,8 +42027,19 @@ abstract class RoomJoinFederatedRoomResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomJoinFederatedRoomResponseApplicationJsonInterface {
+sealed class $RoomJoinFederatedRoomResponseApplicationJsonInterface {
   RoomJoinFederatedRoomResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomJoinFederatedRoomResponseApplicationJsonInterfaceBuilder].
+  $RoomJoinFederatedRoomResponseApplicationJsonInterface rebuild(
+    void Function($RoomJoinFederatedRoomResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomJoinFederatedRoomResponseApplicationJsonInterfaceBuilder].
+  $RoomJoinFederatedRoomResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomJoinFederatedRoomResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -39196,9 +42090,20 @@ abstract class RoomJoinFederatedRoomResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomRoomJoinFederatedRoomHeadersInterface {
+sealed class $RoomRoomJoinFederatedRoomHeadersInterface {
   @BuiltValueField(wireName: 'x-nextcloud-talk-hash')
   String? get xNextcloudTalkHash;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomRoomJoinFederatedRoomHeadersInterfaceBuilder].
+  $RoomRoomJoinFederatedRoomHeadersInterface rebuild(
+    void Function($RoomRoomJoinFederatedRoomHeadersInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomRoomJoinFederatedRoomHeadersInterfaceBuilder].
+  $RoomRoomJoinFederatedRoomHeadersInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomRoomJoinFederatedRoomHeadersInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -39309,9 +42214,20 @@ class _$RoomVerifyDialInPinDeprecatedApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomVerifyDialInPinDeprecatedResponseApplicationJson_OcsInterface {
+sealed class $RoomVerifyDialInPinDeprecatedResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomVerifyDialInPinDeprecatedResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomVerifyDialInPinDeprecatedResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomVerifyDialInPinDeprecatedResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomVerifyDialInPinDeprecatedResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomVerifyDialInPinDeprecatedResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomVerifyDialInPinDeprecatedResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -39363,8 +42279,19 @@ abstract class RoomVerifyDialInPinDeprecatedResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomVerifyDialInPinDeprecatedResponseApplicationJsonInterface {
+sealed class $RoomVerifyDialInPinDeprecatedResponseApplicationJsonInterface {
   RoomVerifyDialInPinDeprecatedResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomVerifyDialInPinDeprecatedResponseApplicationJsonInterfaceBuilder].
+  $RoomVerifyDialInPinDeprecatedResponseApplicationJsonInterface rebuild(
+    void Function($RoomVerifyDialInPinDeprecatedResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomVerifyDialInPinDeprecatedResponseApplicationJsonInterfaceBuilder].
+  $RoomVerifyDialInPinDeprecatedResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomVerifyDialInPinDeprecatedResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -39472,9 +42399,20 @@ class _$RoomVerifyDialInPinApiVersionSerializer implements PrimitiveSerializer<R
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomVerifyDialInPinResponseApplicationJson_OcsInterface {
+sealed class $RoomVerifyDialInPinResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomVerifyDialInPinResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomVerifyDialInPinResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomVerifyDialInPinResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomVerifyDialInPinResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomVerifyDialInPinResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomVerifyDialInPinResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -39525,8 +42463,19 @@ abstract class RoomVerifyDialInPinResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomVerifyDialInPinResponseApplicationJsonInterface {
+sealed class $RoomVerifyDialInPinResponseApplicationJsonInterface {
   RoomVerifyDialInPinResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomVerifyDialInPinResponseApplicationJsonInterfaceBuilder].
+  $RoomVerifyDialInPinResponseApplicationJsonInterface rebuild(
+    void Function($RoomVerifyDialInPinResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomVerifyDialInPinResponseApplicationJsonInterfaceBuilder].
+  $RoomVerifyDialInPinResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomVerifyDialInPinResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -39578,10 +42527,21 @@ abstract class RoomVerifyDialInPinResponseApplicationJson
 
 /// Additional details to verify the validity of the request.
 @BuiltValue(instantiable: false)
-abstract interface class $RoomVerifyDialOutNumberOptionsInterface {
+sealed class $RoomVerifyDialOutNumberOptionsInterface {
   String? get actorId;
   ActorType? get actorType;
   int? get attendeeId;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomVerifyDialOutNumberOptionsInterfaceBuilder].
+  $RoomVerifyDialOutNumberOptionsInterface rebuild(
+    void Function($RoomVerifyDialOutNumberOptionsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomVerifyDialOutNumberOptionsInterfaceBuilder].
+  $RoomVerifyDialOutNumberOptionsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomVerifyDialOutNumberOptionsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -39688,9 +42648,20 @@ class _$RoomVerifyDialOutNumberApiVersionSerializer implements PrimitiveSerializ
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomVerifyDialOutNumberResponseApplicationJson_OcsInterface {
+sealed class $RoomVerifyDialOutNumberResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomVerifyDialOutNumberResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomVerifyDialOutNumberResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomVerifyDialOutNumberResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomVerifyDialOutNumberResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomVerifyDialOutNumberResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomVerifyDialOutNumberResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -39742,8 +42713,19 @@ abstract class RoomVerifyDialOutNumberResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomVerifyDialOutNumberResponseApplicationJsonInterface {
+sealed class $RoomVerifyDialOutNumberResponseApplicationJsonInterface {
   RoomVerifyDialOutNumberResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomVerifyDialOutNumberResponseApplicationJsonInterfaceBuilder].
+  $RoomVerifyDialOutNumberResponseApplicationJsonInterface rebuild(
+    void Function($RoomVerifyDialOutNumberResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomVerifyDialOutNumberResponseApplicationJsonInterfaceBuilder].
+  $RoomVerifyDialOutNumberResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomVerifyDialOutNumberResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -39851,9 +42833,20 @@ class _$RoomCreateGuestByDialInApiVersionSerializer implements PrimitiveSerializ
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomCreateGuestByDialInResponseApplicationJson_OcsInterface {
+sealed class $RoomCreateGuestByDialInResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   Room get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomCreateGuestByDialInResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomCreateGuestByDialInResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomCreateGuestByDialInResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomCreateGuestByDialInResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomCreateGuestByDialInResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomCreateGuestByDialInResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -39905,8 +42898,19 @@ abstract class RoomCreateGuestByDialInResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomCreateGuestByDialInResponseApplicationJsonInterface {
+sealed class $RoomCreateGuestByDialInResponseApplicationJsonInterface {
   RoomCreateGuestByDialInResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomCreateGuestByDialInResponseApplicationJsonInterfaceBuilder].
+  $RoomCreateGuestByDialInResponseApplicationJsonInterface rebuild(
+    void Function($RoomCreateGuestByDialInResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomCreateGuestByDialInResponseApplicationJsonInterfaceBuilder].
+  $RoomCreateGuestByDialInResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomCreateGuestByDialInResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -39958,10 +42962,21 @@ abstract class RoomCreateGuestByDialInResponseApplicationJson
 
 /// Additional details to verify the validity of the request.
 @BuiltValue(instantiable: false)
-abstract interface class $RoomRejectedDialOutRequestOptionsInterface {
+sealed class $RoomRejectedDialOutRequestOptionsInterface {
   String? get actorId;
   ActorType? get actorType;
   int? get attendeeId;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomRejectedDialOutRequestOptionsInterfaceBuilder].
+  $RoomRejectedDialOutRequestOptionsInterface rebuild(
+    void Function($RoomRejectedDialOutRequestOptionsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomRejectedDialOutRequestOptionsInterfaceBuilder].
+  $RoomRejectedDialOutRequestOptionsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomRejectedDialOutRequestOptionsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -40072,9 +43087,20 @@ class _$RoomRejectedDialOutRequestApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomRejectedDialOutRequestResponseApplicationJson_OcsInterface {
+sealed class $RoomRejectedDialOutRequestResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomRejectedDialOutRequestResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomRejectedDialOutRequestResponseApplicationJson_OcsInterface rebuild(
+    void Function($RoomRejectedDialOutRequestResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomRejectedDialOutRequestResponseApplicationJson_OcsInterfaceBuilder].
+  $RoomRejectedDialOutRequestResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomRejectedDialOutRequestResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -40126,8 +43152,19 @@ abstract class RoomRejectedDialOutRequestResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RoomRejectedDialOutRequestResponseApplicationJsonInterface {
+sealed class $RoomRejectedDialOutRequestResponseApplicationJsonInterface {
   RoomRejectedDialOutRequestResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RoomRejectedDialOutRequestResponseApplicationJsonInterfaceBuilder].
+  $RoomRejectedDialOutRequestResponseApplicationJsonInterface rebuild(
+    void Function($RoomRejectedDialOutRequestResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RoomRejectedDialOutRequestResponseApplicationJsonInterfaceBuilder].
+  $RoomRejectedDialOutRequestResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RoomRejectedDialOutRequestResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -40313,9 +43350,20 @@ class _$SettingsSetUserSettingApiVersionSerializer implements PrimitiveSerialize
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SettingsSetUserSettingResponseApplicationJson_OcsInterface {
+sealed class $SettingsSetUserSettingResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SettingsSetUserSettingResponseApplicationJson_OcsInterfaceBuilder].
+  $SettingsSetUserSettingResponseApplicationJson_OcsInterface rebuild(
+    void Function($SettingsSetUserSettingResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SettingsSetUserSettingResponseApplicationJson_OcsInterfaceBuilder].
+  $SettingsSetUserSettingResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SettingsSetUserSettingResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -40367,8 +43415,19 @@ abstract class SettingsSetUserSettingResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SettingsSetUserSettingResponseApplicationJsonInterface {
+sealed class $SettingsSetUserSettingResponseApplicationJsonInterface {
   SettingsSetUserSettingResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SettingsSetUserSettingResponseApplicationJsonInterfaceBuilder].
+  $SettingsSetUserSettingResponseApplicationJsonInterface rebuild(
+    void Function($SettingsSetUserSettingResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SettingsSetUserSettingResponseApplicationJsonInterfaceBuilder].
+  $SettingsSetUserSettingResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SettingsSetUserSettingResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -40475,7 +43534,7 @@ class _$BotAdminListBotsApiVersionSerializer implements PrimitiveSerializer<BotA
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BotWithDetailsInterface implements $BotInterface {
+sealed class $BotWithDetailsInterface implements $BotInterface {
   @BuiltValueField(wireName: 'error_count')
   int get errorCount;
   int get features;
@@ -40486,6 +43545,17 @@ abstract interface class $BotWithDetailsInterface implements $BotInterface {
   String get url;
   @BuiltValueField(wireName: 'url_hash')
   String get urlHash;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BotWithDetailsInterfaceBuilder].
+  @override
+  $BotWithDetailsInterface rebuild(void Function($BotWithDetailsInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$BotWithDetailsInterfaceBuilder].
+  @override
+  $BotWithDetailsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BotWithDetailsInterfaceBuilder b) {
     $BotInterface._defaults(b);
@@ -40534,9 +43604,20 @@ abstract class BotWithDetails implements $BotWithDetailsInterface, Built<BotWith
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BotAdminListBotsResponseApplicationJson_OcsInterface {
+sealed class $BotAdminListBotsResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltList<BotWithDetails> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BotAdminListBotsResponseApplicationJson_OcsInterfaceBuilder].
+  $BotAdminListBotsResponseApplicationJson_OcsInterface rebuild(
+    void Function($BotAdminListBotsResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BotAdminListBotsResponseApplicationJson_OcsInterfaceBuilder].
+  $BotAdminListBotsResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BotAdminListBotsResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -40587,8 +43668,19 @@ abstract class BotAdminListBotsResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BotAdminListBotsResponseApplicationJsonInterface {
+sealed class $BotAdminListBotsResponseApplicationJsonInterface {
   BotAdminListBotsResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BotAdminListBotsResponseApplicationJsonInterfaceBuilder].
+  $BotAdminListBotsResponseApplicationJsonInterface rebuild(
+    void Function($BotAdminListBotsResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$BotAdminListBotsResponseApplicationJsonInterfaceBuilder].
+  $BotAdminListBotsResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BotAdminListBotsResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -40700,9 +43792,20 @@ class _$CertificateGetCertificateExpirationApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $CertificateGetCertificateExpirationResponseApplicationJson_Ocs_DataInterface {
+sealed class $CertificateGetCertificateExpirationResponseApplicationJson_Ocs_DataInterface {
   @BuiltValueField(wireName: 'expiration_in_days')
   int? get expirationInDays;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$CertificateGetCertificateExpirationResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $CertificateGetCertificateExpirationResponseApplicationJson_Ocs_DataInterface rebuild(
+    void Function($CertificateGetCertificateExpirationResponseApplicationJson_Ocs_DataInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$CertificateGetCertificateExpirationResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $CertificateGetCertificateExpirationResponseApplicationJson_Ocs_DataInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($CertificateGetCertificateExpirationResponseApplicationJson_Ocs_DataInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -40754,9 +43857,20 @@ abstract class CertificateGetCertificateExpirationResponseApplicationJson_Ocs_Da
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $CertificateGetCertificateExpirationResponseApplicationJson_OcsInterface {
+sealed class $CertificateGetCertificateExpirationResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   CertificateGetCertificateExpirationResponseApplicationJson_Ocs_Data get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$CertificateGetCertificateExpirationResponseApplicationJson_OcsInterfaceBuilder].
+  $CertificateGetCertificateExpirationResponseApplicationJson_OcsInterface rebuild(
+    void Function($CertificateGetCertificateExpirationResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$CertificateGetCertificateExpirationResponseApplicationJson_OcsInterfaceBuilder].
+  $CertificateGetCertificateExpirationResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($CertificateGetCertificateExpirationResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -40808,8 +43922,19 @@ abstract class CertificateGetCertificateExpirationResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $CertificateGetCertificateExpirationResponseApplicationJsonInterface {
+sealed class $CertificateGetCertificateExpirationResponseApplicationJsonInterface {
   CertificateGetCertificateExpirationResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$CertificateGetCertificateExpirationResponseApplicationJsonInterfaceBuilder].
+  $CertificateGetCertificateExpirationResponseApplicationJsonInterface rebuild(
+    void Function($CertificateGetCertificateExpirationResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$CertificateGetCertificateExpirationResponseApplicationJsonInterfaceBuilder].
+  $CertificateGetCertificateExpirationResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($CertificateGetCertificateExpirationResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -40922,8 +44047,19 @@ class _$RecordingGetWelcomeMessageApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RecordingGetWelcomeMessageResponseApplicationJson_Ocs_DataInterface {
+sealed class $RecordingGetWelcomeMessageResponseApplicationJson_Ocs_DataInterface {
   double get version;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RecordingGetWelcomeMessageResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $RecordingGetWelcomeMessageResponseApplicationJson_Ocs_DataInterface rebuild(
+    void Function($RecordingGetWelcomeMessageResponseApplicationJson_Ocs_DataInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RecordingGetWelcomeMessageResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $RecordingGetWelcomeMessageResponseApplicationJson_Ocs_DataInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RecordingGetWelcomeMessageResponseApplicationJson_Ocs_DataInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -40975,9 +44111,20 @@ abstract class RecordingGetWelcomeMessageResponseApplicationJson_Ocs_Data
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RecordingGetWelcomeMessageResponseApplicationJson_OcsInterface {
+sealed class $RecordingGetWelcomeMessageResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   RecordingGetWelcomeMessageResponseApplicationJson_Ocs_Data get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RecordingGetWelcomeMessageResponseApplicationJson_OcsInterfaceBuilder].
+  $RecordingGetWelcomeMessageResponseApplicationJson_OcsInterface rebuild(
+    void Function($RecordingGetWelcomeMessageResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RecordingGetWelcomeMessageResponseApplicationJson_OcsInterfaceBuilder].
+  $RecordingGetWelcomeMessageResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RecordingGetWelcomeMessageResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -41029,8 +44176,19 @@ abstract class RecordingGetWelcomeMessageResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $RecordingGetWelcomeMessageResponseApplicationJsonInterface {
+sealed class $RecordingGetWelcomeMessageResponseApplicationJsonInterface {
   RecordingGetWelcomeMessageResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$RecordingGetWelcomeMessageResponseApplicationJsonInterfaceBuilder].
+  $RecordingGetWelcomeMessageResponseApplicationJsonInterface rebuild(
+    void Function($RecordingGetWelcomeMessageResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$RecordingGetWelcomeMessageResponseApplicationJsonInterfaceBuilder].
+  $RecordingGetWelcomeMessageResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($RecordingGetWelcomeMessageResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -41139,9 +44297,20 @@ class _$SettingsSetsipSettingsApiVersionSerializer implements PrimitiveSerialize
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SettingsSetsipSettingsResponseApplicationJson_OcsInterface {
+sealed class $SettingsSetsipSettingsResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SettingsSetsipSettingsResponseApplicationJson_OcsInterfaceBuilder].
+  $SettingsSetsipSettingsResponseApplicationJson_OcsInterface rebuild(
+    void Function($SettingsSetsipSettingsResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SettingsSetsipSettingsResponseApplicationJson_OcsInterfaceBuilder].
+  $SettingsSetsipSettingsResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SettingsSetsipSettingsResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -41193,8 +44362,19 @@ abstract class SettingsSetsipSettingsResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SettingsSetsipSettingsResponseApplicationJsonInterface {
+sealed class $SettingsSetsipSettingsResponseApplicationJsonInterface {
   SettingsSetsipSettingsResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SettingsSetsipSettingsResponseApplicationJsonInterfaceBuilder].
+  $SettingsSetsipSettingsResponseApplicationJsonInterface rebuild(
+    void Function($SettingsSetsipSettingsResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SettingsSetsipSettingsResponseApplicationJsonInterfaceBuilder].
+  $SettingsSetsipSettingsResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SettingsSetsipSettingsResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -41306,9 +44486,20 @@ class _$SignalingGetWelcomeMessageApiVersionSerializer
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SignalingGetWelcomeMessageResponseApplicationJson_OcsInterface {
+sealed class $SignalingGetWelcomeMessageResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltMap<String, JsonObject> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SignalingGetWelcomeMessageResponseApplicationJson_OcsInterfaceBuilder].
+  $SignalingGetWelcomeMessageResponseApplicationJson_OcsInterface rebuild(
+    void Function($SignalingGetWelcomeMessageResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SignalingGetWelcomeMessageResponseApplicationJson_OcsInterfaceBuilder].
+  $SignalingGetWelcomeMessageResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SignalingGetWelcomeMessageResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -41360,8 +44551,19 @@ abstract class SignalingGetWelcomeMessageResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SignalingGetWelcomeMessageResponseApplicationJsonInterface {
+sealed class $SignalingGetWelcomeMessageResponseApplicationJsonInterface {
   SignalingGetWelcomeMessageResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SignalingGetWelcomeMessageResponseApplicationJsonInterfaceBuilder].
+  $SignalingGetWelcomeMessageResponseApplicationJsonInterface rebuild(
+    void Function($SignalingGetWelcomeMessageResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SignalingGetWelcomeMessageResponseApplicationJsonInterfaceBuilder].
+  $SignalingGetWelcomeMessageResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SignalingGetWelcomeMessageResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -41469,9 +44671,20 @@ class _$SignalingBackendApiVersionSerializer implements PrimitiveSerializer<Sign
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SignalingBackendResponseApplicationJson_Ocs_Data_ErrorInterface {
+sealed class $SignalingBackendResponseApplicationJson_Ocs_Data_ErrorInterface {
   String get code;
   String get message;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SignalingBackendResponseApplicationJson_Ocs_Data_ErrorInterfaceBuilder].
+  $SignalingBackendResponseApplicationJson_Ocs_Data_ErrorInterface rebuild(
+    void Function($SignalingBackendResponseApplicationJson_Ocs_Data_ErrorInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SignalingBackendResponseApplicationJson_Ocs_Data_ErrorInterfaceBuilder].
+  $SignalingBackendResponseApplicationJson_Ocs_Data_ErrorInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SignalingBackendResponseApplicationJson_Ocs_Data_ErrorInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -41523,10 +44736,21 @@ abstract class SignalingBackendResponseApplicationJson_Ocs_Data_Error
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SignalingBackendResponseApplicationJson_Ocs_Data_AuthInterface {
+sealed class $SignalingBackendResponseApplicationJson_Ocs_Data_AuthInterface {
   String get version;
   String? get userid;
   BuiltMap<String, JsonObject>? get user;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SignalingBackendResponseApplicationJson_Ocs_Data_AuthInterfaceBuilder].
+  $SignalingBackendResponseApplicationJson_Ocs_Data_AuthInterface rebuild(
+    void Function($SignalingBackendResponseApplicationJson_Ocs_Data_AuthInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SignalingBackendResponseApplicationJson_Ocs_Data_AuthInterfaceBuilder].
+  $SignalingBackendResponseApplicationJson_Ocs_Data_AuthInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SignalingBackendResponseApplicationJson_Ocs_Data_AuthInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -41578,12 +44802,23 @@ abstract class SignalingBackendResponseApplicationJson_Ocs_Data_Auth
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SignalingBackendResponseApplicationJson_Ocs_Data_RoomInterface {
+sealed class $SignalingBackendResponseApplicationJson_Ocs_Data_RoomInterface {
   String get version;
   String? get roomid;
   BuiltMap<String, JsonObject>? get properties;
   BuiltList<String>? get permissions;
   BuiltMap<String, JsonObject>? get session;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SignalingBackendResponseApplicationJson_Ocs_Data_RoomInterfaceBuilder].
+  $SignalingBackendResponseApplicationJson_Ocs_Data_RoomInterface rebuild(
+    void Function($SignalingBackendResponseApplicationJson_Ocs_Data_RoomInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SignalingBackendResponseApplicationJson_Ocs_Data_RoomInterfaceBuilder].
+  $SignalingBackendResponseApplicationJson_Ocs_Data_RoomInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SignalingBackendResponseApplicationJson_Ocs_Data_RoomInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -41635,11 +44870,22 @@ abstract class SignalingBackendResponseApplicationJson_Ocs_Data_Room
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SignalingBackendResponseApplicationJson_Ocs_DataInterface {
+sealed class $SignalingBackendResponseApplicationJson_Ocs_DataInterface {
   String get type;
   SignalingBackendResponseApplicationJson_Ocs_Data_Error? get error;
   SignalingBackendResponseApplicationJson_Ocs_Data_Auth? get auth;
   SignalingBackendResponseApplicationJson_Ocs_Data_Room? get room;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SignalingBackendResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $SignalingBackendResponseApplicationJson_Ocs_DataInterface rebuild(
+    void Function($SignalingBackendResponseApplicationJson_Ocs_DataInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SignalingBackendResponseApplicationJson_Ocs_DataInterfaceBuilder].
+  $SignalingBackendResponseApplicationJson_Ocs_DataInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SignalingBackendResponseApplicationJson_Ocs_DataInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -41691,9 +44937,20 @@ abstract class SignalingBackendResponseApplicationJson_Ocs_Data
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SignalingBackendResponseApplicationJson_OcsInterface {
+sealed class $SignalingBackendResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   SignalingBackendResponseApplicationJson_Ocs_Data get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SignalingBackendResponseApplicationJson_OcsInterfaceBuilder].
+  $SignalingBackendResponseApplicationJson_OcsInterface rebuild(
+    void Function($SignalingBackendResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SignalingBackendResponseApplicationJson_OcsInterfaceBuilder].
+  $SignalingBackendResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SignalingBackendResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -41744,8 +45001,19 @@ abstract class SignalingBackendResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $SignalingBackendResponseApplicationJsonInterface {
+sealed class $SignalingBackendResponseApplicationJsonInterface {
   SignalingBackendResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$SignalingBackendResponseApplicationJsonInterfaceBuilder].
+  $SignalingBackendResponseApplicationJsonInterface rebuild(
+    void Function($SignalingBackendResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$SignalingBackendResponseApplicationJsonInterfaceBuilder].
+  $SignalingBackendResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($SignalingBackendResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -41795,9 +45063,20 @@ abstract class SignalingBackendResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $TempAvatarPostAvatarResponseApplicationJson_OcsInterface {
+sealed class $TempAvatarPostAvatarResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$TempAvatarPostAvatarResponseApplicationJson_OcsInterfaceBuilder].
+  $TempAvatarPostAvatarResponseApplicationJson_OcsInterface rebuild(
+    void Function($TempAvatarPostAvatarResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$TempAvatarPostAvatarResponseApplicationJson_OcsInterfaceBuilder].
+  $TempAvatarPostAvatarResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($TempAvatarPostAvatarResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -41848,8 +45127,19 @@ abstract class TempAvatarPostAvatarResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $TempAvatarPostAvatarResponseApplicationJsonInterface {
+sealed class $TempAvatarPostAvatarResponseApplicationJsonInterface {
   TempAvatarPostAvatarResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$TempAvatarPostAvatarResponseApplicationJsonInterfaceBuilder].
+  $TempAvatarPostAvatarResponseApplicationJsonInterface rebuild(
+    void Function($TempAvatarPostAvatarResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$TempAvatarPostAvatarResponseApplicationJsonInterfaceBuilder].
+  $TempAvatarPostAvatarResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($TempAvatarPostAvatarResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -41900,9 +45190,20 @@ abstract class TempAvatarPostAvatarResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $TempAvatarDeleteAvatarResponseApplicationJson_OcsInterface {
+sealed class $TempAvatarDeleteAvatarResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   JsonObject get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$TempAvatarDeleteAvatarResponseApplicationJson_OcsInterfaceBuilder].
+  $TempAvatarDeleteAvatarResponseApplicationJson_OcsInterface rebuild(
+    void Function($TempAvatarDeleteAvatarResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$TempAvatarDeleteAvatarResponseApplicationJson_OcsInterfaceBuilder].
+  $TempAvatarDeleteAvatarResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($TempAvatarDeleteAvatarResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -41954,8 +45255,19 @@ abstract class TempAvatarDeleteAvatarResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $TempAvatarDeleteAvatarResponseApplicationJsonInterface {
+sealed class $TempAvatarDeleteAvatarResponseApplicationJsonInterface {
   TempAvatarDeleteAvatarResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$TempAvatarDeleteAvatarResponseApplicationJsonInterfaceBuilder].
+  $TempAvatarDeleteAvatarResponseApplicationJsonInterface rebuild(
+    void Function($TempAvatarDeleteAvatarResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$TempAvatarDeleteAvatarResponseApplicationJsonInterfaceBuilder].
+  $TempAvatarDeleteAvatarResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($TempAvatarDeleteAvatarResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -42006,8 +45318,19 @@ abstract class TempAvatarDeleteAvatarResponseApplicationJson
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $BotWithDetailsAndSecretInterface implements $BotWithDetailsInterface {
+sealed class $BotWithDetailsAndSecretInterface implements $BotWithDetailsInterface {
   String get secret;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$BotWithDetailsAndSecretInterfaceBuilder].
+  @override
+  $BotWithDetailsAndSecretInterface rebuild(void Function($BotWithDetailsAndSecretInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$BotWithDetailsAndSecretInterfaceBuilder].
+  @override
+  $BotWithDetailsAndSecretInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($BotWithDetailsAndSecretInterfaceBuilder b) {
     $BotWithDetailsInterface._defaults(b);
@@ -42058,8 +45381,17 @@ abstract class BotWithDetailsAndSecret
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $PublicCapabilities0Interface {
+sealed class $PublicCapabilities0Interface {
   Capabilities get spreed;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$PublicCapabilities0InterfaceBuilder].
+  $PublicCapabilities0Interface rebuild(void Function($PublicCapabilities0InterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$PublicCapabilities0InterfaceBuilder].
+  $PublicCapabilities0InterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($PublicCapabilities0InterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -42884,6 +46216,7 @@ final Serializers _$serializers = (Serializers().toBuilder()
       ..add(MessageType.serializer)
       ..add(ChatMessage_Deleted.serializer)
       ..addBuilderFactory(const FullType(BuiltMap, [FullType(String), FullType(int)]), MapBuilder<String, int>.new)
+      ..addBuilderFactory(const FullType(BuiltList, [FullType(String)]), ListBuilder<String>.new)
       ..add($4b3c240037cf48d36f81308e641eef98Extension._serializer)
       ..addBuilderFactory(const FullType(BuiltList, [FullType(Never)]), ListBuilder<Never>.new)
       ..add($bed8482b7c93ae2974fa4be6ae42b9b1Extension._serializer)
@@ -43417,7 +46750,6 @@ final Serializers _$serializers = (Serializers().toBuilder()
       ..add(SignalingSettings_HelloAuthParams_20.serializer)
       ..addBuilderFactory(const FullType(SignalingSettings_Stunservers), SignalingSettings_StunserversBuilder.new)
       ..add(SignalingSettings_Stunservers.serializer)
-      ..addBuilderFactory(const FullType(BuiltList, [FullType(String)]), ListBuilder<String>.new)
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(SignalingSettings_Stunservers)]),
         ListBuilder<SignalingSettings_Stunservers>.new,
@@ -44001,7 +47333,7 @@ final Serializers _$serializers = (Serializers().toBuilder()
       ..addBuilderFactory(const FullType(BuiltList, [FullType(Participant)]), ListBuilder<Participant>.new)
       ..addBuilderFactory(const FullType(RoomRoomGetParticipantsHeaders), RoomRoomGetParticipantsHeadersBuilder.new)
       ..add(RoomRoomGetParticipantsHeaders.serializer)
-      ..addBuilderFactory(const FullType(Header, [FullType(bool)]), HeaderBuilder<bool>.new)
+      ..addBuilderFactory(const FullType(Header, [FullType.nullable(bool)]), HeaderBuilder<bool?>.new)
       ..add(Header.serializer)
       ..add(RoomAddParticipantToRoomSource.serializer)
       ..add(RoomAddParticipantToRoomApiVersion.serializer)

@@ -171,12 +171,21 @@ class $PreviewClient {
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $Capabilities_FilesInterface {
+sealed class $Capabilities_FilesInterface {
   bool get versioning;
   @BuiltValueField(wireName: 'version_labeling')
   bool get versionLabeling;
   @BuiltValueField(wireName: 'version_deletion')
   bool get versionDeletion;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$Capabilities_FilesInterfaceBuilder].
+  $Capabilities_FilesInterface rebuild(void Function($Capabilities_FilesInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$Capabilities_FilesInterfaceBuilder].
+  $Capabilities_FilesInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($Capabilities_FilesInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -222,8 +231,17 @@ abstract class Capabilities_Files
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $CapabilitiesInterface {
+sealed class $CapabilitiesInterface {
   Capabilities_Files get files;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$CapabilitiesInterfaceBuilder].
+  $CapabilitiesInterface rebuild(void Function($CapabilitiesInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$CapabilitiesInterfaceBuilder].
+  $CapabilitiesInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($CapabilitiesInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)

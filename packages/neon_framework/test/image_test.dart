@@ -32,7 +32,7 @@ void main() {
     final image = BehaviorSubject<Result<Uint8List>>();
     final callback = MockCallbackFunction<void>();
 
-    await tester.pumpWidget(
+    await tester.pumpWidgetWithAccessibility(
       TestApp(
         child: NeonImage(
           image: image,
@@ -94,9 +94,9 @@ void main() {
 
     final mockRequest = http.Request('GET', Uri());
 
-    await tester.pumpWidget(
+    await tester.pumpWidgetWithAccessibility(
       TestApp(
-        child: NeonApiImage.withAccount(
+        child: NeonApiImage(
           getRequest: (_) => mockRequest,
           cacheKey: 'key',
           etag: null,
@@ -134,12 +134,11 @@ void main() {
 
     final mockAccount = MockAccount();
     when(() => mockAccount.client).thenReturn(mockNextcloudClient);
-    when(() => mockAccount.completeUri(any())).thenAnswer((invocation) => invocation.positionalArguments.single as Uri);
 
     final uri = Uri.parse('https://example.com');
-    await tester.pumpWidget(
+    await tester.pumpWidgetWithAccessibility(
       TestApp(
-        child: NeonUriImage.withAccount(
+        child: NeonUriImage(
           uri: uri,
           account: mockAccount,
         ),

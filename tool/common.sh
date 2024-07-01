@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euxo pipefail
 
 function image_tag() {
@@ -15,7 +15,7 @@ function cache_build_args() {
       "--cache-to" "type=inline,mode=max"
       "--cache-from" "type=registry,ref=$tag"
     )
-    if [ -v GITHUB_REPOSITORY ]; then
+    if [ -v PUSH_IMAGES ]; then
       build_args+=("--cache-to" "type=registry,ref=$tag,mode=max")
     fi
 

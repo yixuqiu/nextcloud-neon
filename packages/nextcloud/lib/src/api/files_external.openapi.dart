@@ -139,12 +139,21 @@ class $ApiClient {
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $OCSMetaInterface {
+sealed class $OCSMetaInterface {
   String get status;
   int get statuscode;
   String? get message;
   String? get totalitems;
   String? get itemsperpage;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$OCSMetaInterfaceBuilder].
+  $OCSMetaInterface rebuild(void Function($OCSMetaInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$OCSMetaInterfaceBuilder].
+  $OCSMetaInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($OCSMetaInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -366,7 +375,7 @@ class _$StorageConfig_TypeSerializer implements PrimitiveSerializer<StorageConfi
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $StorageConfigInterface {
+sealed class $StorageConfigInterface {
   BuiltList<String>? get applicableGroups;
   BuiltList<String>? get applicableUsers;
   String get authMechanism;
@@ -380,6 +389,15 @@ abstract interface class $StorageConfigInterface {
   String? get statusMessage;
   StorageConfig_Type get type;
   bool get userProvided;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$StorageConfigInterfaceBuilder].
+  $StorageConfigInterface rebuild(void Function($StorageConfigInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$StorageConfigInterfaceBuilder].
+  $StorageConfigInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($StorageConfigInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -423,7 +441,7 @@ abstract class StorageConfig implements $StorageConfigInterface, Built<StorageCo
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $MountInterface {
+sealed class $MountInterface {
   String get name;
   String get path;
   Mount_Type get type;
@@ -434,6 +452,15 @@ abstract interface class $MountInterface {
   @BuiltValueField(wireName: 'class')
   String get $class;
   StorageConfig get config;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$MountInterfaceBuilder].
+  $MountInterface rebuild(void Function($MountInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$MountInterfaceBuilder].
+  $MountInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($MountInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -477,9 +504,20 @@ abstract class Mount implements $MountInterface, Built<Mount, MountBuilder> {
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ApiGetUserMountsResponseApplicationJson_OcsInterface {
+sealed class $ApiGetUserMountsResponseApplicationJson_OcsInterface {
   OCSMeta get meta;
   BuiltList<Mount> get data;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ApiGetUserMountsResponseApplicationJson_OcsInterfaceBuilder].
+  $ApiGetUserMountsResponseApplicationJson_OcsInterface rebuild(
+    void Function($ApiGetUserMountsResponseApplicationJson_OcsInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ApiGetUserMountsResponseApplicationJson_OcsInterfaceBuilder].
+  $ApiGetUserMountsResponseApplicationJson_OcsInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ApiGetUserMountsResponseApplicationJson_OcsInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -530,8 +568,19 @@ abstract class ApiGetUserMountsResponseApplicationJson_Ocs
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ApiGetUserMountsResponseApplicationJsonInterface {
+sealed class $ApiGetUserMountsResponseApplicationJsonInterface {
   ApiGetUserMountsResponseApplicationJson_Ocs get ocs;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ApiGetUserMountsResponseApplicationJsonInterfaceBuilder].
+  $ApiGetUserMountsResponseApplicationJsonInterface rebuild(
+    void Function($ApiGetUserMountsResponseApplicationJsonInterfaceBuilder) updates,
+  );
+
+  /// Converts the instance to a builder [$ApiGetUserMountsResponseApplicationJsonInterfaceBuilder].
+  $ApiGetUserMountsResponseApplicationJsonInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ApiGetUserMountsResponseApplicationJsonInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)

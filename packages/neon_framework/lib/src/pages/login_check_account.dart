@@ -88,7 +88,7 @@ class _LoginCheckAccountPageState extends State<LoginCheckAccountPage> {
                                   ..updateAccount(state.requireData)
                                   ..setActiveAccount(state.requireData);
 
-                                const HomeRoute().go(context);
+                                const HomeRoute().pushReplacement(context);
                               }
                             : () {
                                 if (state.hasError && NeonError.getDetails(state.error).isUnauthorized) {
@@ -124,9 +124,12 @@ class _LoginCheckAccountPageState extends State<LoginCheckAccountPage> {
     }
 
     if (result.hasData) {
+      final account = result.requireData;
+
       return NeonAccountTile(
-        account: result.requireData,
-        showStatus: false,
+        account: account,
+        userStatusBloc: null,
+        userDetailsBloc: NeonProvider.of<AccountsBloc>(context).getUserDetailsBlocFor(account),
       );
     }
 

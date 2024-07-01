@@ -9,6 +9,8 @@ class MockChatMessage extends Mock implements spreed.ChatMessage {}
 
 class MockChatMessageWithParent extends Mock implements spreed.ChatMessageWithParent {}
 
+class MockReaction extends Mock implements spreed.Reaction {}
+
 class MockRoomBloc extends Mock implements TalkRoomBloc {}
 
 class MockTalkBloc extends Mock implements TalkBloc {}
@@ -36,7 +38,7 @@ Map<String, dynamic> getRoom({
       'canStartCall': false,
       'defaultPermissions': 0,
       'description': '',
-      'displayName': '',
+      'displayName': (id ?? 0).toString(),
       'hasCall': false,
       'hasPassword': false,
       'id': id ?? 0,
@@ -60,6 +62,7 @@ Map<String, dynamic> getRoom({
       'participantType': 0,
       'permissions': 0,
       'readOnly': 0,
+      'recordingConsent': 0,
       'sessionId': '',
       'sipEnabled': 0,
       'token': token ?? '',
@@ -71,6 +74,10 @@ Map<String, dynamic> getRoom({
 
 Map<String, dynamic> getChatMessage({
   int? id,
+  String? message,
+  Map<String, dynamic>? reactions,
+  String? systemMessage,
+  Map<String, dynamic>? parent,
 }) =>
     {
       'actorDisplayName': '',
@@ -79,12 +86,14 @@ Map<String, dynamic> getChatMessage({
       'expirationTimestamp': 0,
       'id': id ?? 0,
       'isReplyable': false,
-      'message': '',
+      'markdown': false,
+      'message': message ?? '',
       'messageParameters': <dynamic, dynamic>{},
       'messageType': spreed.MessageType.comment.name,
-      'reactions': <dynamic, dynamic>{},
+      'reactions': reactions ?? <dynamic, dynamic>{},
       'referenceId': '',
-      'systemMessage': '',
+      'systemMessage': systemMessage ?? '',
       'timestamp': 0,
       'token': '',
+      if (parent != null) 'parent': parent,
     };

@@ -31,9 +31,18 @@ typedef AnyOfIntDouble = num;
 typedef AnyOfIntDoubleNum = num;
 
 @BuiltValue(instantiable: false)
-abstract interface class $ObjectAnyOf0Interface {
+sealed class $ObjectAnyOf0Interface {
   @BuiltValueField(wireName: 'attribute1-anyOf')
   String get attribute1AnyOf;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ObjectAnyOf0InterfaceBuilder].
+  $ObjectAnyOf0Interface rebuild(void Function($ObjectAnyOf0InterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$ObjectAnyOf0InterfaceBuilder].
+  $ObjectAnyOf0InterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ObjectAnyOf0InterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -71,9 +80,18 @@ abstract class ObjectAnyOf0 implements $ObjectAnyOf0Interface, Built<ObjectAnyOf
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ObjectAnyOf1Interface {
+sealed class $ObjectAnyOf1Interface {
   @BuiltValueField(wireName: 'attribute2-anyOf')
   String get attribute2AnyOf;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ObjectAnyOf1InterfaceBuilder].
+  $ObjectAnyOf1Interface rebuild(void Function($ObjectAnyOf1InterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$ObjectAnyOf1InterfaceBuilder].
+  $ObjectAnyOf1InterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ObjectAnyOf1InterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -114,9 +132,18 @@ abstract class ObjectAnyOf1 implements $ObjectAnyOf1Interface, Built<ObjectAnyOf
 typedef ObjectAnyOf = ({ObjectAnyOf0? objectAnyOf0, ObjectAnyOf1? objectAnyOf1});
 
 @BuiltValue(instantiable: false)
-abstract interface class $MixedAnyOf1Interface {
+sealed class $MixedAnyOf1Interface {
   @BuiltValueField(wireName: 'attribute-anyOf')
   String get attributeAnyOf;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$MixedAnyOf1InterfaceBuilder].
+  $MixedAnyOf1Interface rebuild(void Function($MixedAnyOf1InterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$MixedAnyOf1InterfaceBuilder].
+  $MixedAnyOf1InterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($MixedAnyOf1InterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -157,9 +184,18 @@ abstract class MixedAnyOf1 implements $MixedAnyOf1Interface, Built<MixedAnyOf1, 
 typedef MixedAnyOf = ({MixedAnyOf1? mixedAnyOf1, String? string});
 
 @BuiltValue(instantiable: false)
-abstract interface class $OneObjectAnyOf0Interface {
+sealed class $OneObjectAnyOf0Interface {
   @BuiltValueField(wireName: 'attribute-anyOf')
   String get attributeAnyOf;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$OneObjectAnyOf0InterfaceBuilder].
+  $OneObjectAnyOf0Interface rebuild(void Function($OneObjectAnyOf0InterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$OneObjectAnyOf0InterfaceBuilder].
+  $OneObjectAnyOf0InterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($OneObjectAnyOf0InterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)

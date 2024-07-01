@@ -1,7 +1,7 @@
 /// The Neon client for the Notifications app.
 ///
 /// Add `NotificationsApp()` to your runNeon command to execute this app.
-library neon_notifications;
+library;
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -14,10 +14,10 @@ import 'package:neon_notifications/src/routes.dart';
 import 'package:nextcloud/nextcloud.dart';
 import 'package:rxdart/rxdart.dart';
 
-class NotificationsApp extends AppImplementation<NotificationsBloc, NotificationsOptions>
+class NotificationsApp extends AppImplementation<NotificationsBlocInterface, NotificationsOptions>
     implements
         // ignore: avoid_implementing_value_types
-        NotificationsAppInterface<NotificationsBloc, NotificationsOptions> {
+        NotificationsAppInterface<NotificationsBlocInterface, NotificationsOptions> {
   NotificationsApp();
 
   @override
@@ -33,8 +33,7 @@ class NotificationsApp extends AppImplementation<NotificationsBloc, Notification
   late final NotificationsOptions options = NotificationsOptions(storage);
 
   @override
-  NotificationsBloc buildBloc(Account account) => NotificationsBloc(
-        options: options,
+  NotificationsBlocInterface buildBloc(Account account) => NotificationsBloc(
         account: account,
       );
 
@@ -45,5 +44,5 @@ class NotificationsApp extends AppImplementation<NotificationsBloc, Notification
   final RouteBase route = $notificationsAppRoute;
 
   @override
-  BehaviorSubject<int> getUnreadCounter(NotificationsBloc bloc) => bloc.unreadCounter;
+  BehaviorSubject<int> getUnreadCounter(NotificationsBlocInterface bloc) => (bloc as NotificationsBloc).unreadCounter;
 }

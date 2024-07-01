@@ -114,10 +114,19 @@ class $Client extends _i1.DynamiteClient {
 typedef Redirect = Object2;
 
 @BuiltValue(instantiable: false)
-abstract interface class $Object2Interface {
+sealed class $Object2Interface {
   @Deprecated('')
   String get name;
   String? get tag;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$Object2InterfaceBuilder].
+  $Object2Interface rebuild(void Function($Object2InterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$Object2InterfaceBuilder].
+  $Object2InterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($Object2InterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -159,8 +168,19 @@ abstract class Object2 implements $Object2Interface, Built<Object2, Object2Build
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $Object1Interface implements $Object2Interface {
+sealed class $Object1Interface implements $Object2Interface {
   int get id;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$Object1InterfaceBuilder].
+  @override
+  $Object1Interface rebuild(void Function($Object1InterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$Object1InterfaceBuilder].
+  @override
+  $Object1InterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($Object1InterfaceBuilder b) {
     $Object2Interface._defaults(b);

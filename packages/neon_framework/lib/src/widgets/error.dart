@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 import 'package:neon_framework/l10n/localizations.dart';
-import 'package:neon_framework/src/blocs/accounts.dart';
+import 'package:neon_framework/models.dart';
 import 'package:neon_framework/src/router.dart';
 import 'package:neon_framework/src/theme/icons.dart';
 import 'package:neon_framework/src/utils/exceptions.dart';
@@ -50,7 +50,7 @@ class NeonError extends StatelessWidget {
   final Object? error;
 
   /// A function that's called when the user decides to retry the action that lead to the error.
-  final VoidCallback onRetry;
+  final VoidCallback? onRetry;
 
   /// The size of the icon in logical pixels.
   ///
@@ -211,7 +211,7 @@ class NeonError extends StatelessWidget {
   static void _openLoginPage(BuildContext context) {
     unawaited(
       LoginCheckServerStatusRoute(
-        serverUrl: NeonProvider.of<AccountsBloc>(context).activeAccount.value!.serverURL,
+        serverUrl: NeonProvider.of<Account>(context).serverURL,
       ).push(context),
     );
   }

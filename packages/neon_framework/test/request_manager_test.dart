@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
@@ -26,6 +24,10 @@ void main() {
   final account = MockAccount();
   when(() => account.id).thenReturn('clientID');
   late MockNeonStorage storage;
+
+  setUpAll(() {
+    registerFallbackValue(Uint8List(0));
+  });
 
   setUp(() {
     storage = MockNeonStorage();
@@ -71,116 +73,132 @@ void main() {
     });
 
     group('throwing DynamiteException should retry', () {
-      test('wrap', () async {
-        final subject = BehaviorSubject<Result<String>>();
-        final callback = MockCallbackFunction<Future<Uint8List>>();
-        when(callback.call).thenAnswer((_) async => throw DynamiteStatusCodeException(500));
+      for (final entry in [
+        ('server side', 500, <String, String>{}, kMaxTries),
+        ('client side', 401, <String, String>{}, 1),
+        ('webdav authorization', 401, <String, String>{'content-type': 'application/xml; charset=utf-8'}, kMaxTries),
+        ('webdav not found', 404, <String, String>{'content-type': 'application/xml; charset=utf-8'}, 1),
+      ]) {
+        group(entry.$1, () {
+          test('wrap', () async {
+            final subject = BehaviorSubject<Result<String>>();
+            final callback = MockCallbackFunction<Future<Uint8List>>();
+            when(callback.call).thenAnswer(
+              (_) async => throw DynamiteStatusCodeException(http.Response('', entry.$2, headers: entry.$3)),
+            );
 
-        await RequestManager.instance.wrap<String, Uint8List>(
-          account: account,
-          cacheKey: 'key',
-          subject: subject,
-          request: () async => callback.call(),
-          unwrap: (deserialized) => base64.encode(deserialized),
-          serialize: (deserialized) => utf8.decode(deserialized),
-          deserialize: (serialized) => utf8.encode(serialized),
-        );
+            await RequestManager.instance.wrap<String, Uint8List>(
+              account: account,
+              cacheKey: 'key',
+              subject: subject,
+              request: () async => callback.call(),
+              unwrap: (deserialized) => base64.encode(deserialized),
+              serialize: (deserialized) => deserialized,
+              deserialize: (serialized) => serialized,
+            );
 
-        verify(callback.call).called(kMaxTries);
+            verify(callback.call).called(entry.$4);
 
-        await subject.close();
-      });
+            await subject.close();
+          });
 
-      test('wrapBinary', () async {
-        final subject = BehaviorSubject<Result<Uint8List>>();
-        final callback = MockCallbackFunction<http.BaseRequest>();
-        when(callback.call).thenAnswer((_) => throw DynamiteStatusCodeException(500));
+          test('wrapBinary', () async {
+            final subject = BehaviorSubject<Result<Uint8List>>();
+            final callback = MockCallbackFunction<http.BaseRequest>();
+            when(callback.call).thenAnswer(
+              (_) => throw DynamiteStatusCodeException(http.Response('', entry.$2, headers: entry.$3)),
+            );
 
-        when(() => account.client).thenReturn(
-          NextcloudClient(
-            Uri(),
-            loginName: '',
-            password: '',
-          ),
-        );
+            when(() => account.client).thenReturn(
+              NextcloudClient(
+                Uri(),
+                loginName: '',
+                password: '',
+              ),
+            );
 
-        await RequestManager.instance.wrapBinary(
-          account: account,
-          cacheKey: 'key',
-          subject: subject,
-          getRequest: callback.call,
-          getCacheParameters: () async => const CacheParameters(
-            etag: null,
-            expires: null,
-          ),
-          unwrap: (data) => data,
-        );
+            await RequestManager.instance.wrapBinary(
+              account: account,
+              cacheKey: 'key',
+              subject: subject,
+              getRequest: callback.call,
+              getCacheParameters: () async => const CacheParameters(
+                etag: null,
+                expires: null,
+              ),
+              unwrap: (data) => data,
+            );
 
-        verify(callback.call).called(kMaxTries);
+            verify(callback.call).called(entry.$4);
 
-        await subject.close();
-      });
+            await subject.close();
+          });
 
-      test('wrapWebDav', () async {
-        final subject = BehaviorSubject<Result<WebDavMultistatus>>();
-        final callback = MockCallbackFunction<http.BaseRequest>();
-        when(callback.call).thenAnswer((_) => throw DynamiteStatusCodeException(500));
+          test('wrapWebDav', () async {
+            final subject = BehaviorSubject<Result<WebDavMultistatus>>();
+            final callback = MockCallbackFunction<http.BaseRequest>();
+            when(callback.call).thenAnswer(
+              (_) => throw DynamiteStatusCodeException(http.Response('', entry.$2, headers: entry.$3)),
+            );
 
-        when(() => account.client).thenReturn(
-          NextcloudClient(
-            Uri(),
-            loginName: '',
-            password: '',
-          ),
-        );
+            when(() => account.client).thenReturn(
+              NextcloudClient(
+                Uri(),
+                loginName: '',
+                password: '',
+              ),
+            );
 
-        await RequestManager.instance.wrapWebDav(
-          account: account,
-          cacheKey: 'key',
-          subject: subject,
-          getRequest: callback.call,
-          unwrap: (data) => data,
-        );
+            await RequestManager.instance.wrapWebDav(
+              account: account,
+              cacheKey: 'key',
+              subject: subject,
+              getRequest: callback.call,
+              unwrap: (data) => data,
+            );
 
-        verify(callback.call).called(kMaxTries);
+            verify(callback.call).called(entry.$4);
 
-        await subject.close();
-      });
+            await subject.close();
+          });
 
-      test('wrapNextcloud', () async {
-        final subject = BehaviorSubject<Result<provisioning_api.UserDetails>>();
-        final callback = MockCallbackFunction<http.BaseRequest>();
-        when(callback.call).thenAnswer((_) => throw DynamiteStatusCodeException(500));
+          test('wrapNextcloud', () async {
+            final subject = BehaviorSubject<Result<provisioning_api.UserDetails>>();
+            final callback = MockCallbackFunction<http.BaseRequest>();
+            when(callback.call).thenAnswer(
+              (_) => throw DynamiteStatusCodeException(http.Response('', entry.$2, headers: entry.$3)),
+            );
 
-        when(() => account.client).thenReturn(
-          NextcloudClient(
-            Uri(),
-            loginName: '',
-            password: '',
-          ),
-        );
+            when(() => account.client).thenReturn(
+              NextcloudClient(
+                Uri(),
+                loginName: '',
+                password: '',
+              ),
+            );
 
-        await RequestManager.instance.wrapNextcloud(
-          account: account,
-          cacheKey: 'key',
-          subject: subject,
-          getRequest: callback.call,
-          unwrap: (data) => data.body.ocs.data,
-          serializer: account.client.provisioningApi.users.$getCurrentUser_Serializer(),
-        );
+            await RequestManager.instance.wrapNextcloud(
+              account: account,
+              cacheKey: 'key',
+              subject: subject,
+              getRequest: callback.call,
+              unwrap: (data) => data.body.ocs.data,
+              serializer: account.client.provisioningApi.users.$getCurrentUser_Serializer(),
+            );
 
-        verify(callback.call).called(kMaxTries);
+            verify(callback.call).called(entry.$4);
 
-        await subject.close();
-      });
+            await subject.close();
+          });
+        });
+      }
     });
 
     group('wrap without cache', () {
       test('successful request', () async {
         var subject = BehaviorSubject<Result<String>>();
 
-        // ignore: unawaited_futures
-        expectLater(
+        expect(
           subject.stream,
           emitsInOrder([
             equals(Result<String>.loading()),
@@ -195,16 +213,15 @@ void main() {
           subject: subject,
           request: () async => utf8.encode('Test value'),
           unwrap: (deserialized) => base64.encode(deserialized),
-          serialize: (deserialized) => utf8.decode(deserialized),
-          deserialize: (serialized) => utf8.encode(serialized),
+          serialize: (deserialized) => deserialized,
+          deserialize: (serialized) => serialized,
         );
 
         await subject.close();
 
         subject = BehaviorSubject.seeded(Result.success('Seed value'));
 
-        // ignore: unawaited_futures
-        expectLater(
+        expect(
           subject.stream,
           emitsInOrder([
             equals(Result.success('Seed value')),
@@ -220,8 +237,8 @@ void main() {
           subject: subject,
           request: () async => utf8.encode('Test value'),
           unwrap: (deserialized) => base64.encode(deserialized),
-          serialize: (deserialized) => utf8.decode(deserialized),
-          deserialize: (serialized) => utf8.encode(serialized),
+          serialize: (deserialized) => deserialized,
+          deserialize: (serialized) => serialized,
         );
 
         await subject.close();
@@ -230,8 +247,7 @@ void main() {
       test('timeout request', () async {
         var subject = BehaviorSubject<Result<String>>();
 
-        // ignore: unawaited_futures
-        expectLater(
+        expect(
           subject.stream,
           emitsInOrder([
             equals(Result<String>.loading()),
@@ -240,8 +256,7 @@ void main() {
           ]),
         );
 
-        // ignore: unawaited_futures
-        expectLater(
+        expect(
           subject.stream,
           neverEmits([
             equals(Result.success(base64String('Test value'))),
@@ -255,8 +270,8 @@ void main() {
           subject: subject,
           request: () => Future.delayed(const Duration(milliseconds: 100), () => utf8.encode('Test value')),
           unwrap: (deserialized) => base64.encode(deserialized),
-          serialize: (deserialized) => utf8.decode(deserialized),
-          deserialize: (serialized) => utf8.encode(serialized),
+          serialize: (deserialized) => deserialized,
+          deserialize: (serialized) => serialized,
           timeLimit: const Duration(milliseconds: 50),
         );
 
@@ -264,8 +279,7 @@ void main() {
 
         subject = BehaviorSubject<Result<String>>.seeded(Result.success('Seed value'));
 
-        // ignore: unawaited_futures
-        expectLater(
+        expect(
           subject.stream,
           emitsInOrder([
             equals(Result.success('Seed value')),
@@ -282,8 +296,7 @@ void main() {
           ]),
         );
 
-        // ignore: unawaited_futures
-        expectLater(
+        expect(
           subject.stream,
           neverEmits([
             equals(Result.success(base64String('Test value'))),
@@ -297,8 +310,8 @@ void main() {
           subject: subject,
           request: () => Future.delayed(const Duration(milliseconds: 100), () => utf8.encode('Test value')),
           unwrap: (deserialized) => base64.encode(deserialized),
-          serialize: (deserialized) => utf8.decode(deserialized),
-          deserialize: (serialized) => utf8.encode(serialized),
+          serialize: (deserialized) => deserialized,
+          deserialize: (serialized) => serialized,
           timeLimit: const Duration(milliseconds: 50),
         );
 
@@ -308,8 +321,7 @@ void main() {
       test('throwing request', () async {
         var subject = BehaviorSubject<Result<String>>();
 
-        // ignore: unawaited_futures
-        expectLater(
+        expect(
           subject.stream,
           emitsInOrder([
             equals(Result<String>.loading()),
@@ -324,16 +336,15 @@ void main() {
           subject: subject,
           request: () async => throw ClientException(''),
           unwrap: (deserialized) => base64.encode(deserialized),
-          serialize: (deserialized) => utf8.decode(deserialized),
-          deserialize: (serialized) => utf8.encode(serialized),
+          serialize: (deserialized) => deserialized,
+          deserialize: (serialized) => serialized,
         );
 
         await subject.close();
 
         subject = BehaviorSubject<Result<String>>.seeded(Result.success('Seed value'));
 
-        // ignore: unawaited_futures
-        expectLater(
+        expect(
           subject.stream,
           emitsInOrder([
             equals(Result.success('Seed value')),
@@ -349,8 +360,8 @@ void main() {
           subject: subject,
           request: () async => throw ClientException(''),
           unwrap: (deserialized) => base64.encode(deserialized),
-          serialize: (deserialized) => utf8.decode(deserialized),
-          deserialize: (serialized) => utf8.encode(serialized),
+          serialize: (deserialized) => deserialized,
+          deserialize: (serialized) => serialized,
         );
 
         await subject.close();
@@ -368,7 +379,7 @@ void main() {
         cache = MockRequestCache();
 
         when(() => cache.get(any(), any())).thenAnswer(
-          (_) => Future.value((value: 'Cached value', parameters: null)),
+          (_) => Future.value((value: utf8.encode('Cached value'), parameters: null)),
         );
 
         when(() => cache.set(any(), any(), any(), any())).thenAnswer(
@@ -385,8 +396,7 @@ void main() {
       test('successful request', () async {
         var subject = BehaviorSubject<Result<String>>();
 
-        // ignore: unawaited_futures
-        expectLater(
+        expect(
           subject.stream,
           emitsInOrder([
             equals(Result<String>.loading()),
@@ -402,18 +412,17 @@ void main() {
           subject: subject,
           request: () => Future.value(utf8.encode('Test value')),
           unwrap: (deserialized) => base64.encode(deserialized),
-          serialize: (deserialized) => utf8.decode(deserialized),
-          deserialize: (serialized) => utf8.encode(serialized),
+          serialize: (deserialized) => deserialized,
+          deserialize: (serialized) => serialized,
         );
 
         await subject.close();
         verify(() => cache.get(account, 'key')).called(1);
-        verify(() => cache.set(account, 'key', 'Test value', null)).called(1);
+        verify(() => cache.set(account, 'key', utf8.encode('Test value'), null)).called(1);
 
         subject = BehaviorSubject<Result<String>>.seeded(Result.success('Seed value'));
 
-        // ignore: unawaited_futures
-        expectLater(
+        expect(
           subject.stream,
           emitsInOrder([
             equals(Result.success('Seed value')),
@@ -429,20 +438,19 @@ void main() {
           subject: subject,
           request: () => Future.value(utf8.encode('Test value')),
           unwrap: (deserialized) => base64.encode(deserialized),
-          serialize: (deserialized) => utf8.decode(deserialized),
-          deserialize: (serialized) => utf8.encode(serialized),
+          serialize: (deserialized) => deserialized,
+          deserialize: (serialized) => serialized,
         );
 
         await subject.close();
         verify(() => cache.get(account, 'key')).called(1);
-        verify(() => cache.set(account, 'key', 'Test value', null)).called(1);
+        verify(() => cache.set(account, 'key', utf8.encode('Test value'), null)).called(1);
       });
 
       test('timeout request', () async {
         var subject = BehaviorSubject<Result<String>>();
 
-        // ignore: unawaited_futures
-        expectLater(
+        expect(
           subject.stream,
           emitsInOrder([
             equals(Result<String>.loading()),
@@ -459,8 +467,7 @@ void main() {
           ]),
         );
 
-        // ignore: unawaited_futures
-        expectLater(
+        expect(
           subject.stream,
           neverEmits([
             equals(Result.success(base64String('Test value'))),
@@ -474,8 +481,8 @@ void main() {
           subject: subject,
           request: () => Future.delayed(const Duration(milliseconds: 100), () => utf8.encode('Test value')),
           unwrap: (deserialized) => base64.encode(deserialized),
-          serialize: (deserialized) => utf8.decode(deserialized),
-          deserialize: (serialized) => utf8.encode(serialized),
+          serialize: (deserialized) => deserialized,
+          deserialize: (serialized) => serialized,
           timeLimit: const Duration(milliseconds: 50),
         );
 
@@ -485,8 +492,7 @@ void main() {
 
         subject = BehaviorSubject<Result<String>>.seeded(Result.success('Seed value'));
 
-        // ignore: unawaited_futures
-        expectLater(
+        expect(
           subject.stream,
           emitsInOrder([
             equals(Result.success('Seed value')),
@@ -503,8 +509,7 @@ void main() {
           ]),
         );
 
-        // ignore: unawaited_futures
-        expectLater(
+        expect(
           subject.stream,
           neverEmits([
             equals(Result.success(base64String('Test value'))),
@@ -518,8 +523,8 @@ void main() {
           subject: subject,
           request: () => Future.delayed(const Duration(milliseconds: 100), () => utf8.encode('Test value')),
           unwrap: (deserialized) => base64.encode(deserialized),
-          serialize: (deserialized) => utf8.decode(deserialized),
-          deserialize: (serialized) => utf8.encode(serialized),
+          serialize: (deserialized) => deserialized,
+          deserialize: (serialized) => serialized,
           timeLimit: const Duration(milliseconds: 50),
         );
 
@@ -531,8 +536,7 @@ void main() {
       test('throwing request', () async {
         var subject = BehaviorSubject<Result<String>>();
 
-        // ignore: unawaited_futures
-        expectLater(
+        expect(
           subject.stream,
           emitsInOrder([
             equals(Result<String>.loading()),
@@ -548,8 +552,8 @@ void main() {
           subject: subject,
           request: () async => throw ClientException(''),
           unwrap: (deserialized) => base64.encode(deserialized),
-          serialize: (deserialized) => utf8.decode(deserialized),
-          deserialize: (serialized) => utf8.encode(serialized),
+          serialize: (deserialized) => deserialized,
+          deserialize: (serialized) => serialized,
         );
 
         await subject.close();
@@ -558,8 +562,7 @@ void main() {
 
         subject = BehaviorSubject<Result<String>>.seeded(Result.success('Seed value'));
 
-        // ignore: unawaited_futures
-        expectLater(
+        expect(
           subject.stream,
           emitsInOrder([
             equals(Result.success('Seed value')),
@@ -575,8 +578,8 @@ void main() {
           subject: subject,
           request: () async => throw ClientException(''),
           unwrap: (deserialized) => base64.encode(deserialized),
-          serialize: (deserialized) => utf8.decode(deserialized),
-          deserialize: (serialized) => utf8.encode(serialized),
+          serialize: (deserialized) => deserialized,
+          deserialize: (serialized) => serialized,
         );
 
         await subject.close();
@@ -588,7 +591,7 @@ void main() {
         when(() => cache.get(any(), any())).thenAnswer(
           (_) => Future.value(
             (
-              value: 'Cached value',
+              value: utf8.encode('Cached value'),
               parameters: CacheParameters(
                 etag: null,
                 expires: tz.TZDateTime.now(tz.UTC).add(const Duration(hours: 1)),
@@ -599,8 +602,7 @@ void main() {
 
         var subject = BehaviorSubject<Result<String>>();
 
-        // ignore: unawaited_futures
-        expectLater(
+        expect(
           subject.stream,
           emitsInOrder([
             equals(Result<String>.loading()),
@@ -615,8 +617,8 @@ void main() {
           subject: subject,
           request: () => Future.value(utf8.encode('Test value')),
           unwrap: (deserialized) => base64.encode(deserialized),
-          serialize: (deserialized) => utf8.decode(deserialized),
-          deserialize: (serialized) => utf8.encode(serialized),
+          serialize: (deserialized) => deserialized,
+          deserialize: (serialized) => serialized,
         );
 
         await subject.close();
@@ -626,7 +628,7 @@ void main() {
         when(() => cache.get(any(), any())).thenAnswer(
           (_) => Future.value(
             (
-              value: 'Cached value',
+              value: utf8.encode('Cached value'),
               parameters: CacheParameters(
                 etag: null,
                 expires: tz.TZDateTime.now(tz.UTC).subtract(const Duration(hours: 1)),
@@ -637,8 +639,7 @@ void main() {
 
         subject = BehaviorSubject<Result<String>>();
 
-        // ignore: unawaited_futures
-        expectLater(
+        expect(
           subject.stream,
           emitsInOrder([
             equals(Result<String>.loading()),
@@ -654,8 +655,8 @@ void main() {
           subject: subject,
           request: () => Future.value(utf8.encode('Test value')),
           unwrap: (deserialized) => base64.encode(deserialized),
-          serialize: (deserialized) => utf8.decode(deserialized),
-          deserialize: (serialized) => utf8.encode(serialized),
+          serialize: (deserialized) => deserialized,
+          deserialize: (serialized) => serialized,
         );
 
         await subject.close();
@@ -673,7 +674,7 @@ void main() {
         when(() => cache.get(any(), any())).thenAnswer(
           (_) => Future.value(
             (
-              value: 'Cached value',
+              value: utf8.encode('Cached value'),
               parameters: const CacheParameters(
                 etag: 'a',
                 expires: null,
@@ -690,8 +691,7 @@ void main() {
 
         var subject = BehaviorSubject<Result<String>>();
 
-        // ignore: unawaited_futures
-        expectLater(
+        expect(
           subject.stream,
           emitsInOrder([
             equals(Result<String>.loading()),
@@ -707,8 +707,8 @@ void main() {
           subject: subject,
           request: () => Future.value(utf8.encode('Test value')),
           unwrap: (deserialized) => base64.encode(deserialized),
-          serialize: (deserialized) => utf8.decode(deserialized),
-          deserialize: (serialized) => utf8.encode(serialized),
+          serialize: (deserialized) => deserialized,
+          deserialize: (serialized) => serialized,
           getCacheParameters: () async => callback(),
         );
 
@@ -721,7 +721,7 @@ void main() {
         when(() => cache.get(any(), any())).thenAnswer(
           (_) => Future.value(
             (
-              value: 'Cached value',
+              value: utf8.encode('Cached value'),
               parameters: const CacheParameters(
                 etag: 'a',
                 expires: null,
@@ -738,8 +738,7 @@ void main() {
 
         subject = BehaviorSubject<Result<String>>();
 
-        // ignore: unawaited_futures
-        expectLater(
+        expect(
           subject.stream,
           emitsInOrder([
             equals(Result<String>.loading()),
@@ -755,15 +754,15 @@ void main() {
           subject: subject,
           request: () => Future.value(utf8.encode('Test value')),
           unwrap: (deserialized) => base64.encode(deserialized),
-          serialize: (deserialized) => utf8.decode(deserialized),
-          deserialize: (serialized) => utf8.encode(serialized),
+          serialize: (deserialized) => deserialized,
+          deserialize: (serialized) => serialized,
           getCacheParameters: () async => callback(),
         );
 
         await subject.close();
         verify(() => cache.get(account, 'key')).called(1);
         verify(callback.call).called(1);
-        verify(() => cache.set(account, 'key', 'Test value', null));
+        verify(() => cache.set(account, 'key', utf8.encode('Test value'), null));
         verifyNever(() => cache.updateParameters(any(), any(), any()));
       });
 
@@ -776,8 +775,7 @@ void main() {
 
           final subject = BehaviorSubject<Result<String>>();
 
-          // ignore: unawaited_futures
-          expectLater(
+          expect(
             subject.stream,
             emitsInOrder([
               equals(Result<String>.loading()),
@@ -794,18 +792,18 @@ void main() {
             request: () async => DynamiteRawResponse<String, Map<String, String>>(
               statusCode: 200,
               body: 'Test value',
-              headers: {},
+              headers: const {},
               rawHeaders: {
                 'etag': 'a',
                 'expires': formatHttpDate(newExpires),
               },
             ),
             unwrap: (rawResponse) => rawResponse.body,
-            serialize: (rawResponse) => rawResponse.body,
+            serialize: (rawResponse) => utf8.encode(rawResponse.body),
             deserialize: (data) {
               final json = {
                 'statusCode': 200,
-                'body': data,
+                'body': utf8.decode(data),
                 'headers': <String, String>{},
               };
 
@@ -825,7 +823,7 @@ void main() {
             () => cache.set(
               account,
               'key',
-              'Test value',
+              utf8.encode('Test value'),
               CacheParameters(etag: 'a', expires: isSet ? newExpires : null),
             ),
           ).called(1);

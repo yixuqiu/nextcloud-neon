@@ -12,5 +12,12 @@
       "type": {}
     }
   },
-  "roomSendMessage": "Send a message..."
+  "roomWriteMessage": "Write a message...",
+  "roomMessageAddEmoji": "Add emoji to message",
+  "roomMessageSend": "Send message",
+  "roomMessageReply": "Reply",
+  "roomMessageReaction": "Add reaction",
+  "reactionsAddNew": "Add a new reaction",
+  "reactionsLoading": "Loading reactions",
+  "roomsCreateNew": "Create new room"
 }

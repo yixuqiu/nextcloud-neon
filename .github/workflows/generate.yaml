@@ -31,14 +31,14 @@ jobs:
     if: needs.changes.outputs.src != 'false'
     steps:
       - name: Checkout
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
           fetch-depth: 0
       - name: Submodules
         run: git submodule update --init --depth 0
 
       - name: Install dart
-        uses: dart-lang/setup-dart@f0ead981b4d9a35b37f30d36160575d60931ec30 # v1
+        uses: dart-lang/setup-dart@0a8a0fc875eb934c15d08629302413c671d3f672 # v1
       - name: Setup
         run: ./tool/setup.sh
 
@@ -73,14 +73,14 @@ jobs:
     if: needs.changes.outputs.src != 'false'
     steps:
       - name: Checkout
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
           fetch-depth: 0
       - name: Submodules
         run: git submodule update --init --depth 0
 
       - name: Install php
-        uses: shivammathur/setup-php@c665c7a15b5295c2488ac8a87af9cb806cd72198 # v2
+        uses: shivammathur/setup-php@2e947f1f6932d141d076ca441d0e1e881775e95b # v2
         with:
           php-version: '8.1'
           tools: composer

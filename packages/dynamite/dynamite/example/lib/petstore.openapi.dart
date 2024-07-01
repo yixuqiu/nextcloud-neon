@@ -315,9 +315,18 @@ class $Client extends _i1.DynamiteClient {
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $NewPetInterface {
+sealed class $NewPetInterface {
   String get name;
   String? get tag;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$NewPetInterfaceBuilder].
+  $NewPetInterface rebuild(void Function($NewPetInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$NewPetInterfaceBuilder].
+  $NewPetInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($NewPetInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -335,12 +344,16 @@ abstract class NewPet implements $NewPetInterface, Built<NewPet, NewPetBuilder> 
   /// Creates a new object from the given [json] data.
   ///
   /// Use [toJson] to serialize it back into json.
+  // coverage:ignore-start
   factory NewPet.fromJson(Map<String, dynamic> json) => _$jsonSerializers.deserializeWith(serializer, json)!;
+  // coverage:ignore-end
 
   /// Parses this object into a json like map.
   ///
   /// Use the fromJson factory to revive it again.
+  // coverage:ignore-start
   Map<String, dynamic> toJson() => _$jsonSerializers.serializeWith(serializer, this)! as Map<String, dynamic>;
+  // coverage:ignore-end
 
   /// Serializer for NewPet.
   static Serializer<NewPet> get serializer => _$newPetSerializer;
@@ -357,8 +370,19 @@ abstract class NewPet implements $NewPetInterface, Built<NewPet, NewPetBuilder> 
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $PetInterface implements $NewPetInterface {
+sealed class $PetInterface implements $NewPetInterface {
   int get id;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$PetInterfaceBuilder].
+  @override
+  $PetInterface rebuild(void Function($PetInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$PetInterfaceBuilder].
+  @override
+  $PetInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($PetInterfaceBuilder b) {
     $NewPetInterface._defaults(b);
@@ -381,12 +405,16 @@ abstract class Pet implements $PetInterface, Built<Pet, PetBuilder> {
   /// Creates a new object from the given [json] data.
   ///
   /// Use [toJson] to serialize it back into json.
+  // coverage:ignore-start
   factory Pet.fromJson(Map<String, dynamic> json) => _$jsonSerializers.deserializeWith(serializer, json)!;
+  // coverage:ignore-end
 
   /// Parses this object into a json like map.
   ///
   /// Use the fromJson factory to revive it again.
+  // coverage:ignore-start
   Map<String, dynamic> toJson() => _$jsonSerializers.serializeWith(serializer, this)! as Map<String, dynamic>;
+  // coverage:ignore-end
 
   /// Serializer for Pet.
   static Serializer<Pet> get serializer => _$petSerializer;
@@ -403,9 +431,18 @@ abstract class Pet implements $PetInterface, Built<Pet, PetBuilder> {
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $ErrorInterface {
+sealed class $ErrorInterface {
   int get code;
   String get message;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$ErrorInterfaceBuilder].
+  $ErrorInterface rebuild(void Function($ErrorInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$ErrorInterfaceBuilder].
+  $ErrorInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($ErrorInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -423,12 +460,16 @@ abstract class Error implements $ErrorInterface, Built<Error, ErrorBuilder> {
   /// Creates a new object from the given [json] data.
   ///
   /// Use [toJson] to serialize it back into json.
+  // coverage:ignore-start
   factory Error.fromJson(Map<String, dynamic> json) => _$jsonSerializers.deserializeWith(serializer, json)!;
+  // coverage:ignore-end
 
   /// Parses this object into a json like map.
   ///
   /// Use the fromJson factory to revive it again.
+  // coverage:ignore-start
   Map<String, dynamic> toJson() => _$jsonSerializers.serializeWith(serializer, this)! as Map<String, dynamic>;
+  // coverage:ignore-end
 
   /// Serializer for Error.
   static Serializer<Error> get serializer => _$errorSerializer;

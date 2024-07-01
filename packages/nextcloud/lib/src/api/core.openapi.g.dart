@@ -1661,7 +1661,7 @@ class _$AvatarAvatarGetAvatarDarkHeadersSerializer implements StructuredSerializ
     if (value != null) {
       result
         ..add('x-nc-iscustomavatar')
-        ..add(serializers.serialize(value, specifiedType: const FullType(Header, [FullType(int)])));
+        ..add(serializers.serialize(value, specifiedType: const FullType(Header, [FullType.nullable(int)])));
     }
     return result;
   }
@@ -1678,8 +1678,8 @@ class _$AvatarAvatarGetAvatarDarkHeadersSerializer implements StructuredSerializ
       final Object? value = iterator.current;
       switch (key) {
         case 'x-nc-iscustomavatar':
-          result.xNcIscustomavatar.replace(
-              serializers.deserialize(value, specifiedType: const FullType(Header, [FullType(int)]))! as Header<int>);
+          result.xNcIscustomavatar.replace(serializers.deserialize(value,
+              specifiedType: const FullType(Header, [FullType.nullable(int)]))! as Header<int?>);
           break;
       }
     }
@@ -1703,7 +1703,7 @@ class _$AvatarAvatarGetAvatarHeadersSerializer implements StructuredSerializer<A
     if (value != null) {
       result
         ..add('x-nc-iscustomavatar')
-        ..add(serializers.serialize(value, specifiedType: const FullType(Header, [FullType(int)])));
+        ..add(serializers.serialize(value, specifiedType: const FullType(Header, [FullType.nullable(int)])));
     }
     return result;
   }
@@ -1720,8 +1720,8 @@ class _$AvatarAvatarGetAvatarHeadersSerializer implements StructuredSerializer<A
       final Object? value = iterator.current;
       switch (key) {
         case 'x-nc-iscustomavatar':
-          result.xNcIscustomavatar.replace(
-              serializers.deserialize(value, specifiedType: const FullType(Header, [FullType(int)]))! as Header<int>);
+          result.xNcIscustomavatar.replace(serializers.deserialize(value,
+              specifiedType: const FullType(Header, [FullType.nullable(int)]))! as Header<int?>);
           break;
       }
     }
@@ -3396,7 +3396,7 @@ class _$OcmOcmDiscoveryHeadersSerializer implements StructuredSerializer<OcmOcmD
       result
         ..add('x-nextcloud-ocm-providers')
         ..add(serializers.serialize(value,
-            specifiedType: const FullType(Header, [FullType(OcmOcmDiscoveryHeaders_XNextcloudOcmProviders)])));
+            specifiedType: const FullType(Header, [FullType.nullable(OcmOcmDiscoveryHeaders_XNextcloudOcmProviders)])));
     }
     return result;
   }
@@ -3414,8 +3414,9 @@ class _$OcmOcmDiscoveryHeadersSerializer implements StructuredSerializer<OcmOcmD
       switch (key) {
         case 'x-nextcloud-ocm-providers':
           result.xNextcloudOcmProviders.replace(serializers.deserialize(value,
-                  specifiedType: const FullType(Header, [FullType(OcmOcmDiscoveryHeaders_XNextcloudOcmProviders)]))!
-              as Header<OcmOcmDiscoveryHeaders_XNextcloudOcmProviders>);
+                  specifiedType:
+                      const FullType(Header, [FullType.nullable(OcmOcmDiscoveryHeaders_XNextcloudOcmProviders)]))!
+              as Header<OcmOcmDiscoveryHeaders_XNextcloudOcmProviders?>);
           break;
       }
     }
@@ -5745,38 +5746,22 @@ class _$SpreedCapabilities_Config_CallSerializer implements StructuredSerializer
       serializers.serialize(object.breakoutRooms, specifiedType: const FullType(bool)),
       'recording',
       serializers.serialize(object.recording, specifiedType: const FullType(bool)),
+      'recording-consent',
+      serializers.serialize(object.recordingConsent, specifiedType: const FullType(int)),
       'supported-reactions',
       serializers.serialize(object.supportedReactions, specifiedType: const FullType(BuiltList, [FullType(String)])),
       'predefined-backgrounds',
       serializers.serialize(object.predefinedBackgrounds, specifiedType: const FullType(BuiltList, [FullType(String)])),
       'can-upload-background',
       serializers.serialize(object.canUploadBackground, specifiedType: const FullType(bool)),
+      'sip-enabled',
+      serializers.serialize(object.sipEnabled, specifiedType: const FullType(bool)),
+      'sip-dialout-enabled',
+      serializers.serialize(object.sipDialoutEnabled, specifiedType: const FullType(bool)),
+      'can-enable-sip',
+      serializers.serialize(object.canEnableSip, specifiedType: const FullType(bool)),
     ];
-    Object? value;
-    value = object.recordingConsent;
-    if (value != null) {
-      result
-        ..add('recording-consent')
-        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
-    }
-    value = object.sipEnabled;
-    if (value != null) {
-      result
-        ..add('sip-enabled')
-        ..add(serializers.serialize(value, specifiedType: const FullType(bool)));
-    }
-    value = object.sipDialoutEnabled;
-    if (value != null) {
-      result
-        ..add('sip-dialout-enabled')
-        ..add(serializers.serialize(value, specifiedType: const FullType(bool)));
-    }
-    value = object.canEnableSip;
-    if (value != null) {
-      result
-        ..add('can-enable-sip')
-        ..add(serializers.serialize(value, specifiedType: const FullType(bool)));
-    }
+
     return result;
   }
 
@@ -5801,7 +5786,7 @@ class _$SpreedCapabilities_Config_CallSerializer implements StructuredSerializer
           result.recording = serializers.deserialize(value, specifiedType: const FullType(bool))! as bool;
           break;
         case 'recording-consent':
-          result.recordingConsent = serializers.deserialize(value, specifiedType: const FullType(int)) as int?;
+          result.recordingConsent = serializers.deserialize(value, specifiedType: const FullType(int))! as int;
           break;
         case 'supported-reactions':
           result.supportedReactions.replace(serializers.deserialize(value,
@@ -5815,13 +5800,13 @@ class _$SpreedCapabilities_Config_CallSerializer implements StructuredSerializer
           result.canUploadBackground = serializers.deserialize(value, specifiedType: const FullType(bool))! as bool;
           break;
         case 'sip-enabled':
-          result.sipEnabled = serializers.deserialize(value, specifiedType: const FullType(bool)) as bool?;
+          result.sipEnabled = serializers.deserialize(value, specifiedType: const FullType(bool))! as bool;
           break;
         case 'sip-dialout-enabled':
-          result.sipDialoutEnabled = serializers.deserialize(value, specifiedType: const FullType(bool)) as bool?;
+          result.sipDialoutEnabled = serializers.deserialize(value, specifiedType: const FullType(bool))! as bool;
           break;
         case 'can-enable-sip':
-          result.canEnableSip = serializers.deserialize(value, specifiedType: const FullType(bool)) as bool?;
+          result.canEnableSip = serializers.deserialize(value, specifiedType: const FullType(bool))! as bool;
           break;
       }
     }
@@ -5844,22 +5829,12 @@ class _$SpreedCapabilities_Config_ChatSerializer implements StructuredSerializer
       serializers.serialize(object.maxLength, specifiedType: const FullType(int)),
       'read-privacy',
       serializers.serialize(object.readPrivacy, specifiedType: const FullType(int)),
+      'has-translation-providers',
+      serializers.serialize(object.hasTranslationProviders, specifiedType: const FullType(bool)),
       'typing-privacy',
       serializers.serialize(object.typingPrivacy, specifiedType: const FullType(int)),
     ];
-    Object? value;
-    value = object.hasTranslationProviders;
-    if (value != null) {
-      result
-        ..add('has-translation-providers')
-        ..add(serializers.serialize(value, specifiedType: const FullType(bool)));
-    }
-    value = object.translations;
-    if (value != null) {
-      result
-        ..add('translations')
-        ..add(serializers.serialize(value, specifiedType: const FullType(BuiltList, [FullType(String)])));
-    }
+
     return result;
   }
 
@@ -5881,14 +5856,10 @@ class _$SpreedCapabilities_Config_ChatSerializer implements StructuredSerializer
           result.readPrivacy = serializers.deserialize(value, specifiedType: const FullType(int))! as int;
           break;
         case 'has-translation-providers':
-          result.hasTranslationProviders = serializers.deserialize(value, specifiedType: const FullType(bool)) as bool?;
+          result.hasTranslationProviders = serializers.deserialize(value, specifiedType: const FullType(bool))! as bool;
           break;
         case 'typing-privacy':
           result.typingPrivacy = serializers.deserialize(value, specifiedType: const FullType(int))! as int;
-          break;
-        case 'translations':
-          result.translations.replace(serializers.deserialize(value,
-              specifiedType: const FullType(BuiltList, [FullType(String)]))! as BuiltList<Object?>);
           break;
       }
     }
@@ -7046,7 +7017,7 @@ class _$ReferenceApiExtractResponseApplicationJson_Ocs_DataSerializer
     final result = <Object?>[
       'references',
       serializers.serialize(object.references,
-          specifiedType: const FullType(BuiltMap, [FullType(String), FullType(Reference)])),
+          specifiedType: const FullType(BuiltMap, [FullType(String), FullType.nullable(Reference)])),
     ];
 
     return result;
@@ -7065,7 +7036,7 @@ class _$ReferenceApiExtractResponseApplicationJson_Ocs_DataSerializer
       switch (key) {
         case 'references':
           result.references.replace(serializers.deserialize(value,
-              specifiedType: const FullType(BuiltMap, [FullType(String), FullType(Reference)]))!);
+              specifiedType: const FullType(BuiltMap, [FullType(String), FullType.nullable(Reference)]))!);
           break;
       }
     }
@@ -7184,7 +7155,7 @@ class _$ReferenceApiResolveOneResponseApplicationJson_Ocs_DataSerializer
     final result = <Object?>[
       'references',
       serializers.serialize(object.references,
-          specifiedType: const FullType(BuiltMap, [FullType(String), FullType(Reference)])),
+          specifiedType: const FullType(BuiltMap, [FullType(String), FullType.nullable(Reference)])),
     ];
 
     return result;
@@ -7204,7 +7175,7 @@ class _$ReferenceApiResolveOneResponseApplicationJson_Ocs_DataSerializer
       switch (key) {
         case 'references':
           result.references.replace(serializers.deserialize(value,
-              specifiedType: const FullType(BuiltMap, [FullType(String), FullType(Reference)]))!);
+              specifiedType: const FullType(BuiltMap, [FullType(String), FullType.nullable(Reference)]))!);
           break;
       }
     }
@@ -7324,7 +7295,7 @@ class _$ReferenceApiResolveResponseApplicationJson_Ocs_DataSerializer
     final result = <Object?>[
       'references',
       serializers.serialize(object.references,
-          specifiedType: const FullType(BuiltMap, [FullType(String), FullType(Reference)])),
+          specifiedType: const FullType(BuiltMap, [FullType(String), FullType.nullable(Reference)])),
     ];
 
     return result;
@@ -7343,7 +7314,7 @@ class _$ReferenceApiResolveResponseApplicationJson_Ocs_DataSerializer
       switch (key) {
         case 'references':
           result.references.replace(serializers.deserialize(value,
-              specifiedType: const FullType(BuiltMap, [FullType(String), FullType(Reference)]))!);
+              specifiedType: const FullType(BuiltMap, [FullType(String), FullType.nullable(Reference)]))!);
           break;
       }
     }
@@ -10148,43 +10119,23 @@ class _$UnifiedSearchProviderSerializer implements StructuredSerializer<UnifiedS
     final result = <Object?>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
+      'appId',
+      serializers.serialize(object.appId, specifiedType: const FullType(String)),
       'name',
       serializers.serialize(object.name, specifiedType: const FullType(String)),
+      'icon',
+      serializers.serialize(object.icon, specifiedType: const FullType(String)),
       'order',
       serializers.serialize(object.order, specifiedType: const FullType(int)),
+      'triggers',
+      serializers.serialize(object.triggers, specifiedType: const FullType(BuiltList, [FullType(String)])),
+      'filters',
+      serializers.serialize(object.filters,
+          specifiedType: const FullType(BuiltMap, [FullType(String), FullType(String)])),
+      'inAppSearch',
+      serializers.serialize(object.inAppSearch, specifiedType: const FullType(bool)),
     ];
-    Object? value;
-    value = object.appId;
-    if (value != null) {
-      result
-        ..add('appId')
-        ..add(serializers.serialize(value, specifiedType: const FullType(String)));
-    }
-    value = object.icon;
-    if (value != null) {
-      result
-        ..add('icon')
-        ..add(serializers.serialize(value, specifiedType: const FullType(String)));
-    }
-    value = object.triggers;
-    if (value != null) {
-      result
-        ..add('triggers')
-        ..add(serializers.serialize(value, specifiedType: const FullType(BuiltList, [FullType(String)])));
-    }
-    value = object.filters;
-    if (value != null) {
-      result
-        ..add('filters')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(BuiltMap, [FullType(String), FullType(String)])));
-    }
-    value = object.inAppSearch;
-    if (value != null) {
-      result
-        ..add('inAppSearch')
-        ..add(serializers.serialize(value, specifiedType: const FullType(bool)));
-    }
+
     return result;
   }
 
@@ -10203,13 +10154,13 @@ class _$UnifiedSearchProviderSerializer implements StructuredSerializer<UnifiedS
           result.id = serializers.deserialize(value, specifiedType: const FullType(String))! as String;
           break;
         case 'appId':
-          result.appId = serializers.deserialize(value, specifiedType: const FullType(String)) as String?;
+          result.appId = serializers.deserialize(value, specifiedType: const FullType(String))! as String;
           break;
         case 'name':
           result.name = serializers.deserialize(value, specifiedType: const FullType(String))! as String;
           break;
         case 'icon':
-          result.icon = serializers.deserialize(value, specifiedType: const FullType(String)) as String?;
+          result.icon = serializers.deserialize(value, specifiedType: const FullType(String))! as String;
           break;
         case 'order':
           result.order = serializers.deserialize(value, specifiedType: const FullType(int))! as int;
@@ -10223,7 +10174,7 @@ class _$UnifiedSearchProviderSerializer implements StructuredSerializer<UnifiedS
               specifiedType: const FullType(BuiltMap, [FullType(String), FullType(String)]))!);
           break;
         case 'inAppSearch':
-          result.inAppSearch = serializers.deserialize(value, specifiedType: const FullType(bool)) as bool?;
+          result.inAppSearch = serializers.deserialize(value, specifiedType: const FullType(bool))! as bool;
           break;
       }
     }
@@ -13222,13 +13173,13 @@ class AutoCompleteGetResponseApplicationJsonBuilder
 abstract mixin class $AvatarAvatarGetAvatarDarkHeadersInterfaceBuilder {
   void replace($AvatarAvatarGetAvatarDarkHeadersInterface other);
   void update(void Function($AvatarAvatarGetAvatarDarkHeadersInterfaceBuilder) updates);
-  HeaderBuilder<int> get xNcIscustomavatar;
-  set xNcIscustomavatar(HeaderBuilder<int>? xNcIscustomavatar);
+  HeaderBuilder<int?> get xNcIscustomavatar;
+  set xNcIscustomavatar(HeaderBuilder<int?>? xNcIscustomavatar);
 }
 
 class _$AvatarAvatarGetAvatarDarkHeaders extends AvatarAvatarGetAvatarDarkHeaders {
   @override
-  final Header<int>? xNcIscustomavatar;
+  final Header<int?>? xNcIscustomavatar;
 
   factory _$AvatarAvatarGetAvatarDarkHeaders([void Function(AvatarAvatarGetAvatarDarkHeadersBuilder)? updates]) =>
       (AvatarAvatarGetAvatarDarkHeadersBuilder()..update(updates))._build();
@@ -13270,9 +13221,9 @@ class AvatarAvatarGetAvatarDarkHeadersBuilder
         $AvatarAvatarGetAvatarDarkHeadersInterfaceBuilder {
   _$AvatarAvatarGetAvatarDarkHeaders? _$v;
 
-  HeaderBuilder<int>? _xNcIscustomavatar;
-  HeaderBuilder<int> get xNcIscustomavatar => _$this._xNcIscustomavatar ??= HeaderBuilder<int>();
-  set xNcIscustomavatar(covariant HeaderBuilder<int>? xNcIscustomavatar) =>
+  HeaderBuilder<int?>? _xNcIscustomavatar;
+  HeaderBuilder<int?> get xNcIscustomavatar => _$this._xNcIscustomavatar ??= HeaderBuilder<int?>();
+  set xNcIscustomavatar(covariant HeaderBuilder<int?>? xNcIscustomavatar) =>
       _$this._xNcIscustomavatar = xNcIscustomavatar;
 
   AvatarAvatarGetAvatarDarkHeadersBuilder() {
@@ -13325,13 +13276,13 @@ class AvatarAvatarGetAvatarDarkHeadersBuilder
 abstract mixin class $AvatarAvatarGetAvatarHeadersInterfaceBuilder {
   void replace($AvatarAvatarGetAvatarHeadersInterface other);
   void update(void Function($AvatarAvatarGetAvatarHeadersInterfaceBuilder) updates);
-  HeaderBuilder<int> get xNcIscustomavatar;
-  set xNcIscustomavatar(HeaderBuilder<int>? xNcIscustomavatar);
+  HeaderBuilder<int?> get xNcIscustomavatar;
+  set xNcIscustomavatar(HeaderBuilder<int?>? xNcIscustomavatar);
 }
 
 class _$AvatarAvatarGetAvatarHeaders extends AvatarAvatarGetAvatarHeaders {
   @override
-  final Header<int>? xNcIscustomavatar;
+  final Header<int?>? xNcIscustomavatar;
 
   factory _$AvatarAvatarGetAvatarHeaders([void Function(AvatarAvatarGetAvatarHeadersBuilder)? updates]) =>
       (AvatarAvatarGetAvatarHeadersBuilder()..update(updates))._build();
@@ -13372,9 +13323,9 @@ class AvatarAvatarGetAvatarHeadersBuilder
         $AvatarAvatarGetAvatarHeadersInterfaceBuilder {
   _$AvatarAvatarGetAvatarHeaders? _$v;
 
-  HeaderBuilder<int>? _xNcIscustomavatar;
-  HeaderBuilder<int> get xNcIscustomavatar => _$this._xNcIscustomavatar ??= HeaderBuilder<int>();
-  set xNcIscustomavatar(covariant HeaderBuilder<int>? xNcIscustomavatar) =>
+  HeaderBuilder<int?>? _xNcIscustomavatar;
+  HeaderBuilder<int?> get xNcIscustomavatar => _$this._xNcIscustomavatar ??= HeaderBuilder<int?>();
+  set xNcIscustomavatar(covariant HeaderBuilder<int?>? xNcIscustomavatar) =>
       _$this._xNcIscustomavatar = xNcIscustomavatar;
 
   AvatarAvatarGetAvatarHeadersBuilder() {
@@ -17632,13 +17583,13 @@ class OcmDiscoveryResponseApplicationJsonBuilder
 abstract mixin class $OcmOcmDiscoveryHeadersInterfaceBuilder {
   void replace($OcmOcmDiscoveryHeadersInterface other);
   void update(void Function($OcmOcmDiscoveryHeadersInterfaceBuilder) updates);
-  HeaderBuilder<OcmOcmDiscoveryHeaders_XNextcloudOcmProviders> get xNextcloudOcmProviders;
-  set xNextcloudOcmProviders(HeaderBuilder<OcmOcmDiscoveryHeaders_XNextcloudOcmProviders>? xNextcloudOcmProviders);
+  HeaderBuilder<OcmOcmDiscoveryHeaders_XNextcloudOcmProviders?> get xNextcloudOcmProviders;
+  set xNextcloudOcmProviders(HeaderBuilder<OcmOcmDiscoveryHeaders_XNextcloudOcmProviders?>? xNextcloudOcmProviders);
 }
 
 class _$OcmOcmDiscoveryHeaders extends OcmOcmDiscoveryHeaders {
   @override
-  final Header<OcmOcmDiscoveryHeaders_XNextcloudOcmProviders>? xNextcloudOcmProviders;
+  final Header<OcmOcmDiscoveryHeaders_XNextcloudOcmProviders?>? xNextcloudOcmProviders;
 
   factory _$OcmOcmDiscoveryHeaders([void Function(OcmOcmDiscoveryHeadersBuilder)? updates]) =>
       (OcmOcmDiscoveryHeadersBuilder()..update(updates))._build();
@@ -17678,11 +17629,11 @@ class OcmOcmDiscoveryHeadersBuilder
     implements Builder<OcmOcmDiscoveryHeaders, OcmOcmDiscoveryHeadersBuilder>, $OcmOcmDiscoveryHeadersInterfaceBuilder {
   _$OcmOcmDiscoveryHeaders? _$v;
 
-  HeaderBuilder<OcmOcmDiscoveryHeaders_XNextcloudOcmProviders>? _xNextcloudOcmProviders;
-  HeaderBuilder<OcmOcmDiscoveryHeaders_XNextcloudOcmProviders> get xNextcloudOcmProviders =>
-      _$this._xNextcloudOcmProviders ??= HeaderBuilder<OcmOcmDiscoveryHeaders_XNextcloudOcmProviders>();
+  HeaderBuilder<OcmOcmDiscoveryHeaders_XNextcloudOcmProviders?>? _xNextcloudOcmProviders;
+  HeaderBuilder<OcmOcmDiscoveryHeaders_XNextcloudOcmProviders?> get xNextcloudOcmProviders =>
+      _$this._xNextcloudOcmProviders ??= HeaderBuilder<OcmOcmDiscoveryHeaders_XNextcloudOcmProviders?>();
   set xNextcloudOcmProviders(
-          covariant HeaderBuilder<OcmOcmDiscoveryHeaders_XNextcloudOcmProviders>? xNextcloudOcmProviders) =>
+          covariant HeaderBuilder<OcmOcmDiscoveryHeaders_XNextcloudOcmProviders?>? xNextcloudOcmProviders) =>
       _$this._xNextcloudOcmProviders = xNextcloudOcmProviders;
 
   OcmOcmDiscoveryHeadersBuilder() {
@@ -23469,7 +23420,7 @@ class _$SpreedCapabilities_Config_Call extends SpreedCapabilities_Config_Call {
   @override
   final bool recording;
   @override
-  final int? recordingConsent;
+  final int recordingConsent;
   @override
   final BuiltList<String> supportedReactions;
   @override
@@ -23477,11 +23428,11 @@ class _$SpreedCapabilities_Config_Call extends SpreedCapabilities_Config_Call {
   @override
   final bool canUploadBackground;
   @override
-  final bool? sipEnabled;
+  final bool sipEnabled;
   @override
-  final bool? sipDialoutEnabled;
+  final bool sipDialoutEnabled;
   @override
-  final bool? canEnableSip;
+  final bool canEnableSip;
 
   factory _$SpreedCapabilities_Config_Call([void Function(SpreedCapabilities_Config_CallBuilder)? updates]) =>
       (SpreedCapabilities_Config_CallBuilder()..update(updates))._build();
@@ -23490,22 +23441,26 @@ class _$SpreedCapabilities_Config_Call extends SpreedCapabilities_Config_Call {
       {required this.enabled,
       required this.breakoutRooms,
       required this.recording,
-      this.recordingConsent,
+      required this.recordingConsent,
       required this.supportedReactions,
       required this.predefinedBackgrounds,
       required this.canUploadBackground,
-      this.sipEnabled,
-      this.sipDialoutEnabled,
-      this.canEnableSip})
+      required this.sipEnabled,
+      required this.sipDialoutEnabled,
+      required this.canEnableSip})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(enabled, r'SpreedCapabilities_Config_Call', 'enabled');
     BuiltValueNullFieldError.checkNotNull(breakoutRooms, r'SpreedCapabilities_Config_Call', 'breakoutRooms');
     BuiltValueNullFieldError.checkNotNull(recording, r'SpreedCapabilities_Config_Call', 'recording');
+    BuiltValueNullFieldError.checkNotNull(recordingConsent, r'SpreedCapabilities_Config_Call', 'recordingConsent');
     BuiltValueNullFieldError.checkNotNull(supportedReactions, r'SpreedCapabilities_Config_Call', 'supportedReactions');
     BuiltValueNullFieldError.checkNotNull(
         predefinedBackgrounds, r'SpreedCapabilities_Config_Call', 'predefinedBackgrounds');
     BuiltValueNullFieldError.checkNotNull(
         canUploadBackground, r'SpreedCapabilities_Config_Call', 'canUploadBackground');
+    BuiltValueNullFieldError.checkNotNull(sipEnabled, r'SpreedCapabilities_Config_Call', 'sipEnabled');
+    BuiltValueNullFieldError.checkNotNull(sipDialoutEnabled, r'SpreedCapabilities_Config_Call', 'sipDialoutEnabled');
+    BuiltValueNullFieldError.checkNotNull(canEnableSip, r'SpreedCapabilities_Config_Call', 'canEnableSip');
   }
 
   @override
@@ -23660,14 +23615,18 @@ class SpreedCapabilities_Config_CallBuilder
                   breakoutRooms, r'SpreedCapabilities_Config_Call', 'breakoutRooms'),
               recording:
                   BuiltValueNullFieldError.checkNotNull(recording, r'SpreedCapabilities_Config_Call', 'recording'),
-              recordingConsent: recordingConsent,
+              recordingConsent: BuiltValueNullFieldError.checkNotNull(
+                  recordingConsent, r'SpreedCapabilities_Config_Call', 'recordingConsent'),
               supportedReactions: supportedReactions.build(),
               predefinedBackgrounds: predefinedBackgrounds.build(),
               canUploadBackground: BuiltValueNullFieldError.checkNotNull(
                   canUploadBackground, r'SpreedCapabilities_Config_Call', 'canUploadBackground'),
-              sipEnabled: sipEnabled,
-              sipDialoutEnabled: sipDialoutEnabled,
-              canEnableSip: canEnableSip);
+              sipEnabled:
+                  BuiltValueNullFieldError.checkNotNull(sipEnabled, r'SpreedCapabilities_Config_Call', 'sipEnabled'),
+              sipDialoutEnabled: BuiltValueNullFieldError.checkNotNull(
+                  sipDialoutEnabled, r'SpreedCapabilities_Config_Call', 'sipDialoutEnabled'),
+              canEnableSip: BuiltValueNullFieldError.checkNotNull(
+                  canEnableSip, r'SpreedCapabilities_Config_Call', 'canEnableSip'));
     } catch (_) {
       late String _$failedField;
       try {
@@ -23699,9 +23658,6 @@ abstract mixin class $SpreedCapabilities_Config_ChatInterfaceBuilder {
 
   int? get typingPrivacy;
   set typingPrivacy(int? typingPrivacy);
-
-  ListBuilder<String> get translations;
-  set translations(ListBuilder<String>? translations);
 }
 
 class _$SpreedCapabilities_Config_Chat extends SpreedCapabilities_Config_Chat {
@@ -23710,11 +23666,9 @@ class _$SpreedCapabilities_Config_Chat extends SpreedCapabilities_Config_Chat {
   @override
   final int readPrivacy;
   @override
-  final bool? hasTranslationProviders;
+  final bool hasTranslationProviders;
   @override
   final int typingPrivacy;
-  @override
-  final BuiltList<String>? translations;
 
   factory _$SpreedCapabilities_Config_Chat([void Function(SpreedCapabilities_Config_ChatBuilder)? updates]) =>
       (SpreedCapabilities_Config_ChatBuilder()..update(updates))._build();
@@ -23722,12 +23676,13 @@ class _$SpreedCapabilities_Config_Chat extends SpreedCapabilities_Config_Chat {
   _$SpreedCapabilities_Config_Chat._(
       {required this.maxLength,
       required this.readPrivacy,
-      this.hasTranslationProviders,
-      required this.typingPrivacy,
-      this.translations})
+      required this.hasTranslationProviders,
+      required this.typingPrivacy})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(maxLength, r'SpreedCapabilities_Config_Chat', 'maxLength');
     BuiltValueNullFieldError.checkNotNull(readPrivacy, r'SpreedCapabilities_Config_Chat', 'readPrivacy');
+    BuiltValueNullFieldError.checkNotNull(
+        hasTranslationProviders, r'SpreedCapabilities_Config_Chat', 'hasTranslationProviders');
     BuiltValueNullFieldError.checkNotNull(typingPrivacy, r'SpreedCapabilities_Config_Chat', 'typingPrivacy');
   }
 
@@ -23745,8 +23700,7 @@ class _$SpreedCapabilities_Config_Chat extends SpreedCapabilities_Config_Chat {
         maxLength == other.maxLength &&
         readPrivacy == other.readPrivacy &&
         hasTranslationProviders == other.hasTranslationProviders &&
-        typingPrivacy == other.typingPrivacy &&
-        translations == other.translations;
+        typingPrivacy == other.typingPrivacy;
   }
 
   @override
@@ -23756,7 +23710,6 @@ class _$SpreedCapabilities_Config_Chat extends SpreedCapabilities_Config_Chat {
     _$hash = $jc(_$hash, readPrivacy.hashCode);
     _$hash = $jc(_$hash, hasTranslationProviders.hashCode);
     _$hash = $jc(_$hash, typingPrivacy.hashCode);
-    _$hash = $jc(_$hash, translations.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -23767,8 +23720,7 @@ class _$SpreedCapabilities_Config_Chat extends SpreedCapabilities_Config_Chat {
           ..add('maxLength', maxLength)
           ..add('readPrivacy', readPrivacy)
           ..add('hasTranslationProviders', hasTranslationProviders)
-          ..add('typingPrivacy', typingPrivacy)
-          ..add('translations', translations))
+          ..add('typingPrivacy', typingPrivacy))
         .toString();
   }
 }
@@ -23796,10 +23748,6 @@ class SpreedCapabilities_Config_ChatBuilder
   int? get typingPrivacy => _$this._typingPrivacy;
   set typingPrivacy(covariant int? typingPrivacy) => _$this._typingPrivacy = typingPrivacy;
 
-  ListBuilder<String>? _translations;
-  ListBuilder<String> get translations => _$this._translations ??= ListBuilder<String>();
-  set translations(covariant ListBuilder<String>? translations) => _$this._translations = translations;
-
   SpreedCapabilities_Config_ChatBuilder() {
     SpreedCapabilities_Config_Chat._defaults(this);
   }
@@ -23811,7 +23759,6 @@ class SpreedCapabilities_Config_ChatBuilder
       _readPrivacy = $v.readPrivacy;
       _hasTranslationProviders = $v.hasTranslationProviders;
       _typingPrivacy = $v.typingPrivacy;
-      _translations = $v.translations?.toBuilder();
       _$v = null;
     }
     return this;
@@ -23833,28 +23780,15 @@ class SpreedCapabilities_Config_ChatBuilder
 
   _$SpreedCapabilities_Config_Chat _build() {
     SpreedCapabilities_Config_Chat._validate(this);
-    _$SpreedCapabilities_Config_Chat _$result;
-    try {
-      _$result = _$v ??
-          _$SpreedCapabilities_Config_Chat._(
-              maxLength:
-                  BuiltValueNullFieldError.checkNotNull(maxLength, r'SpreedCapabilities_Config_Chat', 'maxLength'),
-              readPrivacy:
-                  BuiltValueNullFieldError.checkNotNull(readPrivacy, r'SpreedCapabilities_Config_Chat', 'readPrivacy'),
-              hasTranslationProviders: hasTranslationProviders,
-              typingPrivacy: BuiltValueNullFieldError.checkNotNull(
-                  typingPrivacy, r'SpreedCapabilities_Config_Chat', 'typingPrivacy'),
-              translations: _translations?.build());
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'translations';
-        _translations?.build();
-      } catch (e) {
-        throw BuiltValueNestedFieldError(r'SpreedCapabilities_Config_Chat', _$failedField, e.toString());
-      }
-      rethrow;
-    }
+    final _$result = _$v ??
+        _$SpreedCapabilities_Config_Chat._(
+            maxLength: BuiltValueNullFieldError.checkNotNull(maxLength, r'SpreedCapabilities_Config_Chat', 'maxLength'),
+            readPrivacy:
+                BuiltValueNullFieldError.checkNotNull(readPrivacy, r'SpreedCapabilities_Config_Chat', 'readPrivacy'),
+            hasTranslationProviders: BuiltValueNullFieldError.checkNotNull(
+                hasTranslationProviders, r'SpreedCapabilities_Config_Chat', 'hasTranslationProviders'),
+            typingPrivacy: BuiltValueNullFieldError.checkNotNull(
+                typingPrivacy, r'SpreedCapabilities_Config_Chat', 'typingPrivacy'));
     replace(_$result);
     return _$result;
   }
@@ -26776,14 +26710,14 @@ class ReferenceBuilder implements Builder<Reference, ReferenceBuilder>, $Referen
 abstract mixin class $ReferenceApiExtractResponseApplicationJson_Ocs_DataInterfaceBuilder {
   void replace($ReferenceApiExtractResponseApplicationJson_Ocs_DataInterface other);
   void update(void Function($ReferenceApiExtractResponseApplicationJson_Ocs_DataInterfaceBuilder) updates);
-  MapBuilder<String, Reference> get references;
-  set references(MapBuilder<String, Reference>? references);
+  MapBuilder<String, Reference?> get references;
+  set references(MapBuilder<String, Reference?>? references);
 }
 
 class _$ReferenceApiExtractResponseApplicationJson_Ocs_Data
     extends ReferenceApiExtractResponseApplicationJson_Ocs_Data {
   @override
-  final BuiltMap<String, Reference> references;
+  final BuiltMap<String, Reference?> references;
 
   factory _$ReferenceApiExtractResponseApplicationJson_Ocs_Data(
           [void Function(ReferenceApiExtractResponseApplicationJson_Ocs_DataBuilder)? updates]) =>
@@ -26832,9 +26766,9 @@ class ReferenceApiExtractResponseApplicationJson_Ocs_DataBuilder
         $ReferenceApiExtractResponseApplicationJson_Ocs_DataInterfaceBuilder {
   _$ReferenceApiExtractResponseApplicationJson_Ocs_Data? _$v;
 
-  MapBuilder<String, Reference>? _references;
-  MapBuilder<String, Reference> get references => _$this._references ??= MapBuilder<String, Reference>();
-  set references(covariant MapBuilder<String, Reference>? references) => _$this._references = references;
+  MapBuilder<String, Reference?>? _references;
+  MapBuilder<String, Reference?> get references => _$this._references ??= MapBuilder<String, Reference?>();
+  set references(covariant MapBuilder<String, Reference?>? references) => _$this._references = references;
 
   ReferenceApiExtractResponseApplicationJson_Ocs_DataBuilder() {
     ReferenceApiExtractResponseApplicationJson_Ocs_Data._defaults(this);
@@ -27117,14 +27051,14 @@ class ReferenceApiExtractResponseApplicationJsonBuilder
 abstract mixin class $ReferenceApiResolveOneResponseApplicationJson_Ocs_DataInterfaceBuilder {
   void replace($ReferenceApiResolveOneResponseApplicationJson_Ocs_DataInterface other);
   void update(void Function($ReferenceApiResolveOneResponseApplicationJson_Ocs_DataInterfaceBuilder) updates);
-  MapBuilder<String, Reference> get references;
-  set references(MapBuilder<String, Reference>? references);
+  MapBuilder<String, Reference?> get references;
+  set references(MapBuilder<String, Reference?>? references);
 }
 
 class _$ReferenceApiResolveOneResponseApplicationJson_Ocs_Data
     extends ReferenceApiResolveOneResponseApplicationJson_Ocs_Data {
   @override
-  final BuiltMap<String, Reference> references;
+  final BuiltMap<String, Reference?> references;
 
   factory _$ReferenceApiResolveOneResponseApplicationJson_Ocs_Data(
           [void Function(ReferenceApiResolveOneResponseApplicationJson_Ocs_DataBuilder)? updates]) =>
@@ -27173,9 +27107,9 @@ class ReferenceApiResolveOneResponseApplicationJson_Ocs_DataBuilder
         $ReferenceApiResolveOneResponseApplicationJson_Ocs_DataInterfaceBuilder {
   _$ReferenceApiResolveOneResponseApplicationJson_Ocs_Data? _$v;
 
-  MapBuilder<String, Reference>? _references;
-  MapBuilder<String, Reference> get references => _$this._references ??= MapBuilder<String, Reference>();
-  set references(covariant MapBuilder<String, Reference>? references) => _$this._references = references;
+  MapBuilder<String, Reference?>? _references;
+  MapBuilder<String, Reference?> get references => _$this._references ??= MapBuilder<String, Reference?>();
+  set references(covariant MapBuilder<String, Reference?>? references) => _$this._references = references;
 
   ReferenceApiResolveOneResponseApplicationJson_Ocs_DataBuilder() {
     ReferenceApiResolveOneResponseApplicationJson_Ocs_Data._defaults(this);
@@ -27459,14 +27393,14 @@ class ReferenceApiResolveOneResponseApplicationJsonBuilder
 abstract mixin class $ReferenceApiResolveResponseApplicationJson_Ocs_DataInterfaceBuilder {
   void replace($ReferenceApiResolveResponseApplicationJson_Ocs_DataInterface other);
   void update(void Function($ReferenceApiResolveResponseApplicationJson_Ocs_DataInterfaceBuilder) updates);
-  MapBuilder<String, Reference> get references;
-  set references(MapBuilder<String, Reference>? references);
+  MapBuilder<String, Reference?> get references;
+  set references(MapBuilder<String, Reference?>? references);
 }
 
 class _$ReferenceApiResolveResponseApplicationJson_Ocs_Data
     extends ReferenceApiResolveResponseApplicationJson_Ocs_Data {
   @override
-  final BuiltMap<String, Reference> references;
+  final BuiltMap<String, Reference?> references;
 
   factory _$ReferenceApiResolveResponseApplicationJson_Ocs_Data(
           [void Function(ReferenceApiResolveResponseApplicationJson_Ocs_DataBuilder)? updates]) =>
@@ -27515,9 +27449,9 @@ class ReferenceApiResolveResponseApplicationJson_Ocs_DataBuilder
         $ReferenceApiResolveResponseApplicationJson_Ocs_DataInterfaceBuilder {
   _$ReferenceApiResolveResponseApplicationJson_Ocs_Data? _$v;
 
-  MapBuilder<String, Reference>? _references;
-  MapBuilder<String, Reference> get references => _$this._references ??= MapBuilder<String, Reference>();
-  set references(covariant MapBuilder<String, Reference>? references) => _$this._references = references;
+  MapBuilder<String, Reference?>? _references;
+  MapBuilder<String, Reference?> get references => _$this._references ??= MapBuilder<String, Reference?>();
+  set references(covariant MapBuilder<String, Reference?>? references) => _$this._references = references;
 
   ReferenceApiResolveResponseApplicationJson_Ocs_DataBuilder() {
     ReferenceApiResolveResponseApplicationJson_Ocs_Data._defaults(this);
@@ -34398,36 +34332,41 @@ class _$UnifiedSearchProvider extends UnifiedSearchProvider {
   @override
   final String id;
   @override
-  final String? appId;
+  final String appId;
   @override
   final String name;
   @override
-  final String? icon;
+  final String icon;
   @override
   final int order;
   @override
-  final BuiltList<String>? triggers;
+  final BuiltList<String> triggers;
   @override
-  final BuiltMap<String, String>? filters;
+  final BuiltMap<String, String> filters;
   @override
-  final bool? inAppSearch;
+  final bool inAppSearch;
 
   factory _$UnifiedSearchProvider([void Function(UnifiedSearchProviderBuilder)? updates]) =>
       (UnifiedSearchProviderBuilder()..update(updates))._build();
 
   _$UnifiedSearchProvider._(
       {required this.id,
-      this.appId,
+      required this.appId,
       required this.name,
-      this.icon,
+      required this.icon,
       required this.order,
-      this.triggers,
-      this.filters,
-      this.inAppSearch})
+      required this.triggers,
+      required this.filters,
+      required this.inAppSearch})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(id, r'UnifiedSearchProvider', 'id');
+    BuiltValueNullFieldError.checkNotNull(appId, r'UnifiedSearchProvider', 'appId');
     BuiltValueNullFieldError.checkNotNull(name, r'UnifiedSearchProvider', 'name');
+    BuiltValueNullFieldError.checkNotNull(icon, r'UnifiedSearchProvider', 'icon');
     BuiltValueNullFieldError.checkNotNull(order, r'UnifiedSearchProvider', 'order');
+    BuiltValueNullFieldError.checkNotNull(triggers, r'UnifiedSearchProvider', 'triggers');
+    BuiltValueNullFieldError.checkNotNull(filters, r'UnifiedSearchProvider', 'filters');
+    BuiltValueNullFieldError.checkNotNull(inAppSearch, r'UnifiedSearchProvider', 'inAppSearch');
   }
 
   @override
@@ -34529,8 +34468,8 @@ class UnifiedSearchProviderBuilder
       _name = $v.name;
       _icon = $v.icon;
       _order = $v.order;
-      _triggers = $v.triggers?.toBuilder();
-      _filters = $v.filters?.toBuilder();
+      _triggers = $v.triggers.toBuilder();
+      _filters = $v.filters.toBuilder();
       _inAppSearch = $v.inAppSearch;
       _$v = null;
     }
@@ -34558,20 +34497,20 @@ class UnifiedSearchProviderBuilder
       _$result = _$v ??
           _$UnifiedSearchProvider._(
               id: BuiltValueNullFieldError.checkNotNull(id, r'UnifiedSearchProvider', 'id'),
-              appId: appId,
+              appId: BuiltValueNullFieldError.checkNotNull(appId, r'UnifiedSearchProvider', 'appId'),
               name: BuiltValueNullFieldError.checkNotNull(name, r'UnifiedSearchProvider', 'name'),
-              icon: icon,
+              icon: BuiltValueNullFieldError.checkNotNull(icon, r'UnifiedSearchProvider', 'icon'),
               order: BuiltValueNullFieldError.checkNotNull(order, r'UnifiedSearchProvider', 'order'),
-              triggers: _triggers?.build(),
-              filters: _filters?.build(),
-              inAppSearch: inAppSearch);
+              triggers: triggers.build(),
+              filters: filters.build(),
+              inAppSearch: BuiltValueNullFieldError.checkNotNull(inAppSearch, r'UnifiedSearchProvider', 'inAppSearch'));
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'triggers';
-        _triggers?.build();
+        triggers.build();
         _$failedField = 'filters';
-        _filters?.build();
+        filters.build();
       } catch (e) {
         throw BuiltValueNestedFieldError(r'UnifiedSearchProvider', _$failedField, e.toString());
       }

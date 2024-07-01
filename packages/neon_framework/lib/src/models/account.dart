@@ -1,14 +1,22 @@
 import 'dart:convert';
 
-import 'package:cookie_jar/cookie_jar.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
+import 'package:built_value/standard_json_plugin.dart';
+import 'package:cookie_store/cookie_store.dart';
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:neon_framework/src/utils/findable.dart';
+import 'package:neon_framework/storage.dart';
 import 'package:nextcloud/nextcloud.dart';
 
 part 'account.g.dart';
+
+@SerializersFor([
+  Account,
+])
+final Serializers _serializers = (_$_serializers.toBuilder()..addPlugin(StandardJsonPlugin())).build();
 
 /// Credentials interface
 @internal
@@ -25,68 +33,67 @@ abstract interface class Credentials {
 }
 
 /// Account data.
-@JsonSerializable()
 @immutable
-class Account implements Credentials, Findable {
-  /// Creates a new account.
-  Account({
-    required this.serverURL,
-    required this.username,
-    this.password,
-    this.userAgent,
-    @visibleForTesting Client? httpClient,
-  }) : client = NextcloudClient(
-          serverURL,
-          loginName: username,
-          password: password,
-          appPassword: password,
-          userAgent: userAgent,
-          cookieJar: CookieJar(),
-          httpClient: httpClient,
-        );
+abstract class Account implements Credentials, Findable, Built<Account, AccountBuilder> {
+  // ignore: public_member_api_docs
+  factory Account([void Function(AccountBuilder)? updates]) = _$Account;
+
+  const Account._();
 
   /// Creates a new account object from the given [json] data.
-  factory Account.fromJson(Map<String, dynamic> json) => _$AccountFromJson(json);
+  factory Account.fromJson(Map<String, dynamic> json) => _serializers.deserializeWith(serializer, json)!;
 
   /// Parses this object into a json like map.
-  Map<String, dynamic> toJson() => _$AccountToJson(this);
+  Map<String, dynamic> toJson() => _serializers.serializeWith(serializer, this)! as Map<String, dynamic>;
+
+  // ignore: public_member_api_docs
+  static Serializer<Account> get serializer => _$accountSerializer;
 
   @override
-  final Uri serverURL;
+  Uri get serverURL;
+
   @override
-  final String username;
+  String get username;
+
   @override
-  final String? password;
+  String? get password;
 
   /// The user agent to use.
-  final String? userAgent;
+  String? get userAgent;
 
-  @override
-  bool operator ==(Object other) =>
-      other is Account &&
-      other.serverURL == serverURL &&
-      other.username == username &&
-      other.password == password &&
-      other.userAgent == userAgent;
-
-  @override
-  int get hashCode => serverURL.hashCode + username.hashCode;
+  /// Custom HTTP client used for all requests.
+  @visibleForTesting
+  @BuiltValueField(serialize: false)
+  Client? get httpClient;
 
   /// An authenticated API client.
-  final NextcloudClient client;
+  @memoized
+  NextcloudClient get client {
+    final cookieStore = NeonStorage().cookieStore(
+      accountID: id,
+      serverURL: serverURL,
+    );
+
+    return NextcloudClient(
+      serverURL,
+      loginName: username,
+      password: password,
+      appPassword: password,
+      userAgent: userAgent,
+      cookieJar: cookieStore != null ? CookieJarAdapter(cookieStore) : null,
+      httpClient: httpClient,
+    );
+  }
 
   /// The unique ID of the account.
   ///
   /// Implemented in a primitive way hashing the [username] and [serverURL].
-  /// IDs are globally cached in [_idCache].
   @override
-  String get id {
-    final key = '$username@$serverURL';
-
-    return _idCache[key] ??= sha1.convert(utf8.encode(key)).toString();
-  }
+  @memoized
+  String get id => sha1.convert(utf8.encode('$username@$serverURL')).toString();
 
   /// A human readable representation of [username] and [serverURL].
+  @memoized
   String get humanReadableID {
     // Maybe also show path if it is not '/' ?
     final buffer = StringBuffer()
@@ -110,6 +117,7 @@ class Account implements Credentials, Findable {
   ///
   /// The paths of the [serverURL] and the [uri] need to be join to get the full path, unless the [uri] path is already an absolute path.
   /// In that case an instance hosted at a sub folder will already contain the sub folder part in the [uri].
+  @internal
   Uri completeUri(Uri uri) {
     final result = serverURL.resolveUri(uri);
     if (!uri.hasAbsolutePath) {
@@ -135,9 +143,6 @@ class Account implements Credentials, Findable {
   Uri stripUri(Uri uri) => Uri.parse(uri.toString().replaceFirst(serverURL.toString(), ''));
 }
 
-/// Global [Account.id] cache.
-Map<String, String> _idCache = {};
-
 /// QRcode Login credentials.
 ///
 /// The Credentials as provided by the server when manually creating an app
@@ -155,8 +160,10 @@ class LoginQRcode implements Credentials {
 
   @override
   final Uri serverURL;
+
   @override
   final String username;
+
   @override
   final String password;
 

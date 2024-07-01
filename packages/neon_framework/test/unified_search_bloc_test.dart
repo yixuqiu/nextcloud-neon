@@ -1,10 +1,9 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables
-
 import 'dart:async';
 import 'dart:convert';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:neon_framework/models.dart';
@@ -62,8 +61,11 @@ Account mockUnifiedSearchAccount() => mockServer({
                       for (final id in ['a', 'b', 'c'])
                         {
                           'id': id,
+                          'appId': '',
                           'name': '',
+                          'icon': '',
                           'order': 0,
+                          'inAppSearch': false,
                         },
                     ],
                   },
@@ -75,11 +77,7 @@ Account mockUnifiedSearchAccount() => mockServer({
     });
 
 void main() {
-  final error = DynamiteStatusCodeException.fromResponse(
-    statusCode: 400,
-    headers: {},
-    body: '',
-  );
+  final error = DynamiteStatusCodeException(http.Response('', 400));
 
   late AppImplementation appImplementation;
   late BehaviorSubject<AppImplementation> activeApp;
@@ -100,7 +98,7 @@ void main() {
 
     account = mockUnifiedSearchAccount();
     bloc = UnifiedSearchBloc(
-      appsBloc: appsBloc,
+      activeAppSubject: appsBloc.activeApp,
       account: account,
     );
   });

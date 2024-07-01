@@ -1,10 +1,11 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:nextcloud/nextcloud.dart';
 import 'package:nextcloud/src/api/core.openapi.dart' as core;
 import 'package:nextcloud/src/api/spreed.openapi.dart' as spreed;
 import 'package:version/version.dart';
 
 /// The minimum version of the spreed app that is supported.
-final minVersion = Version(17, 0, 0);
+final minVersion = Version(18, 0, 0);
 
 /// Maximum major of spreed supported
 const maxMajor = 19;
@@ -17,7 +18,7 @@ extension SpreedVersionCheck on spreed.$Client {
   VersionCheck getVersionCheck(core.OcsGetCapabilitiesResponseApplicationJson_Ocs_Data capabilities) {
     final version = capabilities.capabilities.spreedPublicCapabilities?.spreedPublicCapabilities0?.spreed.version;
     return VersionCheck(
-      versions: version != null ? [Version.parse(version)] : null,
+      versions: version != null ? BuiltList([Version.parse(version)]) : null,
       minimumVersion: minVersion,
       maximumMajor: maxMajor,
     );

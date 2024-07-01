@@ -8,6 +8,7 @@ import 'package:neon_framework/blocs.dart';
 import 'package:neon_framework/models.dart';
 import 'package:neon_framework/testing.dart';
 import 'package:neon_talk/src/blocs/room.dart';
+import 'package:neon_talk/src/blocs/talk.dart';
 
 import 'testing.dart';
 
@@ -47,11 +48,37 @@ Account mockTalkAccount() {
             json.encode({
               'ocs': {
                 'meta': {'status': '', 'statuscode': 0},
-                'data': List.generate(2, (i) => getChatMessage(id: messageCount++)),
+                'data': [
+                  getChatMessage(
+                    id: messageCount++,
+                    systemMessage: 'reaction',
+                    parent: getChatMessage(
+                      id: 2,
+                      reactions: {
+                        '😊': 1,
+                      },
+                    ),
+                  ),
+                  getChatMessage(
+                    id: messageCount++,
+                  ),
+                  getChatMessage(
+                    id: messageCount++,
+                    systemMessage: 'message_edited',
+                    parent: getChatMessage(
+                      id: 2,
+                      reactions: {
+                        '😊': 1,
+                      },
+                      message: 'edit',
+                    ),
+                  ),
+                ],
               },
             }),
             200,
             headers: {
+              'content-type': 'application/json; charset=utf-8',
               'x-chat-last-common-read': '0',
             },
           );
@@ -70,16 +97,118 @@ Account mockTalkAccount() {
           );
         }
       },
-      'post': (match, queryParameters) => Response(
+      'post': (match, queryParameters) {
+        final replyTo = queryParameters['replyTo']?.firstOrNull;
+
+        return Response(
+          json.encode({
+            'ocs': {
+              'meta': {'status': '', 'statuscode': 0},
+              'data': getChatMessage(
+                id: messageCount++,
+                parent: replyTo != null
+                    ? getChatMessage(
+                        id: int.parse(replyTo),
+                      )
+                    : null,
+              ),
+            },
+          }),
+          201,
+          headers: {
+            'x-chat-last-common-read': '1',
+          },
+        );
+      },
+    },
+    RegExp(r'/ocs/v2\.php/apps/spreed/api/v1/reaction/abcd/[0-9]+'): {
+      'post': (match, queryParameters) {
+        final reaction = queryParameters['reaction']!.single;
+
+        return Response(
+          json.encode({
+            'ocs': {
+              'meta': {'status': '', 'statuscode': 0},
+              'data': {
+                reaction: [
+                  {
+                    'actorDisplayName': '',
+                    'actorId': 'test',
+                    'actorType': 'users',
+                    'timestamp': 0,
+                  },
+                  {
+                    'actorDisplayName': '',
+                    'actorId': 'other',
+                    'actorType': 'users',
+                    'timestamp': 0,
+                  },
+                ],
+              },
+            },
+          }),
+          200,
+          headers: {
+            'content-type': 'application/json; charset=utf-8',
+          },
+        );
+      },
+      'delete': (match, queryParameters) {
+        final reaction = queryParameters['reaction']!.single;
+
+        return Response(
+          json.encode({
+            'ocs': {
+              'meta': {'status': '', 'statuscode': 0},
+              'data': {
+                reaction: [
+                  {
+                    'actorDisplayName': '',
+                    'actorId': 'test',
+                    'actorType': 'users',
+                    'timestamp': 0,
+                  },
+                  {
+                    'actorDisplayName': '',
+                    'actorId': 'other',
+                    'actorType': 'users',
+                    'timestamp': 0,
+                  },
+                ],
+              },
+            },
+          }),
+          200,
+          headers: {
+            'content-type': 'application/json; charset=utf-8',
+          },
+        );
+      },
+      'get': (match, queryParameters) => Response(
             json.encode({
               'ocs': {
                 'meta': {'status': '', 'statuscode': 0},
-                'data': getChatMessage(id: messageCount++),
+                'data': {
+                  '😀': [
+                    {
+                      'actorDisplayName': '',
+                      'actorId': 'test',
+                      'actorType': 'users',
+                      'timestamp': 0,
+                    },
+                    {
+                      'actorDisplayName': '',
+                      'actorId': 'other',
+                      'actorType': 'users',
+                      'timestamp': 0,
+                    },
+                  ],
+                },
               },
             }),
-            201,
+            200,
             headers: {
-              'x-chat-last-common-read': '1',
+              'content-type': 'application/json; charset=utf-8',
             },
           ),
     },
@@ -88,7 +217,12 @@ Account mockTalkAccount() {
 
 void main() {
   late Account account;
-  late TalkRoomBloc bloc;
+  late TalkBloc talkBloc;
+  late TalkRoomBloc roomBloc;
+
+  setUpAll(() {
+    registerFallbackValue(MockRoom());
+  });
 
   setUp(() {
     FakeNeonStorage.setup();
@@ -100,7 +234,9 @@ void main() {
     when(() => room.lastMessage).thenReturn((baseMessage: null, builtListNever: null, chatMessage: null));
 
     account = mockTalkAccount();
-    bloc = TalkRoomBloc(
+    talkBloc = MockTalkBloc();
+    roomBloc = TalkRoomBloc(
+      talkBloc: talkBloc,
       account: account,
       room: room,
     );
@@ -109,22 +245,24 @@ void main() {
   tearDown(() async {
     // Wait for all events to be processed
     await Future<void>.delayed(const Duration(milliseconds: 1));
-    bloc.dispose();
+    roomBloc.dispose();
   });
 
   test('refresh', () async {
     expect(
-      bloc.room.transformResult((e) => e.token),
+      roomBloc.room.transformResult((e) => e.token),
       emitsInOrder([
         Result.success('abcd').asLoading(),
         Result.success('abcd'),
+        Result.success('abcd'),
         Result.success('abcd').asLoading(),
+        Result.success('abcd'),
         Result.success('abcd'),
       ]),
     );
 
     expect(
-      bloc.messages.transformResult((e) => BuiltList<int>(e.map((m) => m.id))),
+      roomBloc.messages.transformResult((e) => BuiltList<int>(e.map((m) => m.id))),
       emitsInOrder([
         Result<BuiltList<int>>.loading(),
         Result.success(BuiltList<int>([2, 1, 0])),
@@ -134,48 +272,298 @@ void main() {
     );
 
     expect(
-      bloc.lastCommonRead,
+      roomBloc.lastCommonRead,
       emitsInOrder([0, 0]),
     );
 
     // The delay is necessary to avoid a race condition with loading twice at the same time
     await Future<void>.delayed(const Duration(milliseconds: 1));
-    await bloc.refresh();
+    await roomBloc.refresh();
+
+    verify(() => talkBloc.updateRoom(any())).called(4);
   });
 
   test('sendMessage', () async {
     expect(
-      bloc.messages.transformResult((e) => BuiltList<int>(e.map((m) => m.id))),
+      roomBloc.messages.transformResult((e) => BuiltList<int>(e.map((m) => m.id))),
       emitsInOrder([
         Result<BuiltList<int>>.loading(),
         Result.success(BuiltList<int>([2, 1, 0])),
         Result.success(BuiltList<int>([3, 2, 1, 0])),
       ]),
     );
+    expect(
+      roomBloc.room.transformResult((e) => e.lastMessage.chatMessage?.id),
+      emitsInOrder([
+        Result<int>.loading(),
+        Result.success(null),
+        Result.success(2),
+        Result.success(3),
+      ]),
+    );
 
     expect(
-      bloc.lastCommonRead,
+      roomBloc.lastCommonRead,
       emitsInOrder([0, 1]),
     );
 
     // The delay is necessary to avoid a race condition with loading twice at the same time
     await Future<void>.delayed(const Duration(milliseconds: 1));
-    bloc.sendMessage('');
+    roomBloc.sendMessage('');
+
+    verify(() => talkBloc.updateRoom(any())).called(3);
   });
 
-  test('polling', () async {
+  test('Reply', () async {
+    final message = MockChatMessage();
+    when(() => message.id).thenReturn(1);
+
     expect(
-      bloc.messages.transformResult((e) => BuiltList<int>(e.map((m) => m.id))),
+      roomBloc.messages.transformResult((e) => BuiltList<int?>(e.map((m) => m.parent?.id))),
       emitsInOrder([
-        Result<BuiltList<int>>.loading(),
-        Result.success(BuiltList<int>([2, 1, 0])),
-        Result.success(BuiltList<int>([4, 3, 2, 1, 0])),
+        Result<BuiltList<int?>>.loading(),
+        Result.success(BuiltList<int?>([null, null, null])),
+        Result.success(BuiltList<int?>([message.id, null, null, null])),
       ]),
     );
 
     expect(
-      bloc.lastCommonRead,
+      roomBloc.replyTo,
+      emitsInOrder([
+        null,
+        message,
+        null,
+        message,
+        null,
+      ]),
+    );
+
+    // The delay is necessary to avoid a race condition with loading twice at the same time
+    await Future<void>.delayed(const Duration(milliseconds: 1));
+
+    roomBloc
+      ..setReplyChatMessage(message)
+      ..removeReplyChatMessage()
+      ..setReplyChatMessage(message)
+      ..sendMessage('');
+  });
+
+  test('addReaction', () async {
+    expect(
+      roomBloc.messages.transformResult((e) => BuiltList<BuiltMap<String, int>>(e.map((m) => m.reactions))),
+      emitsInOrder([
+        Result<BuiltList<BuiltMap<String, int>>>.loading(),
+        Result.success(
+          BuiltList<BuiltMap<String, int>>([
+            BuiltMap<String, int>(),
+            BuiltMap<String, int>(),
+            BuiltMap<String, int>(),
+          ]),
+        ),
+        Result.success(
+          BuiltList<BuiltMap<String, int>>([
+            BuiltMap<String, int>(),
+            BuiltMap<String, int>(),
+            BuiltMap<String, int>({'😀': 2}),
+          ]),
+        ),
+      ]),
+    );
+    expect(
+      roomBloc.messages.transformResult((e) => BuiltList<BuiltList<String>?>(e.map((m) => m.reactionsSelf))),
+      emitsInOrder([
+        Result<BuiltList<BuiltList<String>?>>.loading(),
+        Result.success(
+          BuiltList<BuiltList<String>?>([
+            null,
+            null,
+            null,
+          ]),
+        ),
+        Result.success(
+          BuiltList<BuiltList<String>?>([
+            null,
+            null,
+            BuiltList<String>(['😀']),
+          ]),
+        ),
+      ]),
+    );
+    expect(
+      roomBloc.reactions.map((a) => a.map((k, v) => MapEntry(k, v.map((k, v) => MapEntry(k, v.length))))),
+      emitsInOrder(<BuiltMap<int, BuiltMap<String, int>>>[
+        BuiltMap(),
+        BuiltMap({
+          0: BuiltMap<String, int>({
+            '😀': 2,
+          }),
+        }),
+      ]),
+    );
+
+    final message = MockChatMessage();
+    when(() => message.id).thenReturn(0);
+
+    roomBloc.addReaction(message, '😀');
+  });
+
+  test('removeReaction', () async {
+    expect(
+      roomBloc.messages.transformResult((e) => BuiltList<BuiltMap<String, int>>(e.map((m) => m.reactions))),
+      emitsInOrder([
+        Result<BuiltList<BuiltMap<String, int>>>.loading(),
+        Result.success(
+          BuiltList<BuiltMap<String, int>>([
+            BuiltMap<String, int>(),
+            BuiltMap<String, int>(),
+            BuiltMap<String, int>(),
+          ]),
+        ),
+        Result.success(
+          BuiltList<BuiltMap<String, int>>([
+            BuiltMap<String, int>({'😀': 2}),
+            BuiltMap<String, int>(),
+            BuiltMap<String, int>(),
+          ]),
+        ),
+      ]),
+    );
+    expect(
+      roomBloc.messages.transformResult((e) => BuiltList<BuiltList<String>?>(e.map((m) => m.reactionsSelf))),
+      emitsInOrder([
+        Result<BuiltList<BuiltList<String>?>>.loading(),
+        Result.success(
+          BuiltList<BuiltList<String>?>([
+            null,
+            null,
+            null,
+          ]),
+        ),
+        Result.success(
+          BuiltList<BuiltList<String>?>([
+            BuiltList<String>(['😀']),
+            null,
+            null,
+          ]),
+        ),
+      ]),
+    );
+    expect(
+      roomBloc.reactions.map((a) => a.map((k, v) => MapEntry(k, v.map((k, v) => MapEntry(k, v.length))))),
+      emitsInOrder(<BuiltMap<int, BuiltMap<String, int>>>[
+        BuiltMap(),
+        BuiltMap({
+          2: BuiltMap<String, int>({
+            '😀': 2,
+          }),
+        }),
+      ]),
+    );
+
+    final message = MockChatMessage();
+    when(() => message.id).thenReturn(2);
+
+    roomBloc.removeReaction(message, '😀');
+  });
+
+  test('loadReactions', () async {
+    expect(
+      roomBloc.messages.transformResult((e) => BuiltList<BuiltMap<String, int>>(e.map((m) => m.reactions))),
+      emitsInOrder([
+        Result<BuiltList<BuiltMap<String, int>>>.loading(),
+        Result.success(
+          BuiltList<BuiltMap<String, int>>([
+            BuiltMap<String, int>(),
+            BuiltMap<String, int>(),
+            BuiltMap<String, int>(),
+          ]),
+        ),
+        Result.success(
+          BuiltList<BuiltMap<String, int>>([
+            BuiltMap<String, int>(),
+            BuiltMap<String, int>({'😀': 2}),
+            BuiltMap<String, int>(),
+          ]),
+        ),
+      ]),
+    );
+    expect(
+      roomBloc.messages.transformResult((e) => BuiltList<BuiltList<String>?>(e.map((m) => m.reactionsSelf))),
+      emitsInOrder([
+        Result<BuiltList<BuiltList<String>?>>.loading(),
+        Result.success(
+          BuiltList<BuiltList<String>?>([
+            null,
+            null,
+            null,
+          ]),
+        ),
+        Result.success(
+          BuiltList<BuiltList<String>?>([
+            null,
+            BuiltList<String>(['😀']),
+            null,
+          ]),
+        ),
+      ]),
+    );
+    expect(
+      roomBloc.reactions.map((a) => a.map((k, v) => MapEntry(k, v.map((k, v) => MapEntry(k, v.length))))),
+      emitsInOrder(<BuiltMap<int, BuiltMap<String, int>>>[
+        BuiltMap(),
+        BuiltMap({
+          1: BuiltMap<String, int>({
+            '😀': 2,
+          }),
+        }),
+      ]),
+    );
+
+    final message = MockChatMessage();
+    when(() => message.id).thenReturn(1);
+
+    roomBloc.loadReactions(message);
+  });
+
+  test('polling', () async {
+    expect(
+      roomBloc.messages.transformResult(
+        (e) => BuiltList<(int, String, BuiltMap<String, int>)>(e.map((m) => (m.id, m.message, m.reactions))),
+      ),
+      emitsInOrder([
+        Result<BuiltList<(int, String, BuiltMap<String, int>)>>.loading(),
+        Result.success(
+          BuiltList<(int, String, BuiltMap<String, int>)>([
+            (2, '', BuiltMap<String, int>()),
+            (1, '', BuiltMap<String, int>()),
+            (0, '', BuiltMap<String, int>()),
+          ]),
+        ),
+        Result.success(
+          BuiltList<(int, String, BuiltMap<String, int>)>([
+            (4, '', BuiltMap<String, int>()),
+            (2, 'edit', BuiltMap<String, int>({'😊': 1})),
+            (1, '', BuiltMap<String, int>()),
+            (0, '', BuiltMap<String, int>()),
+          ]),
+        ),
+      ]),
+    );
+    expect(
+      roomBloc.room.transformResult((e) => e.lastMessage.chatMessage?.id),
+      emitsInOrder([
+        Result<int>.loading(),
+        Result.success(null),
+        Result.success(2),
+        Result.success(4),
+      ]),
+    );
+
+    expect(
+      roomBloc.lastCommonRead,
       emitsInOrder([0, 0]),
     );
+
+    verify(() => talkBloc.updateRoom(any())).called(1);
   });
 }

@@ -6,7 +6,7 @@ jobs:
   spellcheck:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
-      - uses: streetsidesoftware/cspell-action@807d7d92b7057593a2de102168506f298405339d # v6
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      - uses: streetsidesoftware/cspell-action@b7845c5e8f24096fefcaa5f07858bd0ed71badfa # v6
         with:
           incremental_files_only: false

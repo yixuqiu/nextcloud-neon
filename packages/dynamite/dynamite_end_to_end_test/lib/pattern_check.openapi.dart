@@ -21,7 +21,7 @@ import 'package:meta/meta.dart' as _i2;
 part 'pattern_check.openapi.g.dart';
 
 @BuiltValue(instantiable: false)
-abstract interface class $TestObjectInterface {
+sealed class $TestObjectInterface {
   @BuiltValueField(wireName: 'only-numbers')
   String? get onlyNumbers;
   @BuiltValueField(wireName: 'min-length')
@@ -45,6 +45,15 @@ abstract interface class $TestObjectInterface {
   num? get exclusiveMinimum;
   @BuiltValueField(wireName: 'number-multiple-checks')
   num? get numberMultipleChecks;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$TestObjectInterfaceBuilder].
+  $TestObjectInterface rebuild(void Function($TestObjectInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$TestObjectInterfaceBuilder].
+  $TestObjectInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($TestObjectInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)
@@ -161,8 +170,17 @@ abstract class TestObject implements $TestObjectInterface, Built<TestObject, Tes
 }
 
 @BuiltValue(instantiable: false)
-abstract interface class $TestObjectUnspecifiedInterface {
+sealed class $TestObjectUnspecifiedInterface {
   JsonObject? get value;
+
+  /// Rebuilds the instance.
+  ///
+  /// The result is the same as this instance but with [updates] applied.
+  /// [updates] is a function that takes a builder [$TestObjectUnspecifiedInterfaceBuilder].
+  $TestObjectUnspecifiedInterface rebuild(void Function($TestObjectUnspecifiedInterfaceBuilder) updates);
+
+  /// Converts the instance to a builder [$TestObjectUnspecifiedInterfaceBuilder].
+  $TestObjectUnspecifiedInterfaceBuilder toBuilder();
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults($TestObjectUnspecifiedInterfaceBuilder b) {}
   @BuiltValueHook(finalizeBuilder: true)

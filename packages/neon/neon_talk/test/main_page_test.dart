@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:neon_framework/blocs.dart';
+import 'package:neon_framework/models.dart';
 import 'package:neon_framework/testing.dart';
 import 'package:neon_framework/utils.dart';
 import 'package:neon_talk/l10n/localizations.dart';
@@ -17,17 +18,24 @@ import 'package:neon_talk/src/widgets/read_indicator.dart';
 import 'package:neon_talk/src/widgets/unread_indicator.dart';
 import 'package:nextcloud/nextcloud.dart';
 import 'package:nextcloud/spreed.dart' as spreed;
+import 'package:nextcloud/utils.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:timezone/data/latest.dart' as tzdata;
+import 'package:timezone/timezone.dart' as tz;
 
 import 'testing.dart';
 
 void main() {
   late spreed.Room room;
   late TalkBloc bloc;
-  late AccountsBloc accountsBloc;
+  late Account account;
 
   setUpAll(() {
     registerFallbackValue(spreed.RoomType.group);
+
+    tzdata.initializeTimeZones();
+    tz.setLocalLocation(tz.getLocation('Europe/Berlin'));
   });
 
   setUp(() {
@@ -45,13 +53,10 @@ void main() {
     when(() => bloc.errors).thenAnswer((_) => StreamController<Object>().stream);
     when(() => bloc.rooms).thenAnswer((_) => BehaviorSubject.seeded(Result.success(BuiltList([room]))));
 
-    final account = MockAccount();
+    account = MockAccount();
     when(() => account.id).thenReturn('');
     when(() => account.username).thenReturn('test');
     when(() => account.client).thenReturn(NextcloudClient(Uri.parse('')));
-
-    accountsBloc = MockAccountsBloc();
-    when(() => accountsBloc.activeAccount).thenAnswer((_) => BehaviorSubject.seeded(account));
   });
 
   testWidgets('Errors', (tester) async {
@@ -60,17 +65,15 @@ void main() {
     final controller = StreamController<Object>();
     when(() => bloc.errors).thenAnswer((_) => controller.stream);
 
-    await tester.pumpWidget(
+    await tester.pumpWidgetWithAccessibility(
       TestApp(
         localizationsDelegates: TalkLocalizations.localizationsDelegates,
         supportedLocales: TalkLocalizations.supportedLocales,
-        child: NeonProvider<AccountsBloc>.value(
-          value: accountsBloc,
-          child: NeonProvider<TalkBloc>.value(
-            value: bloc,
-            child: const TalkMainPage(),
-          ),
-        ),
+        providers: [
+          Provider<Account>.value(value: account),
+          NeonProvider<TalkBloc>.value(value: bloc),
+        ],
+        child: const TalkMainPage(),
       ),
     );
 
@@ -86,15 +89,15 @@ void main() {
     when(() => room.lastMessage).thenReturn((baseMessage: null, builtListNever: null, chatMessage: null));
     when(() => room.unreadMessages).thenReturn(0);
 
-    await tester.pumpWidget(
+    await tester.pumpWidgetWithAccessibility(
       TestApp(
-        child: NeonProvider<AccountsBloc>.value(
-          value: accountsBloc,
-          child: NeonProvider<TalkBloc>.value(
-            value: bloc,
-            child: const TalkMainPage(),
-          ),
-        ),
+        localizationsDelegates: TalkLocalizations.localizationsDelegates,
+        supportedLocales: TalkLocalizations.supportedLocales,
+        providers: [
+          Provider<Account>.value(value: account),
+          NeonProvider<TalkBloc>.value(value: bloc),
+        ],
+        child: const TalkMainPage(),
       ),
     );
 
@@ -109,27 +112,27 @@ void main() {
       when(() => chatMessage.actorId).thenReturn('test');
       when(() => chatMessage.message).thenReturn('test');
       when(() => chatMessage.messageParameters).thenReturn(BuiltMap());
+      when(() => chatMessage.timestamp).thenReturn(tz.TZDateTime.now(tz.UTC).secondsSinceEpoch - 60 * 60);
 
       when(() => room.lastMessage).thenReturn((baseMessage: null, builtListNever: null, chatMessage: chatMessage));
       when(() => room.unreadMessages).thenReturn(1);
 
-      await tester.pumpWidget(
+      await tester.pumpWidgetWithAccessibility(
         TestApp(
           localizationsDelegates: TalkLocalizations.localizationsDelegates,
           supportedLocales: TalkLocalizations.supportedLocales,
-          child: NeonProvider<AccountsBloc>.value(
-            value: accountsBloc,
-            child: NeonProvider<TalkBloc>.value(
-              value: bloc,
-              child: const TalkMainPage(),
-            ),
-          ),
+          providers: [
+            Provider<Account>.value(value: account),
+            NeonProvider<TalkBloc>.value(value: bloc),
+          ],
+          child: const TalkMainPage(),
         ),
       );
 
       expect(find.byType(TalkMessagePreview), findsOne);
       expect(find.byType(TalkUnreadIndicator), findsOne);
       expect(find.byType(TalkReadIndicator), findsNothing);
+      expect(find.text('1h'), findsOne);
       await expectLater(
         find.byType(TalkMainPage),
         matchesGoldenFile('goldens/main_page_with_message_preview_with_unread_messages.png'),
@@ -144,28 +147,28 @@ void main() {
         when(() => chatMessage.message).thenReturn('test');
         when(() => chatMessage.messageParameters).thenReturn(BuiltMap());
         when(() => chatMessage.id).thenReturn(0);
+        when(() => chatMessage.timestamp).thenReturn(tz.TZDateTime.now(tz.UTC).secondsSinceEpoch - 60 * 60);
 
         when(() => room.lastMessage).thenReturn((baseMessage: null, builtListNever: null, chatMessage: chatMessage));
         when(() => room.unreadMessages).thenReturn(0);
         when(() => room.lastCommonReadMessage).thenReturn(0);
 
-        await tester.pumpWidget(
+        await tester.pumpWidgetWithAccessibility(
           TestApp(
             localizationsDelegates: TalkLocalizations.localizationsDelegates,
             supportedLocales: TalkLocalizations.supportedLocales,
-            child: NeonProvider<AccountsBloc>.value(
-              value: accountsBloc,
-              child: NeonProvider<TalkBloc>.value(
-                value: bloc,
-                child: const TalkMainPage(),
-              ),
-            ),
+            providers: [
+              Provider<Account>.value(value: account),
+              NeonProvider<TalkBloc>.value(value: bloc),
+            ],
+            child: const TalkMainPage(),
           ),
         );
 
         expect(find.byType(TalkMessagePreview), findsOne);
         expect(find.byType(TalkUnreadIndicator), findsNothing);
         expect(find.byType(TalkReadIndicator), findsOne);
+        expect(find.text('1h'), findsOne);
         await expectLater(
           find.byType(TalkMainPage),
           matchesGoldenFile('goldens/main_page_with_message_preview_without_unread_messages_self.png'),
@@ -179,28 +182,28 @@ void main() {
         when(() => chatMessage.message).thenReturn('test');
         when(() => chatMessage.messageParameters).thenReturn(BuiltMap());
         when(() => chatMessage.id).thenReturn(0);
+        when(() => chatMessage.timestamp).thenReturn(tz.TZDateTime.now(tz.UTC).secondsSinceEpoch - 60 * 60);
 
         when(() => room.lastMessage).thenReturn((baseMessage: null, builtListNever: null, chatMessage: chatMessage));
         when(() => room.unreadMessages).thenReturn(0);
         when(() => room.lastCommonReadMessage).thenReturn(0);
 
-        await tester.pumpWidget(
+        await tester.pumpWidgetWithAccessibility(
           TestApp(
             localizationsDelegates: TalkLocalizations.localizationsDelegates,
             supportedLocales: TalkLocalizations.supportedLocales,
-            child: NeonProvider<AccountsBloc>.value(
-              value: accountsBloc,
-              child: NeonProvider<TalkBloc>.value(
-                value: bloc,
-                child: const TalkMainPage(),
-              ),
-            ),
+            providers: [
+              Provider<Account>.value(value: account),
+              NeonProvider<TalkBloc>.value(value: bloc),
+            ],
+            child: const TalkMainPage(),
           ),
         );
 
         expect(find.byType(TalkMessagePreview), findsOne);
         expect(find.byType(TalkUnreadIndicator), findsNothing);
         expect(find.byType(TalkReadIndicator), findsOne);
+        expect(find.text('1h'), findsOne);
         await expectLater(
           find.byType(TalkMainPage),
           matchesGoldenFile('goldens/main_page_with_message_preview_without_unread_messages_other.png'),
@@ -213,40 +216,36 @@ void main() {
     when(() => room.lastMessage).thenReturn((baseMessage: null, builtListNever: null, chatMessage: null));
     when(() => room.unreadMessages).thenReturn(0);
 
-    await tester.pumpWidget(
+    await tester.pumpWidgetWithAccessibility(
       TestApp(
         localizationsDelegates: TalkLocalizations.localizationsDelegates,
         supportedLocales: TalkLocalizations.supportedLocales,
-        child: NeonProvider<AccountsBloc>.value(
-          value: accountsBloc,
-          child: NeonProvider<TalkBloc>.value(
-            value: bloc,
-            child: const TalkMainPage(),
-          ),
-        ),
+        providers: [
+          Provider<Account>.value(value: account),
+          NeonProvider<TalkBloc>.value(value: bloc),
+        ],
+        child: const TalkMainPage(),
       ),
     );
 
     await tester.runAsync(() async {
       await tester.tap(find.byType(FloatingActionButton));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(TalkCreateRoomDialog), findsOne);
+
+      await tester.tap(find.text(TalkLocalizationsEn().roomType(spreed.RoomType.public.name)));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byType(TextFormField), 'test');
+      await tester.pumpAndSettle();
+
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(TalkCreateRoomDialog), findsNothing);
+
+      verify(() => bloc.createRoom(spreed.RoomType.public, 'test', null)).called(1);
     });
-    await tester.pumpAndSettle();
-
-    expect(find.byType(TalkCreateRoomDialog), findsOne);
-
-    await tester.tap(find.text(TalkLocalizationsEn().roomType(spreed.RoomType.public.name)));
-    await tester.pumpAndSettle();
-
-    await tester.enterText(find.byType(TextFormField), 'test');
-    await tester.pumpAndSettle();
-
-    await tester.testTextInput.receiveAction(TextInputAction.done);
-    await tester.pumpAndSettle();
-
-    expect(find.byType(TalkCreateRoomDialog), findsNothing);
-
-    await tester.runAsync(() async {});
-
-    verify(() => bloc.createRoom(spreed.RoomType.public, 'test', null)).called(1);
   });
 }

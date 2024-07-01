@@ -6,7 +6,7 @@ import 'package:neon_framework/testing.dart';
 
 void main() {
   testWidgets('Set weather location dialog', (tester) async {
-    await tester.pumpWidget(
+    await tester.pumpWidgetWithAccessibility(
       const TestApp(
         localizationsDelegates: DashboardLocalizations.localizationsDelegates,
         supportedLocales: DashboardLocalizations.supportedLocales,
@@ -41,7 +41,7 @@ void main() {
 
     await tester.enterText(find.byType(TextField), 'Berlin');
 
-    await tester.tap(find.byType(ElevatedButton));
+    await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
 
     expect(await future, 'Berlin');

@@ -8,12 +8,12 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
           fetch-depth: 0
 
       - name: Install dart
-        uses: dart-lang/setup-dart@f0ead981b4d9a35b37f30d36160575d60931ec30 # v1
+        uses: dart-lang/setup-dart@0a8a0fc875eb934c15d08629302413c671d3f672 # v1
       - name: Install commitlint_cli
         run: dart pub get
 
