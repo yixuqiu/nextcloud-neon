@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:neon_framework/models.dart';
 import 'package:neon_framework/src/theme/server.dart';
 import 'package:neon_framework/src/utils/global_options.dart';
 import 'package:neon_framework/src/utils/hex_color.dart';
@@ -36,7 +37,7 @@ class NeonCustomBackground extends StatelessWidget {
 
         if (theme == null) {
           return ColoredBox(
-            color: Theme.of(context).colorScheme.background,
+            color: Theme.of(context).colorScheme.surface,
             child: child,
           );
         }
@@ -54,11 +55,12 @@ class NeonCustomBackground extends StatelessWidget {
               child: NeonUriImage(
                 uri: Uri.parse(theme.background),
                 fit: BoxFit.cover,
+                account: NeonProvider.of<Account>(context),
               ),
             ),
             Positioned.fill(
               child: ColoredBox(
-                color: Colors.black.withOpacity(0.5),
+                color: Colors.black.withValues(alpha: 0.5),
               ),
             ),
             child!,

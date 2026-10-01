@@ -1,10 +1,9 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables
-
 import 'dart:async';
 import 'dart:convert';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:neon_framework/models.dart';
@@ -18,8 +17,8 @@ import 'package:rxdart/rxdart.dart';
 
 Account mockUnifiedSearchAccount() => mockServer({
       RegExp(r'/ocs/v2\.php/search/providers/(.*)/search'): {
-        'get': (match, queryParameters) {
-          final term = queryParameters['term']!.single;
+        'get': (match, request) {
+          final term = request.url.queryParameters['term']!;
           if (term == 'error') {
             return Response('', 400);
           }
@@ -49,11 +48,12 @@ Account mockUnifiedSearchAccount() => mockServer({
               },
             ),
             200,
+            headers: {'content-type': 'application/json'},
           );
         },
       },
       RegExp(r'/ocs/v2\.php/search/providers'): {
-        'get': (match, queryParameters) => Response(
+        'get': (match, request) => Response(
               json.encode(
                 {
                   'ocs': {
@@ -62,24 +62,24 @@ Account mockUnifiedSearchAccount() => mockServer({
                       for (final id in ['a', 'b', 'c'])
                         {
                           'id': id,
+                          'appId': '',
                           'name': '',
+                          'icon': '',
                           'order': 0,
+                          'inAppSearch': false,
                         },
                     ],
                   },
                 },
               ),
               200,
+              headers: {'content-type': 'application/json'},
             ),
       },
     });
 
 void main() {
-  final error = DynamiteStatusCodeException.fromResponse(
-    statusCode: 400,
-    headers: {},
-    body: '',
-  );
+  final error = DynamiteStatusCodeException(http.Response('', 400));
 
   late AppImplementation appImplementation;
   late BehaviorSubject<AppImplementation> activeApp;
@@ -100,7 +100,7 @@ void main() {
 
     account = mockUnifiedSearchAccount();
     bloc = UnifiedSearchBloc(
-      appsBloc: appsBloc,
+      activeAppSubject: appsBloc.activeApp,
       account: account,
     );
   });

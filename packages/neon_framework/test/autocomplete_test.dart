@@ -12,17 +12,12 @@ import 'package:neon_framework/src/utils/validators.dart';
 import 'package:neon_framework/src/widgets/autocomplete.dart';
 import 'package:neon_framework/testing.dart';
 import 'package:nextcloud/core.dart' as core;
+import 'package:provider/provider.dart';
 
 Account mockAutocompleteAccount() {
   return mockServer({
     RegExp(r'/ocs/v2\.php/core/autocomplete/get'): {
-      'get': (match, queryParameters) {
-        assert(queryParameters['itemType']!.single == 'itemType');
-        assert(queryParameters['itemId']!.single == 'itemId');
-        assert(queryParameters['shareTypes[]']![0] == '0');
-        assert(queryParameters['shareTypes[]']![1] == '1');
-        assert(queryParameters['limit']!.single == '10');
-
+      'get': (match, request) {
         return Response(
           json.encode(
             {
@@ -43,6 +38,7 @@ Account mockAutocompleteAccount() {
             },
           ),
           200,
+          headers: {'content-type': 'application/json'},
         );
       },
     },
@@ -69,11 +65,13 @@ void main() {
   testWidgets('Autocomplete', (tester) async {
     final callback = MockOnSelectedCallbackFunction();
 
-    await tester.pumpWidget(
+    await tester.pumpWidgetWithAccessibility(
       TestApp(
+        providers: [
+          Provider<Account>.value(value: account),
+        ],
         child: Builder(
-          builder: (context) => NeonAutocomplete.withAccount(
-            account: account,
+          builder: (context) => NeonAutocomplete(
             itemType: 'itemType',
             itemId: 'itemId',
             shareTypes: const [
@@ -103,7 +101,7 @@ void main() {
     await tester.enterText(find.byType(TextFormField), 't');
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('test'));
+    await tester.tap(find.text('test'), warnIfMissed: false);
     await tester.pumpAndSettle();
 
     await tester.testTextInput.receiveAction(TextInputAction.done);

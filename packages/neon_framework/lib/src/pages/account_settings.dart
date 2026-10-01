@@ -2,20 +2,19 @@ import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:meta/meta.dart';
-import 'package:neon_framework/l10n/localizations.dart';
+import 'package:neon_framework/models.dart';
 import 'package:neon_framework/src/bloc/result.dart';
 import 'package:neon_framework/src/blocs/accounts.dart';
-import 'package:neon_framework/src/models/account.dart';
 import 'package:neon_framework/src/router.dart';
 import 'package:neon_framework/src/settings/widgets/custom_settings_tile.dart';
 import 'package:neon_framework/src/settings/widgets/option_settings_tile.dart';
 import 'package:neon_framework/src/settings/widgets/settings_category.dart';
 import 'package:neon_framework/src/settings/widgets/settings_list.dart';
 import 'package:neon_framework/src/theme/dialog.dart';
-import 'package:neon_framework/src/utils/adaptive.dart';
 import 'package:neon_framework/src/widgets/dialog.dart';
 import 'package:neon_framework/src/widgets/error.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:neon_framework/utils.dart';
+import 'package:provider/provider.dart';
 
 /// Account settings page.
 ///
@@ -24,19 +23,16 @@ import 'package:url_launcher/url_launcher.dart';
 class AccountSettingsPage extends StatelessWidget {
   /// Creates a new account settings page for the given [account].
   const AccountSettingsPage({
-    required this.bloc,
     required this.account,
     super.key,
   });
-
-  /// The bloc managing the accounts and their settings.
-  final AccountsBloc bloc;
 
   /// The account to display the settings for.
   final Account account;
 
   @override
   Widget build(BuildContext context) {
+    final bloc = NeonProvider.of<AccountsBloc>(context);
     final options = bloc.getOptionsFor(account);
     final userDetailsBloc = bloc.getUserDetailsBlocFor(account);
     final name = account.humanReadableID;
@@ -50,6 +46,7 @@ class AccountSettingsPage extends StatelessWidget {
               context: context,
               builder: (context) => NeonAccountDeletionDialog(
                 account: account,
+                capabilitiesBloc: bloc.getCapabilitiesBlocFor(account),
               ),
             );
 
@@ -57,11 +54,9 @@ class AccountSettingsPage extends StatelessWidget {
               case null:
                 break;
               case AccountDeletion.remote:
-                await launchUrl(
-                  account.serverURL.replace(
-                    path: '${account.serverURL.path}/index.php/settings/user/drop_account',
-                  ),
-                );
+                if (context.mounted) {
+                  await launchUrl(NeonProvider.of<Account>(context), '/index.php/settings/user/drop_account');
+                }
               case AccountDeletion.local:
                 final isActive = bloc.activeAccount.valueOrNull == account;
 
@@ -143,7 +138,7 @@ class AccountSettingsPage extends StatelessWidget {
                     value: value,
                     minHeight: isCupertino(context) ? 15 : null,
                     borderRadius: BorderRadius.circular(isCupertino(context) ? 5 : 3),
-                    backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                    backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
                   ),
                   subtitle: subtitle,
                 );
@@ -169,7 +164,10 @@ class AccountSettingsPage extends StatelessWidget {
         child: Center(
           child: ConstrainedBox(
             constraints: NeonDialogTheme.of(context).constraints,
-            child: body,
+            child: Provider<Account>.value(
+              value: account,
+              child: body,
+            ),
           ),
         ),
       ),

@@ -20,7 +20,7 @@ final class AvoidDartIO extends DartLintRule {
   ) {
     context.registry.addImportDirective((node) {
       if (node.uri.stringValue == 'dart:io') {
-        reporter.reportErrorForToken(code, node.beginToken);
+        reporter.atToken(node.beginToken, _code);
       }
     });
   }

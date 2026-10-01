@@ -5,9 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_material_design_icons/flutter_material_design_icons.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
-import 'package:neon_framework/l10n/localizations.dart';
+import 'package:neon_framework/models.dart';
 import 'package:neon_framework/src/blocs/accounts.dart';
-import 'package:neon_framework/src/models/app_implementation.dart';
 import 'package:neon_framework/src/platform/platform.dart';
 import 'package:neon_framework/src/router.dart';
 import 'package:neon_framework/src/settings/utils/settings_export_helper.dart';
@@ -17,19 +16,16 @@ import 'package:neon_framework/src/settings/widgets/option_settings_tile.dart';
 import 'package:neon_framework/src/settings/widgets/settings_category.dart';
 import 'package:neon_framework/src/settings/widgets/settings_list.dart';
 import 'package:neon_framework/src/settings/widgets/settings_tile.dart';
-import 'package:neon_framework/src/settings/widgets/text_settings_tile.dart';
 import 'package:neon_framework/src/theme/branding.dart';
 import 'package:neon_framework/src/theme/dialog.dart';
 import 'package:neon_framework/src/theme/icons.dart';
-import 'package:neon_framework/src/utils/adaptive.dart';
 import 'package:neon_framework/src/utils/global_options.dart';
-import 'package:neon_framework/src/utils/provider.dart';
 import 'package:neon_framework/src/widgets/dialog.dart';
 import 'package:neon_framework/src/widgets/error.dart';
+import 'package:neon_framework/utils.dart';
 import 'package:nextcloud/utils.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:timezone/timezone.dart' as tz;
-import 'package:url_launcher/url_launcher_string.dart';
 
 final _log = Logger('SettingsPage');
 
@@ -72,7 +68,7 @@ enum SettingsCategories {
 ///
 /// Settings are specified as `Option`s.
 @internal
-class SettingsPage extends StatefulWidget {
+class SettingsPage extends StatelessWidget {
   /// Creates a new settings page.
   const SettingsPage({
     this.initialCategory,
@@ -82,11 +78,6 @@ class SettingsPage extends StatefulWidget {
   /// The optional initial category to show.
   final SettingsCategories? initialCategory;
 
-  @override
-  State<SettingsPage> createState() => _SettingsPageState();
-}
-
-class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final globalOptions = NeonProvider.of<GlobalOptions>(context);
@@ -128,7 +119,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ],
     );
     final body = SettingsList(
-      initialCategoryKey: widget.initialCategory?.name,
+      initialCategoryKey: initialCategory?.name,
       categories: [
         SettingsCategory(
           hasLeading: true,
@@ -173,7 +164,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ],
         ),
-        if (NeonPlatform.instance.canUsePushNotifications) buildNotificationsCategory(),
+        if (NeonPlatform.instance.canUsePushNotifications) buildNotificationsCategory(context),
         if (NeonPlatform.instance.canUseWindowManager)
           SettingsCategory(
             title: Text(NeonLocalizations.of(context).optionsCategoryStartup),
@@ -187,7 +178,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ],
           ),
-        ...buildAccountCategory(),
+        ...buildAccountCategory(context),
         SettingsCategory(
           hasLeading: true,
           title: Text(NeonLocalizations.of(context).optionsCategoryOther),
@@ -201,10 +192,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 title: Text(NeonLocalizations.of(context).sourceCode),
                 onTap: () async {
-                  await launchUrlString(
-                    branding.sourceCodeURL!,
-                    mode: LaunchMode.externalApplication,
-                  );
+                  await launchUrl(NeonProvider.of<Account>(context), branding.sourceCodeURL!);
                 },
               ),
             if (branding.issueTrackerURL != null)
@@ -215,10 +203,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 title: Text(NeonLocalizations.of(context).issueTracker),
                 onTap: () async {
-                  await launchUrlString(
-                    branding.issueTrackerURL!,
-                    mode: LaunchMode.externalApplication,
-                  );
+                  await launchUrl(NeonProvider.of<Account>(context), branding.issueTrackerURL!);
                 },
               ),
             CustomSettingsTile(
@@ -325,36 +310,21 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget buildNotificationsCategory() {
+  Widget buildNotificationsCategory(BuildContext context) {
     final globalOptions = NeonProvider.of<GlobalOptions>(context);
 
-    return ValueListenableBuilder(
-      valueListenable: globalOptions.pushNotificationsEnabled,
-      builder: (context, _, __) => SettingsCategory(
-        title: Text(NeonLocalizations.of(context).optionsCategoryPushNotifications),
-        key: ValueKey(SettingsCategories.pushNotifications.name),
-        tiles: [
-          if (!globalOptions.pushNotificationsEnabled.enabled)
-            TextSettingsTile(
-              text: NeonLocalizations.of(context).globalOptionsPushNotificationsEnabledDisabledNotice,
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontStyle: FontStyle.italic,
-                color: Theme.of(context).colorScheme.error,
-              ),
-            ),
-          ToggleSettingsTile(
-            option: globalOptions.pushNotificationsEnabled,
-          ),
-          SelectSettingsTile(
-            option: globalOptions.pushNotificationsDistributor,
-          ),
-        ],
-      ),
+    return SettingsCategory(
+      title: Text(NeonLocalizations.of(context).optionsCategoryPushNotifications),
+      key: ValueKey(SettingsCategories.pushNotifications.name),
+      tiles: [
+        SelectSettingsTile(
+          option: globalOptions.pushNotificationsDistributor,
+        ),
+      ],
     );
   }
 
-  Iterable<Widget> buildAccountCategory() sync* {
+  Iterable<Widget> buildAccountCategory(BuildContext context) sync* {
     final globalOptions = NeonProvider.of<GlobalOptions>(context);
     final accountsBloc = NeonProvider.of<AccountsBloc>(context);
     final accounts = accountsBloc.accounts.value;
@@ -365,6 +335,8 @@ class _SettingsPageState extends State<SettingsPage> {
     final accountTiles = accounts.map(
       (account) => AccountSettingsTile(
         account: account,
+        userDetailsBloc: accountsBloc.getUserDetailsBlocFor(account),
+        userStatusBloc: accountsBloc.getUserStatusBlocFor(account),
         onTap: () => AccountSettingsRoute(accountID: account.id).go(context),
       ),
     );

@@ -1,16 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euxo pipefail
 cd "$(dirname "$0")/.."
 
-for package in $(yq -r ".dev_dependencies | keys | .[]" pubspec.yaml); do
-  version="$(yq -r ".dev_dependencies.$package" pubspec.yaml)"
-  dart pub global activate "$package" "$version"
-done
+dart pub global activate coverage 1.12.0
+dart pub global activate custom_lint 0.7.5
+dart pub global activate fvm 3.2.1
+dart pub global activate melos 6.0.0
+
 echo "y" | fvm install
 
 if [ ! -v GITHUB_REPOSITORY ]; then
   fvm flutter precache
 fi
 
-melos bootstrap
-fvm dart run husky install
+fvm flutter pub get

@@ -14,7 +14,7 @@ abstract interface class Exportable {
 
 /// Serialization helpers for a collection of [Option]s.
 extension SerializeOptions on Iterable<Option<dynamic>> {
-  /// Serializes into an [Iterable<JsonEntry>].
+  /// Serializes into an `Iterable<JsonEntry>`.
   ///
   /// Use [Map.fromEntries] to get a json Map.
   Iterable<MapEntry<String, Object?>> serialize() sync* {
@@ -29,11 +29,17 @@ extension SerializeOptions on Iterable<Option<dynamic>> {
   void deserialize(Map<String, Object?> data) {
     for (final entry in data.entries) {
       final option = firstWhereOrNull((option) => option.key.value == entry.key);
+      if (option == null) {
+        continue;
+      }
 
       if (entry.value != null) {
-        option?.load(entry.value);
+        final value = option.deserialize(data);
+        if (value != null) {
+          option.value = value;
+        }
       } else {
-        option?.reset();
+        option.reset();
       }
     }
   }

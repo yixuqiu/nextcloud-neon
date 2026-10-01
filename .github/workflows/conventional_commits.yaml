@@ -5,17 +5,19 @@ on:
 jobs:
   conventional-commits:
     name: Conventional commits
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
 
       - name: Install dart
-        uses: dart-lang/setup-dart@f0ead981b4d9a35b37f30d36160575d60931ec30 # v1
+        uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260 # v1
+        with:
+          sdk: 3.7
       - name: Install commitlint_cli
-        run: dart pub get
+        run: dart pub global activate commitlint_cli 0.8.1
 
       - name: Lint conventional commits
-        run: dart run commitlint_cli --from=${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to=${{ github.event.pull_request.head.sha }}
+        run: dart pub global run commitlint_cli --from=${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to=${{ github.event.pull_request.head.sha }}

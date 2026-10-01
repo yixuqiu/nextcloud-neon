@@ -1,0 +1,16 @@
+diff --git a/pubspec.yaml b/pubspec.yaml
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -35,3 +35,12 @@ workspace:
+
+ dev_dependencies:
+   melos: 6.0.0
++
++dependency_overrides:
++  archive: ^3.5.0
++  frontend_server_client: ^4.0.0
++  petitparser: ^6.1.0
++  pointer_interceptor: ^0.10.1+1
++  quiver: ^3.2.1
++  shelf_web_socket: ^2.0.0
++  web_socket_channel: ^3.0.0

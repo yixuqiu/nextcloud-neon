@@ -1,13 +1,12 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables
-
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:neon_framework/blocs.dart';
+import 'package:neon_framework/models.dart';
 import 'package:neon_framework/platform.dart';
-import 'package:neon_framework/src/models/account.dart';
 import 'package:neon_framework/testing.dart';
 import 'package:nextcloud/nextcloud.dart';
 import 'package:nextcloud/user_status.dart' as user_status;
@@ -37,6 +36,7 @@ Account mockUserStatusAccount() {
           },
         }),
         200,
+        headers: {'content-type': 'application/json'},
       );
 
   Response statusResponse() => Response(
@@ -58,6 +58,7 @@ Account mockUserStatusAccount() {
           },
         ),
         200,
+        headers: {'content-type': 'application/json'},
       );
 
   Response emptyResponse() => Response(
@@ -70,39 +71,46 @@ Account mockUserStatusAccount() {
           },
         ),
         200,
+        headers: {'content-type': 'application/json'},
       );
 
   return mockServer({
     RegExp(r'/ocs/v2\.php/apps/user_status/api/v1/predefined_statuses'): {
-      'get': (match, queryParameters) => predefinedStatusesResponse(),
+      'get': (match, request) => predefinedStatusesResponse(),
     },
     RegExp(r'/ocs/v2\.php/apps/user_status/api/v1/user_status/message/predefined'): {
-      'put': (match, queryParameters) {
-        messageId = queryParameters['messageId']!.single;
+      'put': (match, request) {
+        final data = json.decode(request.body) as Map<String, dynamic>;
+
+        messageId = data['messageId'] as String;
         messageIsPredefined = true;
-        clearAt = int.parse(queryParameters['clearAt']!.single);
+        clearAt = data['clearAt'] as int;
         return statusResponse();
       },
     },
     RegExp(r'/ocs/v2\.php/apps/user_status/api/v1/user_status/message/custom'): {
-      'put': (match, queryParameters) {
+      'put': (match, request) {
+        final data = json.decode(request.body) as Map<String, dynamic>;
+
         messageId = null;
-        message = queryParameters['message']!.single;
+        message = data['message'] as String;
         messageIsPredefined = false;
-        icon = queryParameters['statusIcon']!.single;
-        clearAt = int.parse(queryParameters['clearAt']!.single);
+        icon = data['statusIcon'] as String;
+        clearAt = data['clearAt'] as int;
         return statusResponse();
       },
     },
     RegExp(r'/ocs/v2\.php/apps/user_status/api/v1/user_status/status'): {
-      'put': (match, queryParameters) {
-        status = queryParameters['statusType']!.single;
+      'put': (match, request) {
+        final data = json.decode(request.body) as Map<String, dynamic>;
+
+        status = data['statusType'] as String;
         statusIsUserDefined = true;
         return statusResponse();
       },
     },
     RegExp(r'/ocs/v2\.php/apps/user_status/api/v1/user_status/message'): {
-      'delete': (match, queryParameters) {
+      'delete': (match, request) {
         messageId = null;
         messageIsPredefined = false;
         message = null;
@@ -112,10 +120,12 @@ Account mockUserStatusAccount() {
       },
     },
     RegExp(r'/ocs/v2\.php/apps/user_status/api/v1/statuses/(.*)'): {
-      'get': (match, queryParameters) => statusResponse(),
+      'get': (match, request) => statusResponse(),
     },
     RegExp(r'/ocs/v2\.php/apps/user_status/api/v1/heartbeat'): {
-      'put': (match, queryParameters) {
+      'put': (match, request) {
+        final data = json.decode(request.body) as Map<String, dynamic>;
+
         // Hardcoded behavior for testing
         if (status == 'offline') {
           return Response('', 204);
@@ -123,7 +133,7 @@ Account mockUserStatusAccount() {
           return Response('', 201);
         }
 
-        status = queryParameters['status']!.single;
+        status = data['status'] as String;
         statusIsUserDefined = false;
         return statusResponse();
       },
@@ -180,8 +190,7 @@ void main() {
   });
 
   test('Load', () async {
-    // ignore: unawaited_futures
-    expectLater(
+    expect(
       bloc.status.transformResult((e) => e.status),
       emitsInOrder([
         Result<user_status.$Type>.loading(),
@@ -193,13 +202,7 @@ void main() {
         Result.success(user_status.$Type.online),
         Result.success(user_status.$Type.dnd),
         Result.success(user_status.$Type.dnd).asLoading(),
-        Result<String>.error(
-          DynamiteStatusCodeException.fromResponse(
-            statusCode: 201,
-            headers: {},
-            body: '',
-          ),
-        ),
+        Result<String>.error(DynamiteStatusCodeException(http.Response('', 201))),
       ]),
     );
 

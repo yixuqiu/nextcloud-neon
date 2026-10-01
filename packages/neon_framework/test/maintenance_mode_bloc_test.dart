@@ -2,14 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
+import 'package:neon_framework/models.dart';
 import 'package:neon_framework/src/blocs/maintenance_mode.dart';
-import 'package:neon_framework/src/models/account.dart';
 import 'package:neon_framework/testing.dart';
 
 Account mockMaintenanceModeAccount() {
   return mockServer({
     RegExp(r'/status\.php'): {
-      'get': (match, queryParameters) {
+      'get': (match, request) {
         return Response(
           json.encode({
             'installed': false,
@@ -22,6 +22,7 @@ Account mockMaintenanceModeAccount() {
             'extendedSupport': false,
           }),
           200,
+          headers: {'content-type': 'application/json'},
         );
       },
     },

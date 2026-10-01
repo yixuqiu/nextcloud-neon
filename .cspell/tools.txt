@@ -1,5 +1,6 @@
 aarch
 allprojects
+anydpi
 autoptr
 buildscript
 buildsystem
@@ -41,7 +42,9 @@ libapp
 libflutter
 libgtk
 libsqlite
+metaspace
 mipmap
+multimap
 ndebug
 nodoc
 noopenapi
@@ -51,6 +54,7 @@ openrelayprojectsecret
 petstore
 plantuml
 precache
+prgname
 puml
 realpath
 rpath

@@ -1,27 +1,23 @@
 [submodule "external/nextcloud-server"]
 	path = external/nextcloud-server
 	url = https://github.com/nextcloud/server.git
-[submodule "external/seti-ui"]
-	path = external/seti-ui
-	url = https://github.com/jesseweed/seti-ui.git
+	branch = v33.0.2
 [submodule "external/nextcloud-notifications"]
 	path = external/nextcloud-notifications
 	url = https://github.com/nextcloud/notifications.git
+	branch = v33.0.2
 [submodule "external/nextcloud-spreed"]
 	path = external/nextcloud-spreed
 	url = https://github.com/nextcloud/spreed
+	branch = v23.0.3
 [submodule "external/nextcloud-news"]
 	path = external/nextcloud-news
 	url = https://github.com/nextcloud/news
+	branch = 28.2.0
 [submodule "external/nextcloud-notes"]
 	path = external/nextcloud-notes
 	url = https://github.com/nextcloud/notes
-[submodule "external/openapi-specification"]
-	path = external/openapi-specification
-	url = https://github.com/OAI/OpenAPI-Specification.git
-[submodule "external/nextcloud-openapi-extractor"]
-	path = external/nextcloud-openapi-extractor
-	url = https://github.com/nextcloud/openapi-extractor.git
-[submodule "external/nextcloud-drop_account"]
-	path = external/nextcloud-drop_account
-	url = https://framagit.org/framasoft/nextcloud/drop_account.git
+	branch = v5.0.0
+[submodule "external/emoji-metadata"]
+	path = external/emoji-metadata
+	url = https://github.com/googlefonts/emoji-metadata

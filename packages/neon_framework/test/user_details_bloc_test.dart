@@ -4,12 +4,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:neon_framework/blocs.dart';
 import 'package:neon_framework/models.dart';
-import 'package:neon_framework/src/blocs/user_details.dart';
 import 'package:neon_framework/testing.dart';
 
 Account mockUserDetailsAccount() => mockServer({
       RegExp(r'/ocs/v2\.php/cloud/user'): {
-        'get': (match, queryParameters) => Response(
+        'get': (match, request) => Response(
               json.encode(
                 {
                   'ocs': {
@@ -51,6 +50,7 @@ Account mockUserDetailsAccount() => mockServer({
                 },
               ),
               200,
+              headers: {'content-type': 'application/json'},
             ),
       },
     });

@@ -5,32 +5,27 @@ This project uses an assortment of tools for the development.
 Currently included are:
 - [fvm](https://pub.dev/packages/fvm) for managing Flutter versions
 - [melos](https://pub.dev/packages/melos) for managing packages in this monorepo
-- [husky](https://pub.dev/packages/husky) for managing git hooks
 - [commitlint_cli](https://pub.dev/packages/commitlint_cli) for validating commits according to the conventional commits specification
 
 To set up all these tools run the `./tool/setup.sh` script.
 Note that you need to have Dart installed and [`~/.pub-cache/bin/` needs to be in your PATH](https://dart.dev/tools/pub/cmd/pub-global#running-a-script-from-your-path) before running the script.
 
 You will need to have the following dependencies installed to get the app running:
-- [yq](https://github.com/kislyuk/yq)
 - [sqlite3](https://pub.dev/packages/sqflite_common_ffi#getting-started)
 
-For working with lower levels like generating the OpenAPI specifications a few more dependencies are required:
-- [jsonpatch](https://pypi.org/project/jsonpatch)
-- [PHP](https://www.php.net)
-- [composer](https://getcomposer.org)
+For running a development Nextcloud instance see https://github.com/provokateurin/nextcloud.dart/blob/main/DEVELOPMENT.md#run-a-test-instance.
 
 ## Picking an issue
 You may wish to start with our list of [good first issues](https://github.com/nextcloud/neon/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
 
 ## Commits
-All commits need to be signed and signed off to to be pass our tests.
+All commits need to be signed and signed off to pass our tests.
 To sign off your commits use `git commit --signoff`.
 To setup commit signing please consult the [Github documentation](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits).
 We use conventional commits to have meaningful commit messages and be able to generate changelogs.
-A non-breaking feature contribution to `neon_notes` could look like this:
+A non-breaking feature contribution to `notes_app` could look like this:
 ```bash
-git commit -m "feat(neon_notes): Add a super cool feature."
+git commit -m "feat(notes_app): Add a super cool feature."
 ```
 You can read the full documentation at https://www.conventionalcommits.org.
 

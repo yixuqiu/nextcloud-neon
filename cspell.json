@@ -4,7 +4,8 @@
   "useGitignore": true,
   "enableGlobDot": false,
   "words": [
-    "OpenAPI"
+    "OpenAPI",
+    "cacherine"
   ],
   "ignorePaths": [
     "**.svg",
@@ -15,13 +16,10 @@
     "**.openapi.json",
     "**/CHANGELOG.md",
     "external",
-    "packages/app/web/sqlite3.wasm",
-    "packages/app/web/sqflite_sw.js",
-    "packages/dynamite/dynamite/example/lib",
-    "packages/file_icons/lib/src/data.dart",
+    "packages/neon_framework/lib/src/utils/emojis.dart",
+    "packages/neon_framework/example/web/sqflite_sw.js",
+    "packages/neon_framework/example/web/sqlite3.wasm",
     "packages/neon_lints/lib",
-    "packages/nextcloud/test/fixtures",
-    "packages/nextcloud_test/docker/static"
   ],
   "dictionaries": [
     "bash",

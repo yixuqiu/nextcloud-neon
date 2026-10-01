@@ -41,7 +41,7 @@ if unsure about the logging level to use.
     context.registry.addInvocationExpression((node) {
       final element = node.function;
       if (element case Identifier(:final name) when name.startsWith(_debugPrint)) {
-        reporter.reportErrorForToken(code, node.beginToken);
+        reporter.atToken(node.beginToken, _code);
       }
     });
   }

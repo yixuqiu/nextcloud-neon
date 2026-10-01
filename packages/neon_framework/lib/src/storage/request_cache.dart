@@ -1,30 +1,30 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
 
+import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 import 'package:neon_framework/models.dart';
 import 'package:neon_framework/src/platform/platform.dart';
-import 'package:neon_framework/src/utils/request_manager.dart';
-import 'package:nextcloud/utils.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:timezone/timezone.dart' as tz;
 
 final _log = Logger('RequestCache');
 
-/// A storage used to cache a key value pair.
+/// A storage used to cache HTTP requests.
 abstract interface class RequestCache {
-  /// Get's the cached value and parameters for the given [key].
-  Future<({String value, CacheParameters? parameters})?> get(Account account, String key);
+  /// Gets the cached status code, body and headers for the [request].
+  Future<http.Response?> get(Account account, http.Request request);
 
-  /// Set's the cached [value] at the given [key].
+  /// Sets the cached [response] for the [request].
   ///
-  /// If a value is already present it will be updated with the new one.
-  Future<void> set(Account account, String key, String value, CacheParameters? parameters);
+  /// If a request is already present it will be updated with the new one.
+  Future<void> set(Account account, http.Request request, http.Response response);
 
-  /// Updates the cache [parameters] for a given [key] without modifying the `value`.
-  Future<void> updateParameters(Account account, String key, CacheParameters? parameters);
+  /// Updates the cache [headers] for the [request] without modifying anything else.
+  Future<void> updateHeaders(Account account, http.Request request, Map<String, String> headers);
 }
 
 /// Default implementation of the [RequestCache].
@@ -60,20 +60,16 @@ final class DefaultRequestCache implements RequestCache {
     final cacheDir = await getApplicationCacheDirectory();
     database = await openDatabase(
       p.join(cacheDir.path, 'cache.db'),
-      version: 4,
+      version: 7,
       onCreate: onCreate,
       onUpgrade: (db, oldVersion, newVersion) async {
         // We can safely drop the table as it only contains cached data.
         // Non breaking migrations should not drop the cache. The next
         // breaking change should remove all non breaking migrations before it.
         await db.transaction((txn) async {
-          if (oldVersion <= 3) {
+          if (oldVersion <= 6) {
             await txn.execute('DROP TABLE cache');
             await onCreate(txn);
-          }
-
-          if (oldVersion <= 3) {
-            await txn.delete('cache');
           }
         });
       },
@@ -84,12 +80,15 @@ final class DefaultRequestCache implements RequestCache {
   static Future<void> onCreate(DatabaseExecutor db, [int? version]) async {
     await db.execute('''
 CREATE TABLE "cache" (
-	"account" TEXT NOT NULL,
-	"key"     TEXT NOT NULL,
-	"value"   TEXT NOT NULL,
-	"etag"    TEXT,
-	"expires" INTEGER,
-	PRIMARY KEY("key", "account")
+	"account"              TEXT NOT NULL,
+	"request_method"       TEXT NOT NULL,
+	"request_url"          TEXT NOT NULL,
+	"request_headers"      TEXT NOT NULL,
+	"request_body"         BLOB NOT NULL,
+	"response_status_code" INTEGER NOT NULL,
+	"response_headers"     TEXT NOT NULL,
+	"response_body"        BLOB NOT NULL,
+	PRIMARY KEY("account", "request_method", "request_url", "request_headers", "request_body")
 );
 ''');
   }
@@ -106,20 +105,32 @@ CREATE TABLE "cache" (
   }
 
   @override
-  Future<({String value, CacheParameters? parameters})?> get(Account account, String key) async {
+  Future<http.Response?> get(Account account, http.Request request) async {
     List<Map<String, Object?>>? result;
     try {
       result = await _requireDatabase.rawQuery(
         '''
-SELECT value, etag, expires
+SELECT response_status_code,
+       response_headers,
+       response_body
 FROM cache
-WHERE account = ? AND key = ?
+WHERE account = ?
+  AND request_method = ?
+  AND request_url = ?
+  AND request_headers = ?
+  AND request_body = ?
 ''',
-        [account.id, key],
+        [
+          account.id,
+          request.method.toUpperCase(),
+          request.url.toString(),
+          json.encode(sanitizeRequestHeaders(request.headers)),
+          request.bodyBytes,
+        ],
       );
     } on DatabaseException catch (error, stackTrace) {
       _log.severe(
-        'Error while getting `$key` from cache.',
+        'Error while getting `$request` from cache.',
         error,
         stackTrace,
       );
@@ -130,25 +141,18 @@ WHERE account = ? AND key = ?
       return null;
     }
 
-    final value = row['value']! as String;
-    final etag = row['etag'] as String?;
-    final expires = row['expires'] as int?;
-
-    final parameters = CacheParameters(
-      etag: etag,
-      expires: expires != null
-          ? DateTimeUtils.fromSecondsSinceEpoch(
-              tz.UTC,
-              expires,
-            )
-          : null,
+    return http.Response.bytes(
+      row['response_body']! as Uint8List,
+      row['response_status_code']! as int,
+      headers: (json.decode(row['response_headers']! as String) as Map<String, dynamic>).cast<String, String>(),
     );
-
-    return (value: value, parameters: parameters);
   }
 
   @override
-  Future<void> set(Account account, String key, String value, CacheParameters? parameters) async {
+  Future<void> set(Account account, http.Request request, http.Response response) async {
+    final encodedRequestHeaders = json.encode(sanitizeRequestHeaders(request.headers));
+    final encodedResponseHeaders = json.encode(response.headers);
+
     try {
       // UPSERT is only available since SQLite 3.24.0 (June 4, 2018).
       // Using a manual solution from https://stackoverflow.com/a/38463024
@@ -157,32 +161,53 @@ WHERE account = ? AND key = ?
           'cache',
           {
             'account': account.id,
-            'key': key,
-            'value': value,
-            'etag': parameters?.etag,
-            'expires': parameters?.expires?.secondsSinceEpoch,
+            'request_method': request.method.toUpperCase(),
+            'request_url': request.url.toString(),
+            'request_headers': encodedRequestHeaders,
+            'request_body': request.bodyBytes,
+            'response_status_code': response.statusCode,
+            'response_headers': encodedResponseHeaders,
+            'response_body': response.bodyBytes,
           },
-          where: 'account = ? AND key = ?',
-          whereArgs: [account.id, key],
+          where: 'account = ? AND request_method = ? AND request_url = ? AND request_headers = ? AND request_body = ?',
+          whereArgs: [
+            account.id,
+            request.method.toUpperCase(),
+            request.url.toString(),
+            encodedRequestHeaders,
+            request.bodyBytes,
+          ],
         )
         ..rawInsert(
           '''
-INSERT INTO cache (account, key, value, etag, expires)
-SELECT ?, ?, ?, ?, ?
+INSERT INTO cache (
+  account,
+  request_method,
+  request_url,
+  request_headers,
+  request_body,
+  response_status_code,
+  response_headers,
+  response_body
+)
+SELECT ?, ?, ?, ?, ?, ?, ?, ?
 WHERE (SELECT changes() = 0)
 ''',
           [
             account.id,
-            key,
-            value,
-            parameters?.etag,
-            parameters?.expires?.secondsSinceEpoch,
+            request.method.toUpperCase(),
+            request.url.toString(),
+            encodedRequestHeaders,
+            request.bodyBytes,
+            response.statusCode,
+            encodedResponseHeaders,
+            response.bodyBytes,
           ],
         );
       await batch.commit(noResult: true);
     } on DatabaseException catch (error, stackTrace) {
       _log.severe(
-        'Error while setting `$value` at `$key` in the cache.',
+        'Error while setting `$request` in the cache.',
         error,
         stackTrace,
       );
@@ -190,24 +215,37 @@ WHERE (SELECT changes() = 0)
   }
 
   @override
-  Future<void> updateParameters(Account account, String key, CacheParameters? parameters) async {
+  Future<void> updateHeaders(Account account, http.Request request, Map<String, String> headers) async {
     try {
       await _requireDatabase.update(
         'cache',
         {
           'account': account.id,
-          'etag': parameters?.etag,
-          'expires': parameters?.expires?.secondsSinceEpoch,
+          'response_headers': json.encode(headers),
         },
-        where: 'account = ? AND key = ?',
-        whereArgs: [account.id, key],
+        where: 'account = ? AND request_method = ? AND request_url = ? AND request_headers = ? AND request_body = ?',
+        whereArgs: [
+          account.id,
+          request.method.toUpperCase(),
+          request.url.toString(),
+          json.encode(sanitizeRequestHeaders(request.headers)),
+          request.bodyBytes,
+        ],
       );
     } on DatabaseException catch (error, stackTrace) {
       _log.severe(
-        'Error while updating cache parameters at `$key`.',
+        'Error while updating headers at `$request`.',
         error,
         stackTrace,
       );
     }
+  }
+
+  /// Ensures header names are case-insensitive and removes headers that would potentially prevent caching.
+  Map<String, String> sanitizeRequestHeaders(Map<String, String> headers) {
+    return headers.map((key, value) => MapEntry(key.toLowerCase(), value))
+      ..remove('authorization')
+      ..remove('cookie')
+      ..remove('user-agent');
   }
 }

@@ -3,15 +3,23 @@
   "extends": [
     "config:best-practices"
   ],
+  "git-submodules": {
+    "enabled": true
+  },
   "labels": [
     "dependencies"
   ],
   "rangeStrategy": "bump",
+  "prConcurrentLimit": 0,
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true
   },
   "packageRules": [
+    {
+      "matchDatasources": ["dart"],
+      "versioning": "npm"
+    },
     {
       "matchManagers": ["pub"],
       "matchDatasources": ["dart-version", "flutter-version"],
@@ -23,28 +31,26 @@
     },
     {
       "matchManagers": ["pub"],
-      "matchDepTypes": ["dependencies"],
+      "matchDepTypes": ["dependencies", "devDependencies"],
       "matchUpdateTypes": [
         "minor",
         "patch"
       ],
       "matchCurrentVersion": "!/^0/",
-      "excludeDepNames": [
-        "app",
-        "dynamite_end_to_end_test",
-        "dynamite_petstore_example",
-        "neon_lints",
-        "nextcloud_test"
-      ],
       "enabled": false
     },
     {
       "matchManagers": ["pub"],
-      "matchDepTypes": ["dependencies"],
+      "matchDepTypes": ["dependencies", "devDependencies"],
       "matchUpdateTypes": [
         "patch"
       ],
       "matchCurrentVersion": "/^0/",
+      "enabled": false
+    },
+    {
+      "matchManagers": ["git-submodules"],
+      "matchUpdateTypes": ["digest"],
       "enabled": false
     },
     {
@@ -55,33 +61,26 @@
     },
     {
       "groupName": "built_value",
-      "matchPackagePatterns": "^built"
+      "matchPackageNames": ["/^built/"]
+    },
+    {
+      "groupName": "custom_lint",
+      "matchPackageNames": [
+        "custom_lint",
+        "custom_lint_builder"
+      ]
     },
     {
       "groupName": "go_router",
-      "matchPackagePatterns": "^go_router"
+      "matchPackageNames": ["/^go_router/"]
     },
     {
       "groupName": "sqflite",
-      "matchPackagePatterns": "^sqflite"
+      "matchPackageNames": ["/^sqflite/"]
     },
     {
       "groupName": "unifiedpush",
-      "matchPackagePatterns": "^unifiedpush"
-    },
-    {
-      "groupName": "xml_serializable",
-      "matchPackageNames": [
-        "xml_annotation",
-        "xml_serializable"
-      ]
-    },
-    {
-      "groupName": "json_serializable",
-      "matchPackageNames": [
-        "json_annotation",
-        "json_serializable"
-      ]
+      "matchPackageNames": ["/^unifiedpush/"]
     },
     {
       "groupName": "test",
@@ -89,6 +88,29 @@
         "test",
         "test_api",
         "test_core"
+      ]
+    },
+    {
+      "groupName": "analyzer",
+      "matchPackageNames": [
+        "analyzer",
+        "analyzer_plugin"
+      ]
+    },
+    {
+      "groupName": "bloc",
+      "matchPackageNames": [
+        "bloc",
+        "bloc_concurrency",
+        "bloc_test",
+        "flutter_bloc"
+      ]
+    },
+    {
+      "groupName": "build",
+      "matchPackageNames": [
+        "build",
+        "build_runner"
       ]
     }
   ]

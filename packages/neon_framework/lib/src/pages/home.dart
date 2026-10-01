@@ -5,9 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:neon_framework/l10n/localizations.dart';
 import 'package:neon_framework/src/bloc/result.dart';
-import 'package:neon_framework/src/blocs/accounts.dart';
 import 'package:neon_framework/src/blocs/apps.dart';
-import 'package:neon_framework/src/models/account.dart';
+import 'package:neon_framework/src/blocs/maintenance_mode.dart';
 import 'package:neon_framework/src/utils/dialog.dart';
 import 'package:neon_framework/src/utils/global_options.dart' as global_options;
 import 'package:neon_framework/src/utils/global_popups.dart';
@@ -23,11 +22,8 @@ import 'package:provider/provider.dart';
 class HomePage extends StatefulWidget {
   /// Creates a new home page.
   const HomePage({
-    required this.account,
     super.key,
   });
-
-  final Account account;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -35,33 +31,31 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late global_options.GlobalOptions _globalOptions;
-  late AccountsBloc _accountsBloc;
   late AppsBloc _appsBloc;
-  late StreamSubscription<BuiltMap<String, VersionCheck>> _versionCheckSubscription;
-  late StreamSubscription<Object> maintenanceModeErrorsSubscription;
-  late StreamSubscription<void> maintenanceModeSubscription;
+  late final StreamSubscription<BuiltMap<String, VersionCheck>> _versionCheckSubscription;
+  late final StreamSubscription<Object> maintenanceModeErrorsSubscription;
+  late final StreamSubscription<void> maintenanceModeSubscription;
 
   @override
   void initState() {
     super.initState();
     _globalOptions = NeonProvider.of<global_options.GlobalOptions>(context);
-    _accountsBloc = NeonProvider.of<AccountsBloc>(context);
-    _appsBloc = _accountsBloc.getAppsBlocFor(widget.account);
-    final maintenanceModeBloc = _accountsBloc.getMaintenanceModeBlocFor(widget.account);
+    _appsBloc = NeonProvider.of<AppsBloc>(context);
+    final maintenanceModeBloc = NeonProvider.of<MaintenanceModeBloc>(context);
 
-    _versionCheckSubscription = _appsBloc.appVersionChecks.listen((values) {
-      if (!mounted) {
+    _versionCheckSubscription = _appsBloc.unsupportedApps.listen((unsupportedChecks) {
+      if (!mounted || unsupportedChecks.isEmpty) {
         return;
       }
 
       final l10n = NeonLocalizations.of(context);
       final buffer = StringBuffer()..writeln();
 
-      for (final entry in values.entries) {
+      for (final entry in unsupportedChecks.entries) {
         final versionCheck = entry.value;
         final appName = l10n.appImplementationName(entry.key);
 
-        buffer.writeln('- $appName >=${versionCheck.minimumVersion} <${versionCheck.maximumMajor + 1}.0.0');
+        buffer.writeln('- $appName >=${versionCheck.minimumVersion}');
       }
 
       final message = l10n.errorUnsupportedAppVersions(buffer.toString());
@@ -69,14 +63,18 @@ class _HomePageState extends State<HomePage> {
     });
 
     maintenanceModeErrorsSubscription = maintenanceModeBloc.errors.listen((error) {
-      NeonError.showSnackbar(context, error);
+      if (mounted) {
+        NeonError.showSnackbar(context, error);
+      }
     });
 
     maintenanceModeSubscription = maintenanceModeBloc.onMaintenanceMode.listen((_) async {
-      await showErrorDialog(
-        context: context,
-        message: NeonLocalizations.of(context).errorServerInMaintenanceMode,
-      );
+      if (mounted) {
+        await showErrorDialog(
+          context: context,
+          message: NeonLocalizations.of(context).errorServerInMaintenanceMode,
+        );
+      }
     });
 
     GlobalPopups().register(context);
@@ -139,11 +137,14 @@ class _HomePageState extends State<HomePage> {
               return Row(
                 children: [
                   ColoredBox(
-                    color: Theme.of(context).colorScheme.background,
+                    color: Theme.of(context).colorScheme.surface,
                     child: const NeonDrawer(),
                   ),
                   Expanded(
-                    child: body,
+                    // Clip to avoid shadows leaking onto the drawer
+                    child: ClipRRect(
+                      child: body,
+                    ),
                   ),
                 ],
               );

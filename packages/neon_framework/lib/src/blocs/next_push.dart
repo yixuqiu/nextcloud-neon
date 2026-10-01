@@ -1,11 +1,11 @@
 import 'dart:async';
 
+import 'package:built_collection/built_collection.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
+import 'package:neon_framework/models.dart';
 import 'package:neon_framework/src/bloc/bloc.dart';
-import 'package:neon_framework/src/blocs/accounts.dart';
-import 'package:neon_framework/src/models/account.dart';
 import 'package:neon_framework/src/models/disposable.dart';
 import 'package:neon_framework/src/utils/global_options.dart';
 import 'package:nextcloud/uppush.dart' as uppush;
@@ -15,7 +15,7 @@ import 'package:rxdart/rxdart.dart';
 sealed class NextPushBloc implements Disposable {
   @internal
   factory NextPushBloc({
-    required AccountsBloc accountsBloc,
+    required BehaviorSubject<BuiltList<Account>> accountsSubject,
     required GlobalOptions globalOptions,
     bool disabled,
   }) = _NextPushBloc;
@@ -26,22 +26,18 @@ sealed class NextPushBloc implements Disposable {
 
 class _NextPushBloc extends Bloc implements NextPushBloc {
   _NextPushBloc({
-    required this.accountsBloc,
+    required this.accountsSubject,
     required this.globalOptions,
     bool disabled = false,
   }) {
     if (disabled) {
       return;
     }
-    Rx.merge([
-      globalOptions.pushNotificationsEnabled.stream,
+    changesSubscription = Rx.merge<dynamic>([
       globalOptions.pushNotificationsDistributor.stream,
-      accountsBloc.accounts,
-    ]).debounceTime(const Duration(milliseconds: 100)).listen((_) async {
-      if (!globalOptions.pushNotificationsEnabled.enabled || !globalOptions.pushNotificationsEnabled.value) {
-        return;
-      }
-      if (globalOptions.pushNotificationsDistributor.value != null) {
+      accountsSubject,
+    ]).listen((_) async {
+      if (globalOptions.pushNotificationsDistributor.value == null) {
         return;
       }
       if (globalOptions.pushNotificationsDistributor.values.containsKey(unifiedPushNextPushID)) {
@@ -50,7 +46,7 @@ class _NextPushBloc extends Bloc implements NextPushBloc {
       }
 
       var isSupported = false;
-      for (final account in accountsBloc.accounts.value) {
+      for (final account in accountsSubject.value) {
         if (!supported.containsKey(account)) {
           try {
             final response = await account.client.uppush.check();
@@ -85,12 +81,14 @@ class _NextPushBloc extends Bloc implements NextPushBloc {
   @override
   final log = Logger('NextPushBloc');
 
-  final AccountsBloc accountsBloc;
+  final BehaviorSubject<BuiltList<Account>> accountsSubject;
   final GlobalOptions globalOptions;
   final supported = <Account, bool>{};
+  late final StreamSubscription<Object?> changesSubscription;
 
   @override
   void dispose() {
+    unawaited(changesSubscription.cancel());
     unawaited(onNextPushSupported.close());
   }
 

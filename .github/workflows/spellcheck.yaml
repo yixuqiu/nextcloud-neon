@@ -4,9 +4,9 @@ on:
 
 jobs:
   spellcheck:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
-      - uses: streetsidesoftware/cspell-action@807d7d92b7057593a2de102168506f298405339d # v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: streetsidesoftware/cspell-action@de2a73e963e7443969755b648a1008f77033c5b2 # v8
         with:
           incremental_files_only: false

@@ -1,31 +1,33 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:account_repository/account_repository.dart';
 import 'package:built_collection/built_collection.dart';
-import 'package:collection/collection.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:meta/meta.dart';
+import 'package:neon_framework/blocs.dart';
 import 'package:neon_framework/l10n/localizations.dart';
-import 'package:neon_framework/src/bloc/result.dart';
+import 'package:neon_framework/models.dart';
 import 'package:neon_framework/src/blocs/accounts.dart';
-import 'package:neon_framework/src/models/account.dart';
-import 'package:neon_framework/src/models/app_implementation.dart';
-import 'package:neon_framework/src/models/notifications_interface.dart';
-import 'package:neon_framework/src/models/push_notification.dart';
+import 'package:neon_framework/src/blocs/maintenance_mode.dart';
+import 'package:neon_framework/src/blocs/unified_search.dart';
 import 'package:neon_framework/src/platform/platform.dart';
 import 'package:neon_framework/src/router.dart';
 import 'package:neon_framework/src/theme/neon.dart';
 import 'package:neon_framework/src/theme/server.dart';
 import 'package:neon_framework/src/theme/theme.dart';
+import 'package:neon_framework/src/utils/account_options.dart';
 import 'package:neon_framework/src/utils/findable.dart';
 import 'package:neon_framework/src/utils/global_options.dart';
 import 'package:neon_framework/src/utils/localizations.dart';
 import 'package:neon_framework/src/utils/provider.dart';
 import 'package:neon_framework/src/utils/push_utils.dart';
 import 'package:neon_framework/src/widgets/options_collection_builder.dart';
-import 'package:nextcloud/nextcloud.dart';
+import 'package:nextcloud/notifications.dart' as notifications;
+import 'package:notifications_push_repository/notifications_push_repository.dart';
+import 'package:provider/provider.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'package:universal_io/io.dart';
 import 'package:window_manager/window_manager.dart';
@@ -51,16 +53,15 @@ class NeonApp extends StatefulWidget {
   State<NeonApp> createState() => _NeonAppState();
 }
 
-// ignore: prefer_mixin
 class _NeonAppState extends State<NeonApp> with WidgetsBindingObserver, WindowListener {
-  final _appRegex = RegExp(r'^app_([a-z]+)$', multiLine: true);
+  final _appRegex = RegExp(r'^([a-z]+)_app$', multiLine: true);
   final _navigatorKey = GlobalKey<NavigatorState>();
   late final BuiltSet<AppImplementation> _appImplementations;
   late final GlobalOptions _globalOptions;
   late final AccountsBloc _accountsBloc;
   late final _routerDelegate = buildAppRouter(
     navigatorKey: _navigatorKey,
-    accountsBloc: _accountsBloc,
+    accountRepository: context.read<AccountRepository>(),
   );
 
   @override
@@ -88,9 +89,9 @@ class _NeonAppState extends State<NeonApp> with WidgetsBindingObserver, WindowLi
           _appImplementations
               .map(
                 (app) => ShortcutItem(
-                  type: 'app_${app.id}',
+                  type: '${app.id}_app',
                   localizedTitle: app.nameFromLocalization(localizations),
-                  icon: 'app_${app.id}',
+                  icon: '${app.id}_app',
                 ),
               )
               .toList(),
@@ -107,15 +108,14 @@ class _NeonAppState extends State<NeonApp> with WidgetsBindingObserver, WindowLi
       }
 
       if (NeonPlatform.instance.canUsePushNotifications) {
-        final localNotificationsPlugin = await PushUtils.initLocalNotifications();
         PushUtils.onPushNotificationReceived = (accountID) async {
-          final account = _accountsBloc.accounts.value.tryFind(accountID);
+          final account = _accountsBloc.accountByID(accountID);
           if (account == null) {
             return;
           }
 
           final allAppImplementations = NeonProvider.of<BuiltSet<AppImplementation>>(context);
-          final app = allAppImplementations.tryFind(AppIDs.notifications) as NotificationsAppInterface?;
+          final app = allAppImplementations.tryFind(notifications.appID) as NotificationsAppInterface?;
 
           if (app == null) {
             return;
@@ -124,7 +124,7 @@ class _NeonAppState extends State<NeonApp> with WidgetsBindingObserver, WindowLi
           await _accountsBloc.getAppsBlocFor(account).getAppBloc<NotificationsBlocInterface>(app).refresh();
         };
         PushUtils.onLocalNotificationClicked = (pushNotificationWithAccountID) async {
-          final account = _accountsBloc.accounts.value.tryFind(pushNotificationWithAccountID.accountID);
+          final account = _accountsBloc.accountByID(pushNotificationWithAccountID.accountID);
           if (account == null) {
             return;
           }
@@ -132,7 +132,7 @@ class _NeonAppState extends State<NeonApp> with WidgetsBindingObserver, WindowLi
 
           final allAppImplementations = NeonProvider.of<BuiltSet<AppImplementation>>(context);
 
-          final notificationsApp = allAppImplementations.tryFind(AppIDs.notifications) as NotificationsAppInterface?;
+          final notificationsApp = allAppImplementations.tryFind(notifications.appID) as NotificationsAppInterface?;
           if (notificationsApp != null) {
             _accountsBloc
                 .getAppsBlocFor(account)
@@ -148,6 +148,13 @@ class _NeonAppState extends State<NeonApp> with WidgetsBindingObserver, WindowLi
           await _openAppFromExternal(account, app.id);
         };
 
+        if (!mounted) {
+          return;
+        }
+
+        final localNotificationsPlugin = await PushUtils.initLocalNotifications(
+          localizations: localizations,
+        );
         final details = await localNotificationsPlugin.getNotificationAppLaunchDetails();
         if (details != null && details.didNotificationLaunchApp && details.notificationResponse?.payload != null) {
           await PushUtils.onLocalNotificationClicked!(
@@ -217,11 +224,11 @@ class _NeonAppState extends State<NeonApp> with WidgetsBindingObserver, WindowLi
                   deviceThemeLight: deviceThemeLight,
                   deviceThemeDark: deviceThemeDark,
                   oledAsDark: options.themeOLEDAsDark.value,
-                  appThemes: _appImplementations.map((a) => a.theme).whereNotNull(),
+                  appThemes: _appImplementations.map((a) => a.theme).nonNulls,
                   neonTheme: widget.neonTheme,
                 );
 
-                return MaterialApp.router(
+                final app = MaterialApp.router(
                   debugShowCheckedModeBanner: false,
                   localizationsDelegates: [
                     ..._appImplementations.map((app) => app.localizationsDelegate),
@@ -236,6 +243,48 @@ class _NeonAppState extends State<NeonApp> with WidgetsBindingObserver, WindowLi
                   darkTheme: appTheme.darkTheme,
                   routerConfig: _routerDelegate,
                 );
+
+                if (activeAccountSnapshot.hasData) {
+                  final account = activeAccountSnapshot.requireData!;
+
+                  return MultiProvider(
+                    providers: [
+                      Provider<Account>.value(
+                        value: account,
+                      ),
+                      NeonProvider<AccountOptions>.value(
+                        value: _accountsBloc.getOptionsFor(account),
+                      ),
+                      NeonProvider<AppsBloc>.value(
+                        value: _accountsBloc.getAppsBlocFor(account),
+                      ),
+                      NeonProvider<CapabilitiesBloc>.value(
+                        value: _accountsBloc.getCapabilitiesBlocFor(account),
+                      ),
+                      NeonProvider<UserDetailsBloc>.value(
+                        value: _accountsBloc.getUserDetailsBlocFor(account),
+                      ),
+                      NeonProvider<UserStatusBloc>.value(
+                        value: _accountsBloc.getUserStatusBlocFor(account),
+                      ),
+                      NeonProvider<UnifiedSearchBloc>.value(
+                        value: _accountsBloc.getUnifiedSearchBlocFor(account),
+                      ),
+                      NeonProvider<WeatherStatusBloc>.value(
+                        value: _accountsBloc.getWeatherStatusBlocFor(account),
+                      ),
+                      NeonProvider<MaintenanceModeBloc>.value(
+                        value: _accountsBloc.getMaintenanceModeBlocFor(account),
+                      ),
+                      NeonProvider<ReferencesBloc>.value(
+                        value: _accountsBloc.getReferencesBlocFor(account),
+                      ),
+                    ],
+                    child: app,
+                  );
+                }
+
+                return app;
               },
             );
           },

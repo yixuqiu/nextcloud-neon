@@ -1,8 +1,7 @@
 name: Publish
 
 on:
-  schedule:
-    - cron:  '0 5 * * *'
+  workflow_dispatch:
 
 concurrency:
   group: publish
@@ -11,66 +10,67 @@ concurrency:
 jobs:
   android:
     name: Android
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
       - name: Set up Java
-        uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9 # v4
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
         with:
           distribution: 'adopt'
           java-version: 17
 
       - name: Install dart
-        uses: dart-lang/setup-dart@f0ead981b4d9a35b37f30d36160575d60931ec30 # v1
+        uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260 # v1
+        with:
+          sdk: 3.7
       - name: Setup
         run: ./tool/setup.sh
 
       - name: Build
-        run: cd packages/app && fvm flutter build apk --split-per-abi --build-number="$(date +"%s")"
-      - uses: ilharp/sign-android-release@2034987c31e3959f7c97e88d5e656e52e6e88bd8 # v1
+        run: cd packages/neon_framework/example && fvm flutter build apk --split-per-abi --build-number="$(date +"%s")"
+      - uses: ilharp/sign-android-release@13dd52242698526f951aa8bb8696204f6fea702a # v2
         name: Sign
         with:
-          releaseDir: packages/app/build/app/outputs/flutter-apk
+          buildToolsVersion: 35.0.0
+          releaseDir: packages/neon_framework/example/build/app/outputs/flutter-apk
           signingKey: ${{ secrets.SIGNING_KEY }}
           keyAlias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
 
-      - uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: Android arm64-v8a
-          path: packages/app/build/app/outputs/flutter-apk/app-arm64-v8a-release-signed.apk
+          path: packages/neon_framework/example/build/app/outputs/flutter-apk/app-arm64-v8a-release-signed.apk
           if-no-files-found: error
-      - uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: Android armeabi-v7a
-          path: packages/app/build/app/outputs/flutter-apk/app-armeabi-v7a-release-signed.apk
+          path: packages/neon_framework/example/build/app/outputs/flutter-apk/app-armeabi-v7a-release-signed.apk
           if-no-files-found: error
-      - uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: Android x86_64
-          path: packages/app/build/app/outputs/flutter-apk/app-x86_64-release-signed.apk
+          path: packages/neon_framework/example/build/app/outputs/flutter-apk/app-x86_64-release-signed.apk
           if-no-files-found: error
 
       - name: F-Droid nightly
         run: |
-          cp packages/app/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk app-arm64-v8a-debug.apk
-          cp packages/app/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk app-armeabi-v7a-debug.apk
-          cp packages/app/build/app/outputs/flutter-apk/app-x86_64-release.apk app-x86_64-debug.apk
+          cp packages/neon_framework/example/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk app-arm64-v8a-debug.apk
+          cp packages/neon_framework/example/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk app-armeabi-v7a-debug.apk
+          cp packages/neon_framework/example/build/app/outputs/flutter-apk/app-x86_64-release.apk app-x86_64-debug.apk
 
-          sudo add-apt-repository ppa:fdroid/fdroidserver
-          sudo apt-get update
-          sudo apt-get install apksigner fdroidserver python3-pip --no-install-recommends
-          sudo apt-get purge fdroidserver
-          pip3 install https://gitlab.com/fdroid/fdroidserver/-/archive/master/fdroidserver.tar.gz
+          sudo apt-get update && sudo apt-get install apksigner python3-pip --no-install-recommends
+          python -m venv venv && source venv/bin/activate
+          pip install https://gitlab.com/fdroid/fdroidserver/-/archive/9684eade0dda3663f5fb68ca02b06f7b0bb7c086/fdroidserver.tar.gz
           export DEBUG_KEYSTORE=${{ secrets.DEBUG_KEYSTORE }}
           GITHUB_REPOSITORY=provokateurin/nextcloud-neon fdroid nightly -v --archive-older 10
 
   linux:
     name: Linux ${{ matrix.architecture.flutter }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
       packages: write
     strategy:
@@ -83,31 +83,33 @@ jobs:
             flutter: arm64
     steps:
       - name: Checkout
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - name: Login to GHCR
-        uses: docker/login-action@e92390c5fb421da1463c202d546fed0ec5c39f20 # v3
+        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3
+        uses: docker/setup-qemu-action@ce360397dd3f832beb865e1373c09c0e9f86d70a # v4
         with:
           platforms: ${{ matrix.architecture.docker }}
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@d70bba72b1f3fd22344832f00baa16ece964efeb # v3
+        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4
         with:
           platforms: linux/${{ matrix.architecture.docker }}
 
       - name: Install dart
-        uses: dart-lang/setup-dart@f0ead981b4d9a35b37f30d36160575d60931ec30 # v1
+        uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260 # v1
+        with:
+          sdk: 3.7
       - name: Setup
         run: ./tool/setup.sh
       - name: Build
         run: ./tool/build-app.sh linux/${{ matrix.architecture.docker }} --build-number="$(date +"%s")"
 
-      - uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: Linux ${{ matrix.architecture.flutter }}
-          path: packages/app/build/linux/${{ matrix.architecture.flutter }}/release/bundle/*
+          path: packages/neon_framework/example/build/linux/${{ matrix.architecture.flutter }}/release/bundle/*
           if-no-files-found: error

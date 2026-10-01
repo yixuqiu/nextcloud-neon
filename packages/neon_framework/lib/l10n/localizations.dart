@@ -7,6 +7,8 @@ import 'package:intl/intl.dart' as intl;
 
 import 'localizations_en.dart';
 
+// ignore_for_file: type=lint
+
 /// Callers can lookup localized strings with an instance of NeonLocalizations
 /// returned by `NeonLocalizations.of(context)`.
 ///
@@ -104,7 +106,7 @@ abstract class NeonLocalizations {
   /// No description provided for @appImplementationName.
   ///
   /// In en, this message translates to:
-  /// **'{app, select, nextcloud{Nextcloud} core{Server} dashboard{Dashboard} files{Files} news{News} notes{Notes} notifications{Notifications} talk{Talk} other{}}'**
+  /// **'{app, select, nextcloud{Nextcloud} core{Server} dashboard{Dashboard} files{Files} news{News} notes{Notes} notifications{Notifications} spreed{Talk} talk{Talk} other{}}'**
   String appImplementationName(String app);
 
   /// No description provided for @loginAgain.
@@ -143,37 +145,37 @@ abstract class NeonLocalizations {
   /// **'Login using the server address'**
   String get loginUsingServerAddress;
 
-  /// No description provided for @loginCheckingServerVersion.
+  /// When the server version is checked an not yet known
   ///
   /// In en, this message translates to:
   /// **'Checking server version'**
-  String get loginCheckingServerVersion;
+  String get loginServerVersion;
 
-  /// No description provided for @loginSupportedServerVersion.
+  /// When the server version is known and supported
   ///
   /// In en, this message translates to:
   /// **'Supported server version: {version}'**
-  String loginSupportedServerVersion(String version);
+  String loginServerVersionSupported(String version);
 
-  /// No description provided for @loginUnsupportedServerVersion.
+  /// When the server version is known but unsupported
   ///
   /// In en, this message translates to:
-  /// **'Unsupported server version: {version}'**
-  String loginUnsupportedServerVersion(String version);
+  /// **'Unsupported server version: {version}}'**
+  String loginServerVersionUnsupported(String version);
 
-  /// No description provided for @loginCheckingMaintenanceMode.
+  /// when the maintenance mode is loaded from the server
   ///
   /// In en, this message translates to:
   /// **'Checking maintenance mode'**
-  String get loginCheckingMaintenanceMode;
+  String get loginMaintenanceMode;
 
-  /// No description provided for @loginMaintenanceModeEnabled.
+  /// When the maintenance mode is enabled
   ///
   /// In en, this message translates to:
   /// **'Maintenance mode enabled'**
   String get loginMaintenanceModeEnabled;
 
-  /// No description provided for @loginMaintenanceModeDisabled.
+  /// When the maintenance mode is disabled
   ///
   /// In en, this message translates to:
   /// **'Maintenance mode disabled'**
@@ -190,6 +192,12 @@ abstract class NeonLocalizations {
   /// In en, this message translates to:
   /// **'The credentials for this account no longer match'**
   String get errorCredentialsForAccountNoLongerMatch;
+
+  /// No description provided for @errorBruteforceThrottled.
+  ///
+  /// In en, this message translates to:
+  /// **'Your requests are throttled at the moment due to brute force protection'**
+  String get errorBruteforceThrottled;
 
   /// No description provided for @errorServerHadAProblemProcessingYourRequest.
   ///
@@ -328,6 +336,12 @@ abstract class NeonLocalizations {
   /// In en, this message translates to:
   /// **'Done'**
   String get actionDone;
+
+  /// No description provided for @actionOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get actionOpen;
 
   /// No description provided for @firstLaunchGoToSettingsToEnablePushNotifications.
   ///
@@ -551,23 +565,17 @@ abstract class NeonLocalizations {
   /// **'Custom background'**
   String get globalOptionsThemeCustomBackground;
 
-  /// No description provided for @globalOptionsPushNotificationsEnabled.
+  /// No description provided for @globalOptionsPushNotifications.
   ///
   /// In en, this message translates to:
-  /// **'Enabled'**
-  String get globalOptionsPushNotificationsEnabled;
+  /// **'UnifiedPush'**
+  String get globalOptionsPushNotifications;
 
-  /// No description provided for @globalOptionsPushNotificationsEnabledDisabledNotice.
+  /// No description provided for @globalOptionsPushNotificationsDisabled.
   ///
   /// In en, this message translates to:
-  /// **'No UnifiedPush distributor could be found or you denied the permission for showing notifications. Please go to the app settings and allow notifications and go to https://unifiedpush.org/users/distributors and setup any of the listed distributors. Then re-open this app and you should be able to enable notifications'**
-  String get globalOptionsPushNotificationsEnabledDisabledNotice;
-
-  /// No description provided for @globalOptionsPushNotificationsDistributor.
-  ///
-  /// In en, this message translates to:
-  /// **'UnifiedPush Distributor'**
-  String get globalOptionsPushNotificationsDistributor;
+  /// **'Disabled'**
+  String get globalOptionsPushNotificationsDisabled;
 
   /// No description provided for @globalOptionsPushNotificationsDistributorGotifyUP.
   ///
@@ -758,26 +766,26 @@ abstract class NeonLocalizations {
   /// No description provided for @relativeTimeMinutes.
   ///
   /// In en, this message translates to:
-  /// **'{time} {time,plural, =1{minute}other{minutes}}'**
-  String relativeTimeMinutes(int time);
+  /// **'{time}{abbreviation,select, true{m} other{ {time,plural, =1{minute}other{minutes}}}}'**
+  String relativeTimeMinutes(int time, String abbreviation);
 
   /// No description provided for @relativeTimeHours.
   ///
   /// In en, this message translates to:
-  /// **'{time} {time,plural, =1{hour}other{hours}}'**
-  String relativeTimeHours(int time);
+  /// **'{time}{abbreviation,select, true{h} other{ {time,plural, =1{hour}other{hours}}}}'**
+  String relativeTimeHours(int time, String abbreviation);
 
   /// No description provided for @relativeTimeDays.
   ///
   /// In en, this message translates to:
-  /// **'{time} {time,plural, =1{day}other{days}}'**
-  String relativeTimeDays(int time);
+  /// **'{time}{abbreviation,select, true{d} other{ {time,plural, =1{day}other{days}}}}'**
+  String relativeTimeDays(int time, String abbreviation);
 
   /// No description provided for @relativeTimeYears.
   ///
   /// In en, this message translates to:
-  /// **'{time} {time,plural, =1{year}other{years}}'**
-  String relativeTimeYears(int time);
+  /// **'{time}{abbreviation,select, true{y} other{ {time,plural, =1{year}other{years}}}}'**
+  String relativeTimeYears(int time, String abbreviation);
 
   /// No description provided for @userStatusSetStatus.
   ///
@@ -862,6 +870,60 @@ abstract class NeonLocalizations {
   /// In en, this message translates to:
   /// **'Online status'**
   String get userStatusOnlineStatus;
+
+  /// No description provided for @emojisCategorySmileysAndEmotions.
+  ///
+  /// In en, this message translates to:
+  /// **'Smileys and emotions'**
+  String get emojisCategorySmileysAndEmotions;
+
+  /// No description provided for @emojisCategoryPeople.
+  ///
+  /// In en, this message translates to:
+  /// **'People'**
+  String get emojisCategoryPeople;
+
+  /// No description provided for @emojisCategoryAnimalsAndNature.
+  ///
+  /// In en, this message translates to:
+  /// **'Animals and nature'**
+  String get emojisCategoryAnimalsAndNature;
+
+  /// No description provided for @emojisCategoryFoodAndDrink.
+  ///
+  /// In en, this message translates to:
+  /// **'Food and drink'**
+  String get emojisCategoryFoodAndDrink;
+
+  /// No description provided for @emojisCategoryTravelAndPlaces.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel and places'**
+  String get emojisCategoryTravelAndPlaces;
+
+  /// No description provided for @emojisCategoryActivitiesAndEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Activities and events'**
+  String get emojisCategoryActivitiesAndEvents;
+
+  /// No description provided for @emojisCategoryObjects.
+  ///
+  /// In en, this message translates to:
+  /// **'Objects'**
+  String get emojisCategoryObjects;
+
+  /// No description provided for @emojisCategorySymbols.
+  ///
+  /// In en, this message translates to:
+  /// **'Symbols'**
+  String get emojisCategorySymbols;
+
+  /// No description provided for @emojisCategoryFlags.
+  ///
+  /// In en, this message translates to:
+  /// **'Flags'**
+  String get emojisCategoryFlags;
 }
 
 class _NeonLocalizationsDelegate extends LocalizationsDelegate<NeonLocalizations> {

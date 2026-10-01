@@ -1,17 +1,30 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euxo pipefail
 cd "$(dirname "$0")/.."
-source tool/common.sh
+
+function cache_build_args() {
+    tag="$(echo "$1" | cut -d ":" -f 1)"
+
+    build_args=(
+      "--load"
+      "--cache-from" "$tag"
+    )
+    if [ -v PUSH_IMAGES ]; then
+      build_args+=("--cache-to" "$tag")
+    fi
+
+    echo "${build_args[*]}"
+}
 
 function get_mount_paths_dir() {
   dir="$1"
-  mapfile -t packages < <(melos list --parsable --relative --dir-exists="$dir")
+  mapfile -t packages < <(melos list --parsable --relative --dir-exists="$dir" | grep "^packages/")
   echo "${packages[@]/%//$dir}"
 }
 
 function get_mount_paths_file() {
   file="$1"
-  mapfile -t packages < <(melos list --parsable --relative --file-exists="$file")
+  mapfile -t packages < <(melos list --parsable --relative --file-exists="$file" | grep "^packages/")
   echo "${packages[@]/%//$file}"
 }
 
@@ -41,7 +54,7 @@ if [[ "$target" == "linux/arm64" ]] || [[ "$target" == "linux/amd64" ]]; then
   -f "tool/build/Dockerfile.$os" \
   ./tool/build
 
-  paths=(packages/app/{pubspec.lock,linux,build})
+  paths=(pubspec.{yaml,lock} packages/neon_framework/example/{linux,build})
   mapfile -O "${#paths[@]}" -t paths < <(get_mount_paths_dir "lib")
   mapfile -O "${#paths[@]}" -t paths < <(get_mount_paths_dir "assets")
   mapfile -O "${#paths[@]}" -t paths < <(get_mount_paths_file "pubspec.yaml")
@@ -51,7 +64,7 @@ if [[ "$target" == "linux/arm64" ]] || [[ "$target" == "linux/amd64" ]]; then
   for path in ${paths[*]}; do
     run_args+=(-v "$(pwd)/$path:/src/$path")
   done
-  mkdir -p "packages/app/build"
+  mkdir -p "packages/neon_framework/example/build"
 
   container_id="$(
     # shellcheck disable=SC2086

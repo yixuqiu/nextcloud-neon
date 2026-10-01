@@ -2,7 +2,7 @@
   "@@locale": "en",
   "nextcloud": "Nextcloud",
   "nextcloudLogo": "Nextcloud logo",
-  "appImplementationName": "{app, select, nextcloud{Nextcloud} core{Server} dashboard{Dashboard} files{Files} news{News} notes{Notes} notifications{Notifications} talk{Talk} other{}}",
+  "appImplementationName": "{app, select, nextcloud{Nextcloud} core{Server} dashboard{Dashboard} files{Files} news{News} notes{Notes} notifications{Notifications} spreed{Talk} talk{Talk} other{}}",
   "@appImplementationName": {
     "placeholders": {
       "app": {}
@@ -14,28 +14,45 @@
   "loginWorksWith": "works with",
   "loginUsingQRcode": "Login using a QR code",
   "loginUsingServerAddress": "Login using the server address",
-  "loginCheckingServerVersion": "Checking server version",
-  "loginSupportedServerVersion": "Supported server version: {version}",
-  "@loginSupportedServerVersion": {
+  "loginServerVersion": "Checking server version",
+  "@loginServerVersion": {
+    "description": "When the server version is checked an not yet known"
+  },
+  "loginServerVersionSupported": "Supported server version: {version}",
+  "@loginServerVersionSupported": {
+    "description": "When the server version is known and supported",
     "placeholders": {
       "version": {
-        "type": "String"
+        "type": "String",
+        "example": "29.0.0"
       }
     }
   },
-  "loginUnsupportedServerVersion": "Unsupported server version: {version}",
-  "@loginUnsupportedServerVersion": {
+  "loginServerVersionUnsupported": "Unsupported server version: {version}}",
+  "@loginServerVersionUnsupported": {
+    "description": "When the server version is known but unsupported",
     "placeholders": {
       "version": {
-        "type": "String"
+        "type": "String",
+        "example": "29.0.0"
       }
     }
   },
-  "loginCheckingMaintenanceMode": "Checking maintenance mode",
+  "loginMaintenanceMode": "Checking maintenance mode",
+  "@loginMaintenanceMode": {
+    "description": "when the maintenance mode is loaded from the server"
+  },
   "loginMaintenanceModeEnabled": "Maintenance mode enabled",
+  "@loginMaintenanceModeEnabled": {
+    "description": "When the maintenance mode is enabled"
+  },
   "loginMaintenanceModeDisabled": "Maintenance mode disabled",
+  "@loginMaintenanceModeDisabled": {
+    "description": "When the maintenance mode is disabled"
+  },
   "loginCheckingAccount": "Checking account",
   "errorCredentialsForAccountNoLongerMatch": "The credentials for this account no longer match",
+  "errorBruteforceThrottled": "Your requests are throttled at the moment due to brute force protection",
   "errorServerHadAProblemProcessingYourRequest": "The server had a problem while processing your request. You might want to try again",
   "errorSomethingWentWrongTryAgainLater": "Something went wrong. Please try again later",
   "errorUnableToReachServer": "Unable to reach the server",
@@ -87,6 +104,7 @@
   "actionContinue": "Continue",
   "actionCancel": "Cancel",
   "actionDone": "Done",
+  "actionOpen": "Open",
   "firstLaunchGoToSettingsToEnablePushNotifications": "Go to the settings to enable push notifications",
   "nextPushSupported": "NextPush is supported!",
   "nextPushSupportedText": "NextPush is a FOSS way of receiving push notifications using the UnifiedPush protocol via a Nextcloud instance.\nYou can install NextPush from the F-Droid app store.",
@@ -145,9 +163,8 @@
   "globalOptionsThemeOLEDAsDark": "OLED theme as dark theme",
   "globalOptionsThemeUseNextcloudTheme": "Use Nextcloud theme",
   "globalOptionsThemeCustomBackground": "Custom background",
-  "globalOptionsPushNotificationsEnabled": "Enabled",
-  "globalOptionsPushNotificationsEnabledDisabledNotice": "No UnifiedPush distributor could be found or you denied the permission for showing notifications. Please go to the app settings and allow notifications and go to https://unifiedpush.org/users/distributors and setup any of the listed distributors. Then re-open this app and you should be able to enable notifications",
-  "globalOptionsPushNotificationsDistributor": "UnifiedPush Distributor",
+  "globalOptionsPushNotifications": "UnifiedPush",
+  "globalOptionsPushNotificationsDisabled": "Disabled",
   "globalOptionsPushNotificationsDistributorGotifyUP": "Gotify-UP (FOSS)",
   "globalOptionsPushNotificationsDistributorFirebaseEmbedded": "Firebase (proprietary)",
   "globalOptionsPushNotificationsDistributorNtfy": "ntfy (FOSS)",
@@ -220,35 +237,47 @@
       }
     }
   },
-  "relativeTimeMinutes": "{time} {time,plural, =1{minute}other{minutes}}",
+  "relativeTimeMinutes": "{time}{abbreviation,select, true{m} other{ {time,plural, =1{minute}other{minutes}}}}",
   "@relativeTimeMinutes": {
     "placeholders": {
       "time": {
         "type": "int"
+      },
+      "abbreviation": {
+        "type": "String"
       }
     }
   },
-  "relativeTimeHours": "{time} {time,plural, =1{hour}other{hours}}",
+  "relativeTimeHours": "{time}{abbreviation,select, true{h} other{ {time,plural, =1{hour}other{hours}}}}",
   "@relativeTimeHours": {
     "placeholders": {
       "time": {
         "type": "int"
+      },
+      "abbreviation": {
+        "type": "String"
       }
     }
   },
-  "relativeTimeDays": "{time} {time,plural, =1{day}other{days}}",
+  "relativeTimeDays": "{time}{abbreviation,select, true{d} other{ {time,plural, =1{day}other{days}}}}",
   "@relativeTimeDays": {
     "placeholders": {
       "time": {
         "type": "int"
+      },
+      "abbreviation": {
+        "type": "String"
       }
     }
   },
-  "relativeTimeYears": "{time} {time,plural, =1{year}other{years}}",
+  "relativeTimeYears": "{time}{abbreviation,select, true{y} other{ {time,plural, =1{year}other{years}}}}",
   "@relativeTimeYears": {
     "placeholders": {
       "time": {
         "type": "int"
+      },
+      "abbreviation": {
+        "type": "String"
       }
     }
   },
@@ -265,5 +294,14 @@
   "userStatusClearAtThisWeek": "This week",
   "userStatusActionClear": "Clear status",
   "userStatusStatusMessage": "Status message",
-  "userStatusOnlineStatus": "Online status"
+  "userStatusOnlineStatus": "Online status",
+  "emojisCategorySmileysAndEmotions": "Smileys and emotions",
+  "emojisCategoryPeople": "People",
+  "emojisCategoryAnimalsAndNature": "Animals and nature",
+  "emojisCategoryFoodAndDrink": "Food and drink",
+  "emojisCategoryTravelAndPlaces": "Travel and places",
+  "emojisCategoryActivitiesAndEvents": "Activities and events",
+  "emojisCategoryObjects": "Objects",
+  "emojisCategorySymbols": "Symbols",
+  "emojisCategoryFlags": "Flags"
 }

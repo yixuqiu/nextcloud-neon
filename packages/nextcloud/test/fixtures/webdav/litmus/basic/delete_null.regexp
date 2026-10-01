@@ -1,5 +1,0 @@
-DELETE http://localhost/remote\.php/webdav/delete-null\.txt
-authorization: Bearer mock
-content-type: application/xml
-ocs-apirequest: true
-requesttoken: token

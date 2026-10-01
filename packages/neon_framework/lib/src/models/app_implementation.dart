@@ -5,9 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meta/meta.dart';
 import 'package:neon_framework/l10n/localizations.dart';
+import 'package:neon_framework/models.dart';
 import 'package:neon_framework/src/bloc/bloc.dart';
-import 'package:neon_framework/src/blocs/accounts.dart';
-import 'package:neon_framework/src/models/account.dart';
 import 'package:neon_framework/src/models/account_cache.dart';
 import 'package:neon_framework/src/models/disposable.dart';
 import 'package:neon_framework/src/settings/models/options_collection.dart';
@@ -29,8 +28,6 @@ import 'package:vector_graphics/vector_graphics.dart';
 @immutable
 abstract class AppImplementation<T extends Bloc, R extends AppImplementationOptions> implements Disposable, Findable {
   /// The unique id of an app.
-  ///
-  /// It is common to specify them in `AppIDs`.
   @override
   String get id;
 
@@ -65,6 +62,11 @@ abstract class AppImplementation<T extends Bloc, R extends AppImplementationOpti
   @mustBeOverridden
   R get options;
 
+  /// The [Provider] of the [options].
+  Provider<R> get optionsProvider => Provider<R>.value(
+        value: options,
+      );
+
   /// Checks if the app is supported on the server of the [account].
   ///
   /// A value of `null` means that it can not be known if the app is supported.
@@ -96,12 +98,7 @@ abstract class AppImplementation<T extends Bloc, R extends AppImplementationOpti
   /// Blocs will not be disposed on disposal of the provider. You must handle
   /// the [blocsCache] manually.
   Provider<T> get blocProvider => Provider<T>(
-        create: (context) {
-          final accountsBloc = NeonProvider.of<AccountsBloc>(context);
-          final account = accountsBloc.activeAccount.value!;
-
-          return getBloc(account);
-        },
+        create: (context) => getBloc(NeonProvider.of<Account>(context)),
       );
 
   /// The count of unread notifications.
@@ -116,9 +113,7 @@ abstract class AppImplementation<T extends Bloc, R extends AppImplementationOpti
 
   /// The drawer destination used in widgets like [NavigationDrawer].
   NeonNavigationDestination destination(BuildContext context) {
-    final accountsBloc = NeonProvider.of<AccountsBloc>(context);
-    final account = accountsBloc.activeAccount.value!;
-    final bloc = getBloc(account);
+    final bloc = getBloc(NeonProvider.of<Account>(context));
 
     return NeonNavigationDestination(
       label: name(context),
@@ -166,15 +161,18 @@ abstract class AppImplementation<T extends Bloc, R extends AppImplementationOpti
       Builder(
         builder: (context) {
           final realSize = size ?? IconTheme.of(context).size;
-          return VectorGraphic(
+          final child = VectorGraphic(
             width: realSize,
             height: realSize,
             colorFilter: ColorFilter.mode(color ?? Theme.of(context).colorScheme.primary, BlendMode.srcIn),
             loader: AssetBytesLoader(
               'assets/app.svg.vec',
-              packageName: 'neon_$id',
+              packageName: '${id}_app',
             ),
-            semanticsLabel: NeonLocalizations.of(context).nextcloudLogo,
+          );
+
+          return ExcludeSemantics(
+            child: child,
           );
         },
       );

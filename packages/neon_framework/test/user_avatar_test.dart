@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:neon_framework/blocs.dart';
-import 'package:neon_framework/src/utils/provider.dart';
 import 'package:neon_framework/src/widgets/user_avatar.dart';
 import 'package:neon_framework/testing.dart';
 import 'package:neon_framework/widgets.dart';
-import 'package:nextcloud/nextcloud.dart';
 import 'package:nextcloud/user_status.dart' as user_status;
 import 'package:rxdart/rxdart.dart';
 
@@ -16,12 +14,9 @@ void main() {
     FakeNeonStorage.setup();
   });
 
-  for (final (withStatus, matcher) in [(false, findsNothing), (true, findsOne)]) {
-    testWidgets('${withStatus ? 'With' : 'Without'} status', (tester) async {
+  group('NeonUserAvatar', () {
+    testWidgets('With UserStatusBloc', (tester) async {
       final account = MockAccount();
-      when(() => account.id).thenReturn('test');
-      when(() => account.username).thenReturn('test');
-      when(() => account.client).thenReturn(NextcloudClient(Uri.parse('')));
 
       final userStatusBloc = MockUserStatusBloc();
       when(() => userStatusBloc.statuses).thenAnswer(
@@ -41,25 +36,53 @@ void main() {
         ),
       );
 
-      final accountsBloc = MockAccountsBloc();
-      when(() => accountsBloc.activeAccount).thenAnswer((_) => BehaviorSubject.seeded(account));
-      when(() => accountsBloc.getUserStatusBlocFor(account)).thenReturn(userStatusBloc);
-
-      await tester.pumpWidget(
+      await tester.pumpWidgetWithAccessibility(
         TestApp(
-          child: NeonProvider<AccountsBloc>.value(
-            value: accountsBloc,
-            child: NeonUserAvatar(
-              showStatus: withStatus,
-            ),
+          child: NeonUserAvatar(
+            account: account,
+            userStatusBloc: userStatusBloc,
           ),
         ),
       );
-      await tester.pumpAndSettle();
 
-      expect(find.byType(NeonUserStatusIndicator), matcher);
+      expect(find.byType(NeonUserStatusIndicator), findsOne);
     });
-  }
+
+    testWidgets('With user status', (tester) async {
+      final account = MockAccount();
+
+      final userStatus = user_status.Public(
+        (b) => b
+          ..userId = 'test'
+          ..status = user_status.$Type.online,
+      );
+
+      await tester.pumpWidgetWithAccessibility(
+        TestApp(
+          child: NeonUserAvatar(
+            account: account,
+            userStatus: userStatus,
+          ),
+        ),
+      );
+
+      expect(find.byType(NeonUserStatusIndicator), findsOne);
+    });
+
+    testWidgets('Without UserStatusBloc and user status', (tester) async {
+      final account = MockAccount();
+
+      await tester.pumpWidgetWithAccessibility(
+        TestApp(
+          child: NeonUserAvatar(
+            account: account,
+          ),
+        ),
+      );
+
+      expect(find.byType(NeonUserStatusIndicator), findsNothing);
+    });
+  });
 
   group('Status indicator', () {
     for (final (status, icon, textMatcher, iconMatcher) in [
@@ -71,7 +94,7 @@ void main() {
       (user_status.$Type.dnd, null, findsNothing, findsOne),
     ]) {
       testWidgets('${status.value} ${icon != null ? 'with' : 'without'} emoji', (tester) async {
-        await tester.pumpWidget(
+        await tester.pumpWidgetWithAccessibility(
           TestApp(
             child: NeonUserStatusIndicator(
               result: Result<user_status.$PublicInterface>(

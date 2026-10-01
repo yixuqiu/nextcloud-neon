@@ -1,17 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:meta/meta.dart';
 import 'package:neon_framework/l10n/localizations.dart';
-import 'package:neon_framework/src/blocs/accounts.dart';
+import 'package:neon_framework/models.dart';
 import 'package:neon_framework/src/router.dart';
 import 'package:neon_framework/src/theme/icons.dart';
 import 'package:neon_framework/src/utils/exceptions.dart';
 import 'package:neon_framework/src/utils/provider.dart';
 import 'package:neon_framework/src/widgets/adaptive_widgets/list_tile.dart';
-import 'package:nextcloud/nextcloud.dart';
-import 'package:universal_io/io.dart';
 
 /// The display mode of the [NeonError] widget.
 enum NeonErrorType {
@@ -50,7 +46,7 @@ class NeonError extends StatelessWidget {
   final Object? error;
 
   /// A function that's called when the user decides to retry the action that lead to the error.
-  final VoidCallback onRetry;
+  final VoidCallback? onRetry;
 
   /// The size of the icon in logical pixels.
   ///
@@ -69,7 +65,7 @@ class NeonError extends StatelessWidget {
 
   /// Shows a [SnackBar] popup for the [error].
   static void showSnackbar(BuildContext context, Object? error) {
-    final details = getDetails(error);
+    final details = NeonExceptionDetails.fromError(error);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -77,7 +73,7 @@ class NeonError extends StatelessWidget {
         action: details.isUnauthorized
             ? SnackBarAction(
                 label: NeonLocalizations.of(context).loginAgain,
-                onPressed: () => _openLoginPage(context),
+                onPressed: () async => _openLoginPage(context),
               )
             : null,
       ),
@@ -90,7 +86,7 @@ class NeonError extends StatelessWidget {
       return const SizedBox();
     }
 
-    final details = getDetails(error);
+    final details = NeonExceptionDetails.fromError(error);
     final color = this.color ?? Theme.of(context).colorScheme.error;
     final textStyle = TextStyle(
       color: color,
@@ -106,7 +102,7 @@ class NeonError extends StatelessWidget {
     final actionMessage =
         details.isUnauthorized ? NeonLocalizations.of(context).loginAgain : NeonLocalizations.of(context).actionRetry;
 
-    final onPressed = details.isUnauthorized ? () => _openLoginPage(context) : onRetry;
+    final onPressed = details.isUnauthorized ? () async => _openLoginPage(context) : onRetry;
 
     switch (type) {
       case NeonErrorType.iconOnly:
@@ -157,62 +153,9 @@ class NeonError extends StatelessWidget {
     }
   }
 
-  /// Gets the details for a given [error].
-  @internal
-  static NeonExceptionDetails getDetails(Object? error) {
-    switch (error) {
-      case String():
-        return NeonExceptionDetails(
-          getText: (_) => error,
-        );
-      case NeonException():
-        return error.details;
-      case DynamiteStatusCodeException():
-        if (error.statusCode == 401) {
-          return NeonExceptionDetails(
-            getText: (context) => NeonLocalizations.of(context).errorCredentialsForAccountNoLongerMatch,
-            isUnauthorized: true,
-          );
-        }
-        if (error.statusCode >= 500 && error.statusCode <= 599) {
-          return NeonExceptionDetails(
-            getText: (context) => NeonLocalizations.of(context).errorServerHadAProblemProcessingYourRequest,
-          );
-        }
-      case SocketException():
-        return NeonExceptionDetails(
-          getText: (context) => error.address != null
-              ? NeonLocalizations.of(context).errorUnableToReachServerAt(error.address!.host)
-              : NeonLocalizations.of(context).errorUnableToReachServer,
-        );
-      case ClientException():
-        return NeonExceptionDetails(
-          getText: (context) => error.uri != null
-              ? NeonLocalizations.of(context).errorUnableToReachServerAt(error.uri!.host)
-              : NeonLocalizations.of(context).errorUnableToReachServer,
-        );
-      case HttpException():
-        return NeonExceptionDetails(
-          getText: (context) => error.uri != null
-              ? NeonLocalizations.of(context).errorUnableToReachServerAt(error.uri!.host)
-              : NeonLocalizations.of(context).errorUnableToReachServer,
-        );
-      case TimeoutException():
-        return NeonExceptionDetails(
-          getText: (context) => NeonLocalizations.of(context).errorConnectionTimedOut,
-        );
-    }
-
-    return NeonExceptionDetails(
-      getText: (context) => NeonLocalizations.of(context).errorSomethingWentWrongTryAgainLater,
-    );
-  }
-
-  static void _openLoginPage(BuildContext context) {
-    unawaited(
-      LoginCheckServerStatusRoute(
-        serverUrl: NeonProvider.of<AccountsBloc>(context).activeAccount.value!.serverURL,
-      ).push(context),
-    );
+  static Future<void> _openLoginPage(BuildContext context) async {
+    await LoginRoute(
+      serverUrl: NeonProvider.of<Account>(context).credentials.serverURL,
+    ).push<void>(context);
   }
 }

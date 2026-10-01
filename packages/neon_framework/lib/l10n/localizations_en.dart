@@ -2,6 +2,8 @@ import 'package:intl/intl.dart' as intl;
 
 import 'localizations.dart';
 
+// ignore_for_file: type=lint
+
 /// The translations for English (`en`).
 class NeonLocalizationsEn extends NeonLocalizations {
   NeonLocalizationsEn([String locale = 'en']) : super(locale);
@@ -24,6 +26,7 @@ class NeonLocalizationsEn extends NeonLocalizations {
         'news': 'News',
         'notes': 'Notes',
         'notifications': 'Notifications',
+        'spreed': 'Talk',
         'talk': 'Talk',
         'other': '',
       },
@@ -50,20 +53,20 @@ class NeonLocalizationsEn extends NeonLocalizations {
   String get loginUsingServerAddress => 'Login using the server address';
 
   @override
-  String get loginCheckingServerVersion => 'Checking server version';
+  String get loginServerVersion => 'Checking server version';
 
   @override
-  String loginSupportedServerVersion(String version) {
+  String loginServerVersionSupported(String version) {
     return 'Supported server version: $version';
   }
 
   @override
-  String loginUnsupportedServerVersion(String version) {
+  String loginServerVersionUnsupported(String version) {
     return 'Unsupported server version: $version';
   }
 
   @override
-  String get loginCheckingMaintenanceMode => 'Checking maintenance mode';
+  String get loginMaintenanceMode => 'Checking maintenance mode';
 
   @override
   String get loginMaintenanceModeEnabled => 'Maintenance mode enabled';
@@ -76,6 +79,9 @@ class NeonLocalizationsEn extends NeonLocalizations {
 
   @override
   String get errorCredentialsForAccountNoLongerMatch => 'The credentials for this account no longer match';
+
+  @override
+  String get errorBruteforceThrottled => 'Your requests are throttled at the moment due to brute force protection';
 
   @override
   String get errorServerHadAProblemProcessingYourRequest =>
@@ -156,6 +162,9 @@ class NeonLocalizationsEn extends NeonLocalizations {
 
   @override
   String get actionDone => 'Done';
+
+  @override
+  String get actionOpen => 'Open';
 
   @override
   String get firstLaunchGoToSettingsToEnablePushNotifications => 'Go to the settings to enable push notifications';
@@ -277,14 +286,10 @@ class NeonLocalizationsEn extends NeonLocalizations {
   String get globalOptionsThemeCustomBackground => 'Custom background';
 
   @override
-  String get globalOptionsPushNotificationsEnabled => 'Enabled';
+  String get globalOptionsPushNotifications => 'UnifiedPush';
 
   @override
-  String get globalOptionsPushNotificationsEnabledDisabledNotice =>
-      'No UnifiedPush distributor could be found or you denied the permission for showing notifications. Please go to the app settings and allow notifications and go to https://unifiedpush.org/users/distributors and setup any of the listed distributors. Then re-open this app and you should be able to enable notifications';
-
-  @override
-  String get globalOptionsPushNotificationsDistributor => 'UnifiedPush Distributor';
+  String get globalOptionsPushNotificationsDisabled => 'Disabled';
 
   @override
   String get globalOptionsPushNotificationsDistributorGotifyUP => 'Gotify-UP (FOSS)';
@@ -390,47 +395,75 @@ class NeonLocalizationsEn extends NeonLocalizations {
   }
 
   @override
-  String relativeTimeMinutes(int time) {
+  String relativeTimeMinutes(int time, String abbreviation) {
     String _temp0 = intl.Intl.pluralLogic(
       time,
       locale: localeName,
       other: 'minutes',
       one: 'minute',
     );
-    return '$time $_temp0';
+    String _temp1 = intl.Intl.selectLogic(
+      abbreviation,
+      {
+        'true': 'm',
+        'other': ' $_temp0',
+      },
+    );
+    return '$time$_temp1';
   }
 
   @override
-  String relativeTimeHours(int time) {
+  String relativeTimeHours(int time, String abbreviation) {
     String _temp0 = intl.Intl.pluralLogic(
       time,
       locale: localeName,
       other: 'hours',
       one: 'hour',
     );
-    return '$time $_temp0';
+    String _temp1 = intl.Intl.selectLogic(
+      abbreviation,
+      {
+        'true': 'h',
+        'other': ' $_temp0',
+      },
+    );
+    return '$time$_temp1';
   }
 
   @override
-  String relativeTimeDays(int time) {
+  String relativeTimeDays(int time, String abbreviation) {
     String _temp0 = intl.Intl.pluralLogic(
       time,
       locale: localeName,
       other: 'days',
       one: 'day',
     );
-    return '$time $_temp0';
+    String _temp1 = intl.Intl.selectLogic(
+      abbreviation,
+      {
+        'true': 'd',
+        'other': ' $_temp0',
+      },
+    );
+    return '$time$_temp1';
   }
 
   @override
-  String relativeTimeYears(int time) {
+  String relativeTimeYears(int time, String abbreviation) {
     String _temp0 = intl.Intl.pluralLogic(
       time,
       locale: localeName,
       other: 'years',
       one: 'year',
     );
-    return '$time $_temp0';
+    String _temp1 = intl.Intl.selectLogic(
+      abbreviation,
+      {
+        'true': 'y',
+        'other': ' $_temp0',
+      },
+    );
+    return '$time$_temp1';
   }
 
   @override
@@ -474,4 +507,31 @@ class NeonLocalizationsEn extends NeonLocalizations {
 
   @override
   String get userStatusOnlineStatus => 'Online status';
+
+  @override
+  String get emojisCategorySmileysAndEmotions => 'Smileys and emotions';
+
+  @override
+  String get emojisCategoryPeople => 'People';
+
+  @override
+  String get emojisCategoryAnimalsAndNature => 'Animals and nature';
+
+  @override
+  String get emojisCategoryFoodAndDrink => 'Food and drink';
+
+  @override
+  String get emojisCategoryTravelAndPlaces => 'Travel and places';
+
+  @override
+  String get emojisCategoryActivitiesAndEvents => 'Activities and events';
+
+  @override
+  String get emojisCategoryObjects => 'Objects';
+
+  @override
+  String get emojisCategorySymbols => 'Symbols';
+
+  @override
+  String get emojisCategoryFlags => 'Flags';
 }

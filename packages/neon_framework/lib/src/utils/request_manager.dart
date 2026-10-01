@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:built_value/serializer.dart';
 import 'package:dynamite_runtime/http_client.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -9,13 +8,12 @@ import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 import 'package:neon_framework/models.dart';
 import 'package:neon_framework/src/bloc/result.dart';
-import 'package:neon_framework/src/models/account.dart';
 import 'package:neon_framework/storage.dart';
+import 'package:neon_http_client/neon_http_client.dart';
 import 'package:nextcloud/utils.dart';
-import 'package:nextcloud/webdav.dart';
+import 'package:queue/queue.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:timezone/timezone.dart' as tz;
-import 'package:xml/xml.dart' as xml;
 
 final _log = Logger('RequestManager');
 
@@ -28,22 +26,17 @@ typedef UnwrapCallback<T, R> = T Function(R);
 ///
 /// This is used to store a value in the cache.
 @internal
-typedef SerializeCallback<T> = String Function(T);
+typedef SerializeCallback<T> = Uint8List Function(T);
 
 /// A callback to revive cached values [String] into their original type [T].
 @internal
-typedef DeserializeCallback<T> = T Function(String);
+typedef DeserializeCallback<T> = T Function(Uint8List);
 
 /// How often a request will be tried.
 ///
 /// A request will not be retried if the returned status code is in the `500`
 /// range or if the request has timed out.
 const kMaxTries = 3;
-
-/// The default timeout for requests.
-///
-/// Requests that take longer than this duration will be canceled.
-const kDefaultTimeout = Duration(seconds: 30);
 
 /// A singleton class that handles requests to the Nextcloud API.
 ///
@@ -69,179 +62,49 @@ class RequestManager {
 
   final RequestCache? _cache = NeonStorage().requestCache;
 
-  /// Executes a request to a Nextcloud API endpoint.
+  /// Overrides the HTTP client used for executing the requests.
   ///
-  /// Every time [getRequest] is called a new [http.Request] has to be created.
-  /// Re-using the same will not work when retrying failed requests.
-  Future<void> wrapNextcloud<T, B, H>({
-    required Account account,
-    required String cacheKey,
-    required BehaviorSubject<Result<T>> subject,
-    required http.BaseRequest Function() getRequest,
-    required DynamiteSerializer<B, H> serializer,
-    required UnwrapCallback<T, DynamiteResponse<B, H>> unwrap,
-    bool disableTimeout = false,
-  }) async =>
-      wrap<T, DynamiteResponse<B, H>>(
-        account: account,
-        cacheKey: cacheKey,
-        subject: subject,
-        request: () async {
-          final response = await account.client.send(getRequest());
-          return ResponseConverter<B, H>(serializer).convert(response);
-        },
-        unwrap: (rawResponse) => unwrap(rawResponse),
-        serialize: (data) {
-          const encoder = RawResponseEncoder();
-
-          return json.encode(encoder.convert(data as DynamiteRawResponse));
-        },
-        deserialize: (data) {
-          final decoder = RawResponseDecoder<B, H>(serializer);
-          return decoder.convert(json.decode(data) as Map<String, dynamic>);
-        },
-        disableTimeout: disableTimeout,
-      );
-
-  /// Executes a WebDAV request.
-  Future<void> wrapWebDav<T>({
-    required Account account,
-    required String cacheKey,
-    required BehaviorSubject<Result<T>> subject,
-    required http.BaseRequest Function() getRequest,
-    required UnwrapCallback<T, WebDavMultistatus> unwrap,
-    bool disableTimeout = false,
-  }) =>
-      wrap<T, WebDavMultistatus>(
-        account: account,
-        cacheKey: cacheKey,
-        subject: subject,
-        request: () async {
-          final response = await account.client.webdav.csrfClient.send(getRequest());
-          return const WebDavResponseConverter().convert(response);
-        },
-        unwrap: unwrap,
-        serialize: (data) => data.toXmlElement(namespaces: namespaces).toXmlString(),
-        deserialize: (data) => WebDavMultistatus.fromXmlElement(xml.XmlDocument.parse(data).rootElement),
-        disableTimeout: disableTimeout,
-      );
-
-  /// Executes a HTTP request for binary content.
-  ///
-  /// Every time [getRequest] is called a new [http.Request] has to be created.
-  /// Re-using the same will not work when retrying failed requests.
-  Future<void> wrapBinary({
-    required Account account,
-    required String cacheKey,
-    required AsyncValueGetter<CacheParameters> getCacheParameters,
-    required http.BaseRequest Function() getRequest,
-    required UnwrapCallback<Uint8List, Uint8List>? unwrap,
-    required BehaviorSubject<Result<Uint8List>> subject,
-    bool disableTimeout = false,
-  }) async {
-    final serializer = DynamiteSerializer<Uint8List, Map<String, String>>(
-      bodyType: const FullType(Uint8List),
-      headersType: const FullType(Map, [FullType(String), FullType(String)]),
-      serializers: Serializers(),
-      validStatuses: const {200, 201},
-    );
-
-    return wrap<Uint8List, DynamiteResponse<Uint8List, dynamic>>(
-      account: account,
-      cacheKey: cacheKey,
-      subject: subject,
-      request: () async {
-        final response = await account.client.send(getRequest());
-
-        return ResponseConverter<Uint8List, Map<String, String>>(serializer).convert(response);
-      },
-      unwrap: (rawResponse) {
-        var data = rawResponse.body;
-        if (unwrap != null) {
-          data = unwrap(data);
-        }
-
-        return data;
-      },
-      serialize: (response) => base64.encode(response.body),
-      deserialize: (data) => DynamiteResponse(
-        200,
-        base64.decode(data),
-        null,
-      ),
-      getCacheParameters: getCacheParameters,
-      disableTimeout: disableTimeout,
-    );
-  }
-
-  /// Executes a HTTP request for binary content using a simplified [uri] based approach.
-  Future<void> wrapUri({
-    required Account account,
-    required Uri uri,
-    required UnwrapCallback<Uint8List, Uint8List>? unwrap,
-    required BehaviorSubject<Result<Uint8List>> subject,
-  }) {
-    final headers = account.getAuthorizationHeaders(uri);
-
-    return wrapBinary(
-      account: account,
-      cacheKey: uri.toString(),
-      getCacheParameters: () async {
-        final response = await account.client.head(
-          uri,
-          headers: headers,
-        );
-
-        return CacheParameters.parseHeaders(response.headers);
-      },
-      getRequest: () {
-        final request = http.Request('GET', uri);
-        if (headers != null) {
-          request.headers.addAll(headers);
-        }
-
-        return request;
-      },
-      unwrap: unwrap,
-      subject: subject,
-    );
-  }
-
-  /// Executes a generic request.
-  ///
-  /// This method is only meant to be used in testing.
+  /// Only to be used for testing.
   @visibleForTesting
+  http.Client? httpClient;
+
+  /// This allows us to limit the amount of parallel requests to the server.
+  /// This is especially important when opening a gallery with a lot of images which require previews.
+  final _requestQueue = Queue(parallel: 10);
+
+  /// Executes a generic [http.Request] in a queued manner.
+  /// Only actual requests that are not cached will be executed against the server and queued.
   Future<void> wrap<T, R>({
     required Account account,
-    required String cacheKey,
     required BehaviorSubject<Result<T>> subject,
-    required AsyncValueGetter<R> request,
+    required http.Request Function() getRequest,
+    required Converter<http.Response, R> converter,
     required UnwrapCallback<T, R> unwrap,
-    required SerializeCallback<R> serialize,
-    required DeserializeCallback<R> deserialize,
-    AsyncValueGetter<CacheParameters>? getCacheParameters,
-    bool disableTimeout = false,
-    Duration timeLimit = kDefaultTimeout,
+    AsyncValueGetter<Map<String, String>>? getCacheHeaders,
   }) async {
     if (subject.isClosed) {
       return;
     }
+
     if (!subject.hasValue) {
       subject.add(Result.loading());
     }
 
-    // Fetch the cached data with the cache parameters.
-    final cached = await _cache?.get(account, cacheKey);
+    final request = getRequest();
+
+    final cachedResponse = await _cache?.get(account, request);
     if (subject.isClosed) {
       return;
     }
 
-    if (cached != null) {
-      final unwrapped = unwrap(deserialize(cached.value));
+    if (cachedResponse != null) {
+      final parameters = CacheParameters.parseHeaders(cachedResponse.headers);
+
+      final unwrapped = unwrap(converter.convert(cachedResponse));
 
       // If the cached data is not expired emit it.
       // Return as the value is up to date.
-      if (cached.parameters case CacheParameters(isExpired: false)) {
+      if (parameters case CacheParameters(isExpired: false)) {
         subject.add(Result(unwrapped, null, isLoading: false, isCached: true));
         return;
       }
@@ -259,29 +122,27 @@ class RequestManager {
       // If the cached data expired and has an etag, try to refresh the cache parameters.
       // If the etag did not change, emit the cached data in a done state.
       // Save the new cache parameters and return.
-      if (cached.parameters case CacheParameters(:final etag) when etag != null && getCacheParameters != null) {
+      if (parameters case CacheParameters(:final etag) when etag != null && getCacheHeaders != null) {
         try {
-          final newParameters = await timeout(
-            getCacheParameters.call,
-            timeLimit: timeLimit,
-          );
+          final newHeaders = await getCacheHeaders.call();
           if (subject.isClosed) {
             return;
           }
 
+          final newParameters = CacheParameters.parseHeaders(newHeaders);
           if (newParameters.etag == etag) {
             unawaited(
-              _cache?.updateParameters(
+              _cache?.updateHeaders(
                 account,
-                cacheKey,
-                newParameters,
+                request,
+                newHeaders,
               ),
             );
 
             subject.add(Result(unwrapped, null, isLoading: false, isCached: true));
             return;
           }
-        } on TimeoutException catch (error) {
+        } on HttpTimeoutException catch (error) {
           _log.info(
             'Fetching cache parameters timed out. Assuming expired.',
             error,
@@ -306,40 +167,49 @@ class RequestManager {
       subject.add(subject.value.asLoading());
     }
 
+    await _requestQueue.add(
+      () => _requestFromServer(
+        request: request,
+        account: account,
+        subject: subject,
+        getRequest: getRequest,
+        converter: converter,
+        unwrap: unwrap,
+        getCacheHeaders: getCacheHeaders,
+      ),
+    );
+  }
+
+  /// Performs [http.Request] against the server.
+  Future<void> _requestFromServer<T, R>({
+    required http.Request request,
+    required Account account,
+    required BehaviorSubject<Result<T>> subject,
+    required http.Request Function() getRequest,
+    required Converter<http.Response, R> converter,
+    required UnwrapCallback<T, R> unwrap,
+    AsyncValueGetter<Map<String, String>>? getCacheHeaders,
+  }) async {
+    final client = httpClient ?? account.client;
+
     for (var i = 0; i < kMaxTries; i++) {
       try {
-        final response = await timeout(
-          request,
-          disableTimeout: disableTimeout,
-          timeLimit: timeLimit,
-        );
+        final streamedResponse = await client.send(request);
+        final response = await http.Response.fromStream(streamedResponse);
+
         if (subject.isClosed) {
           return;
         }
-        subject.add(Result.success(unwrap(response)));
+        subject.add(Result.success(unwrap(converter.convert(response))));
 
-        final serialized = serialize(response);
-
-        CacheParameters? cacheParameters;
-        if (response case DynamiteRawResponse(:final rawHeaders) when rawHeaders != null) {
-          try {
-            cacheParameters = CacheParameters.parseHeaders(rawHeaders);
-          } on FormatException catch (error) {
-            _log.info(
-              'Invalid format when parsing cache parameters.',
-              error,
-            );
-          }
-        }
-
-        await _cache?.set(account, cacheKey, serialized, cacheParameters);
-        break;
-      } on TimeoutException catch (error, stackTrace) {
-        _log.info(
-          'Request timeout',
-          error,
-          stackTrace,
+        await _cache?.set(
+          account,
+          request,
+          response,
         );
+        break;
+      } on HttpTimeoutException catch (error) {
+        _log.info('Request timeout', error);
 
         if (subject.isClosed) {
           return;
@@ -370,6 +240,8 @@ class RequestManager {
           );
           break;
         }
+
+        request = getRequest();
 
         _log.info(
           'Error while executing the request. Retrying ...',
@@ -414,7 +286,15 @@ class CacheParameters {
   factory CacheParameters.parseHeaders(Map<String, dynamic> headers) {
     tz.TZDateTime? expiry;
     if (headers.containsKey('expires')) {
-      expiry = parseHttpDate(headers['expires']! as String);
+      try {
+        expiry = parseHttpDate(headers['expires']! as String);
+      } on FormatException catch (error, stackTrace) {
+        _log.finer(
+          'Failed to parse "Expires" header: "${headers['expires']}"',
+          error,
+          stackTrace,
+        );
+      }
     }
 
     return CacheParameters(
@@ -442,4 +322,19 @@ class CacheParameters {
 
   @override
   String toString() => 'CacheParameters(etag: $etag, expires: $expires)';
+}
+
+/// Converter to transform [http.Response] into it's [http.Response.bodyBytes].
+class BinaryResponseConverter with Converter<http.Response, Uint8List> {
+  /// Creates a new [BinaryResponseConverter].
+  const BinaryResponseConverter();
+
+  @override
+  Uint8List convert(http.Response input) {
+    if (input.statusCode != 200 && input.statusCode != 201) {
+      throw DynamiteStatusCodeException(input);
+    }
+
+    return input.bodyBytes;
+  }
 }

@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:built_collection/built_collection.dart';
-import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:neon_framework/blocs.dart';
-import 'package:neon_framework/src/models/account.dart';
+import 'package:neon_framework/models.dart';
+import 'package:neon_framework/src/blocs/accounts.dart';
+import 'package:neon_framework/src/utils/emojis.dart';
 import 'package:neon_framework/src/utils/global_options.dart';
 import 'package:neon_framework/src/utils/relative_time.dart';
 import 'package:neon_framework/src/utils/user_status_clear_at.dart';
@@ -20,7 +21,6 @@ import 'package:nextcloud/core.dart' as core;
 import 'package:nextcloud/user_status.dart' as user_status;
 import 'package:nextcloud/utils.dart';
 import 'package:timezone/timezone.dart' as tz;
-import 'package:url_launcher/url_launcher_string.dart';
 
 /// An button typically used in an [AlertDialog.adaptive].
 ///
@@ -202,6 +202,9 @@ class NeonDialog extends StatelessWidget {
             child: Text(
               NeonLocalizations.of(context).actionCancel,
               textAlign: TextAlign.end,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
             ),
           ),
         ...?actions,
@@ -467,6 +470,8 @@ class NeonAccountSelectionDialog extends StatelessWidget {
         .map<Widget>(
           (account) => NeonAccountTile(
             account: account,
+            userDetailsBloc: accountsBloc.getUserDetailsBlocFor(account),
+            userStatusBloc: accountsBloc.getUserStatusBlocFor(account),
             trailing:
                 highlightActiveAccount && account.id == activeAccount.id ? Icon(AdaptiveIcons.check_circle) : null,
             onTap: () {
@@ -485,9 +490,7 @@ class NeonAccountSelectionDialog extends StatelessWidget {
           onPressed: () async {
             await showDialog<void>(
               context: context,
-              builder: (context) => NeonUserStatusDialog(
-                account: activeAccount,
-              ),
+              builder: (context) => const NeonUserStatusDialog(),
             );
             if (context.mounted) {
               Navigator.of(context).pop();
@@ -542,10 +545,13 @@ enum AccountDeletion {
 class NeonAccountDeletionDialog extends StatefulWidget {
   const NeonAccountDeletionDialog({
     required this.account,
+    required this.capabilitiesBloc,
     super.key,
   });
 
   final Account account;
+
+  final CapabilitiesBloc capabilitiesBloc;
 
   @override
   State<NeonAccountDeletionDialog> createState() => _NeonAccountDeletionDialogState();
@@ -554,6 +560,8 @@ class NeonAccountDeletionDialog extends StatefulWidget {
 class _NeonAccountDeletionDialogState extends State<NeonAccountDeletionDialog> {
   core.DropAccountCapabilities_DropAccount? dropAccountCapabilities;
   AccountDeletion value = AccountDeletion.local;
+  late final StreamSubscription<Result<core.OcsGetCapabilitiesResponseApplicationJson_Ocs_Data>>
+      capabilitiesSubscription;
 
   void update(AccountDeletion value) {
     setState(() {
@@ -565,7 +573,7 @@ class _NeonAccountDeletionDialogState extends State<NeonAccountDeletionDialog> {
   void initState() {
     super.initState();
 
-    NeonProvider.of<AccountsBloc>(context).getCapabilitiesBlocFor(widget.account).capabilities.listen((result) {
+    capabilitiesSubscription = widget.capabilitiesBloc.capabilities.listen((result) {
       setState(() {
         dropAccountCapabilities = result.data?.capabilities.dropAccountCapabilities?.dropAccount;
         if (!(dropAccountCapabilities?.enabled ?? false)) {
@@ -573,6 +581,13 @@ class _NeonAccountDeletionDialogState extends State<NeonAccountDeletionDialog> {
         }
       });
     });
+  }
+
+  @override
+  void dispose() {
+    unawaited(capabilitiesSubscription.cancel());
+
+    super.dispose();
   }
 
   @override
@@ -684,10 +699,7 @@ class NeonUnifiedPushDialog extends StatelessWidget {
           isDefaultAction: true,
           onPressed: () async {
             Navigator.pop(context);
-            await launchUrlString(
-              'https://f-droid.org/packages/$unifiedPushNextPushID',
-              mode: LaunchMode.externalApplication,
-            );
+            await launchUrl(NeonProvider.of<Account>(context), 'https://f-droid.org/packages/$unifiedPushNextPushID');
           },
           child: Text(
             NeonLocalizations.of(context).nextPushSupportedInstall,
@@ -710,35 +722,76 @@ class NeonEmojiPickerDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final localizations = NeonLocalizations.of(context);
+    final groups = [
+      (icon: '🙂', name: localizations.emojisCategorySmileysAndEmotions, emojis: smileysAndEmotionsGroup),
+      (icon: '🙇', name: localizations.emojisCategoryPeople, emojis: peopleGroup),
+      (icon: '🐕', name: localizations.emojisCategoryAnimalsAndNature, emojis: animalsAndNatureGroup),
+      (icon: '🍎', name: localizations.emojisCategoryFoodAndDrink, emojis: foodAndDrinkGroup),
+      (icon: '🚙', name: localizations.emojisCategoryTravelAndPlaces, emojis: travelAndPlacesGroup),
+      (icon: '🏀', name: localizations.emojisCategoryActivitiesAndEvents, emojis: activitiesAndEventsGroup),
+      (icon: '💡', name: localizations.emojisCategoryObjects, emojis: objectsGroup),
+      (icon: '🔣', name: localizations.emojisCategorySymbols, emojis: symbolsGroup),
+      (icon: '🏁', name: localizations.emojisCategoryFlags, emojis: flagsGroup),
+    ];
+
     final constraints = NeonDialogTheme.of(context).constraints;
 
     return NeonDialog(
       content: SizedBox(
         width: constraints.maxWidth,
         height: constraints.maxWidth * 1.5,
-        child: EmojiPicker(
-          config: Config(
-            emojiViewConfig: const EmojiViewConfig(
-              emojiSizeMax: 25,
-              backgroundColor: Colors.transparent,
+        child: DefaultTabController(
+          length: groups.length,
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: TabBar(
+              isScrollable: true,
+              tabAlignment: TabAlignment.center,
+              tabs: [
+                for (final group in groups)
+                  Tooltip(
+                    message: group.name,
+                    child: Tab(
+                      icon: Text(
+                        group.icon,
+                        style: const TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
             ),
-            categoryViewConfig: CategoryViewConfig(
-              backgroundColor: Colors.transparent,
-              indicatorColor: theme.colorScheme.primary,
-              iconColorSelected: theme.colorScheme.primary,
-            ),
-            skinToneConfig: SkinToneConfig(
-              dialogBackgroundColor: theme.dialogBackgroundColor,
-              indicatorColor: theme.colorScheme.primary,
-            ),
-            bottomActionBarConfig: const BottomActionBarConfig(
-              enabled: false,
+            body: TabBarView(
+              children: [
+                for (final group in groups)
+                  SingleChildScrollView(
+                    child: Wrap(
+                      children: [
+                        for (final emoji in group.emojis)
+                          SizedBox.square(
+                            dimension: 40,
+                            child: IconButton(
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                              icon: Center(
+                                child: Text(
+                                  emoji.base,
+                                  style: const TextStyle(
+                                    fontSize: 25,
+                                  ),
+                                ),
+                              ),
+                              onPressed: () => Navigator.of(context).pop(emoji.base),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+              ],
             ),
           ),
-          onEmojiSelected: (category, emoji) {
-            Navigator.of(context).pop(emoji.emoji);
-          },
         ),
       ),
     );
@@ -749,13 +802,9 @@ class NeonEmojiPickerDialog extends StatelessWidget {
 class NeonUserStatusDialog extends StatefulWidget {
   /// Creates a new user status dialog.
   const NeonUserStatusDialog({
-    required this.account,
     @visibleForTesting this.now,
     super.key,
   });
-
-  /// Account to set the status for.
-  final Account account;
 
   /// The current time, only used for testing.
   final tz.TZDateTime? now;
@@ -831,7 +880,7 @@ class _NeonUserStatusDialogState extends State<NeonUserStatusDialog> {
   void initState() {
     super.initState();
 
-    bloc = NeonProvider.of<AccountsBloc>(context).getUserStatusBlocFor(widget.account);
+    bloc = NeonProvider.of<UserStatusBloc>(context);
 
     statusSubscription = bloc.status.listen((result) {
       if (result.hasData) {

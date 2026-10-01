@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:neon_framework/blocs.dart';
-import 'package:neon_framework/src/models/account.dart';
+import 'package:neon_framework/models.dart';
 import 'package:neon_framework/testing.dart';
 import 'package:nextcloud/core.dart' as core;
 import 'package:rxdart/rxdart.dart';
@@ -27,20 +27,23 @@ Account mockWeatherStatusAccount() {
           },
         }),
         200,
+        headers: {'content-type': 'application/json'},
       );
 
   return mockServer({
     RegExp(r'/ocs/v2\.php/apps/weather_status/api/v1/location'): {
-      'get': (match, queryParameters) => locationResponse(),
-      'put': (match, queryParameters) {
-        lat = queryParameters['lat']?.single;
-        lon = queryParameters['lon']?.single;
-        address = queryParameters['address']!.single;
+      'get': (match, request) => locationResponse(),
+      'put': (match, request) {
+        final data = json.decode(request.body) as Map<String, dynamic>;
+
+        lat = data['lat'] as String?;
+        lon = data['lon'] as String?;
+        address = data['address'] as String;
         return locationResponse();
       },
     },
     RegExp(r'/ocs/v2\.php/apps/weather_status/api/v1/forecast'): {
-      'get': (match, queryParameters) => Response(
+      'get': (match, request) => Response(
             json.encode({
               'ocs': {
                 'meta': {'status': '', 'statuscode': 0},
@@ -88,6 +91,7 @@ Account mockWeatherStatusAccount() {
               },
             }),
             200,
+            headers: {'content-type': 'application/json'},
           ),
     },
   });
@@ -117,11 +121,14 @@ core.OcsGetCapabilitiesResponseApplicationJson_Ocs_Data buildCapabilities({requi
           filesVersionsCapabilities: null,
           notesCapabilities: null,
           notificationsCapabilities: null,
+          passwordPolicyCapabilities: null,
           provisioningApiCapabilities: null,
           sharebymailCapabilities: null,
           spreedCapabilities: null,
           spreedPublicCapabilities: null,
           systemtagsCapabilities: null,
+          tablesCapabilities: null,
+          termsOfServicePublicCapabilities: null,
           themingPublicCapabilities: null,
           userStatusCapabilities: null,
           weatherStatusCapabilities: core.WeatherStatusCapabilities(
